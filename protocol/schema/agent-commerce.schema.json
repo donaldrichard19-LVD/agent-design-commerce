@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agent-commerce.dev/schema/agent-commerce.schema.json",
+  "title": "Agent Commerce Discovery File",
+  "description": "Served at https://{domain}/.well-known/agent-commerce.json. Lists a seller's purchasable components for agent discovery.",
+  "type": "object",
+  "required": ["protocol_version", "seller", "payment", "components", "updated_at"],
+  "properties": {
+    "protocol_version": { "type": "string", "const": "0.1" },
+    "seller": {
+      "type": "object",
+      "required": ["name", "seller_id", "site_url"],
+      "properties": {
+        "name": { "type": "string" },
+        "seller_id": { "type": "string" },
+        "site_url": { "type": "string", "format": "uri" },
+        "credibility": { "type": "array", "items": { "type": "string" } },
+        "contact": { "type": "string" }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": ["processor", "connected_account_id"],
+      "properties": {
+        "processor": { "type": "string", "const": "stripe" },
+        "connected_account_id": { "type": "string" }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["component_id", "name", "category", "framework", "price_usd", "purchase_endpoint", "detail_url"],
+        "properties": {
+          "component_id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": { "type": "string" },
+          "framework": { "type": "string" },
+          "style_tags": { "type": "array", "items": { "type": "string" } },
+          "price_usd": { "type": "number", "minimum": 0 },
+          "license_type": { "type": "string" },
+          "license_url": { "type": "string", "format": "uri" },
+          "preview_url": { "type": "string", "format": "uri" },
+          "detail_url": { "type": "string", "format": "uri" },
+          "purchase_endpoint": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

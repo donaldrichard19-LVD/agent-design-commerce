@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agent-commerce.dev/schema/component-detail.schema.json",
+  "title": "Component Detail",
+  "description": "Fetched from a component's detail_url before purchase. Gives an agent enough to evaluate fit without exposing the paid asset.",
+  "type": "object",
+  "required": ["component_id", "full_description", "dependencies"],
+  "properties": {
+    "component_id": { "type": "string" },
+    "full_description": { "type": "string" },
+    "dependencies": { "type": "array", "items": { "type": "string" } },
+    "design_tokens_used": { "type": "array", "items": { "type": "string" } },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "wcag_level": { "type": "string" },
+        "keyboard_nav": { "type": "boolean" }
+      }
+    },
+    "code_preview_snippet": { "type": "string" },
+    "compatibility_score": { "type": "number", "minimum": 0, "maximum": 1 }
+  }
+}

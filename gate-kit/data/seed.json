@@ -1,0 +1,59 @@
+{
+  "seller": {
+    "name": "Priya Ramesh",
+    "seller_id": "dsn_priya_r",
+    "site_url": "http://localhost:3001",
+    "credibility": ["Ex-Shopify design systems lead"],
+    "contact": "priya@example.com"
+  },
+  "stripe_connect": {
+    "connected": true,
+    "connected_account_id": "acct_mock_priya"
+  },
+  "components": [
+    {
+      "component_id": "cmp_8f2a1c",
+      "name": "Multi-step checkout form",
+      "category": "forms",
+      "framework": "react-tailwind",
+      "style_tags": ["minimal", "high-density", "dark-mode-ready"],
+      "price_usd": 10,
+      "gated": true,
+      "sold_count": 340,
+      "license_type": "non-exclusive",
+      "full_description": "A three-step checkout form with inline validation, a progress indicator, and keyboard-accessible navigation between steps.",
+      "dependencies": ["react-hook-form", "zod"],
+      "design_tokens_used": ["color.brand.primary", "spacing.4", "radius.md"],
+      "accessibility": { "wcag_level": "AA", "keyboard_nav": true },
+      "code_preview_snippet": "export function CheckoutForm({ onSubmit }) {\n  const [step, setStep] = useState(1);\n  // ...\n}",
+      "compatibility_score": 0.94,
+      "files": [
+        { "path": "CheckoutForm.tsx", "content": "// CheckoutForm.tsx\nimport { useState } from 'react';\nimport { useForm } from 'react-hook-form';\n\nexport function CheckoutForm({ onSubmit }) {\n  const [step, setStep] = useState(1);\n  const { register, handleSubmit, formState } = useForm();\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)} className=\"max-w-md mx-auto space-y-4\">\n      {step === 1 && (\n        <fieldset className=\"space-y-2\">\n          <legend className=\"font-medium\">Shipping</legend>\n          <input {...register('address')} placeholder=\"Address\" className=\"w-full border rounded-md px-3 py-2\" />\n        </fieldset>\n      )}\n      {step === 2 && (\n        <fieldset className=\"space-y-2\">\n          <legend className=\"font-medium\">Payment</legend>\n          <input {...register('card')} placeholder=\"Card number\" className=\"w-full border rounded-md px-3 py-2\" />\n        </fieldset>\n      )}\n      {step === 3 && (\n        <fieldset className=\"space-y-2\">\n          <legend className=\"font-medium\">Review</legend>\n          <button type=\"submit\" className=\"w-full bg-black text-white rounded-md py-2\">Place order</button>\n        </fieldset>\n      )}\n      <div className=\"flex justify-between\">\n        {step > 1 && <button type=\"button\" onClick={() => setStep(step - 1)}>Back</button>}\n        {step < 3 && <button type=\"button\" onClick={() => setStep(step + 1)}>Next</button>}\n      </div>\n    </form>\n  );\n}\n" },
+        { "path": "CheckoutForm.module.css", "content": "/* CheckoutForm.module.css */\n.progress {\n  display: flex;\n  gap: 8px;\n}\n" }
+      ],
+      "install_instructions": "npm install react-hook-form zod"
+    },
+    {
+      "component_id": "cmp_9b3d2e",
+      "name": "Command palette",
+      "category": "navigation",
+      "framework": "react-tailwind",
+      "style_tags": ["keyboard-first", "minimal"],
+      "price_usd": 10,
+      "gated": true,
+      "sold_count": 118,
+      "license_type": "non-exclusive",
+      "full_description": "A keyboard-first command palette (cmd+k) with fuzzy search and grouped results.",
+      "dependencies": ["cmdk"],
+      "design_tokens_used": ["color.surface.overlay", "radius.lg"],
+      "accessibility": { "wcag_level": "AA", "keyboard_nav": true },
+      "code_preview_snippet": "export function CommandPalette({ commands }) {\n  // cmd+k listener + fuzzy match\n}",
+      "compatibility_score": 0.89,
+      "files": [
+        { "path": "CommandPalette.tsx", "content": "// CommandPalette.tsx\nimport { Command } from 'cmdk';\n\nexport function CommandPalette({ commands, open, onOpenChange }) {\n  return (\n    <Command.Dialog open={open} onOpenChange={onOpenChange} label=\"Command palette\">\n      <Command.Input placeholder=\"Type a command...\" />\n      <Command.List>\n        {commands.map((c) => (\n          <Command.Item key={c.id} onSelect={c.action}>{c.label}</Command.Item>\n        ))}\n      </Command.List>\n    </Command.Dialog>\n  );\n}\n" }
+      ],
+      "install_instructions": "npm install cmdk"
+    }
+  ],
+  "sales": []
+}

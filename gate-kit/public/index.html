@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Agent commerce — dashboard</title>
+<style>
+  body { font-family: -apple-system, sans-serif; max-width: 640px; margin: 40px auto; color: #14161A; }
+  .card { border: 1px solid #E3E2DD; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .card .name { font-weight: 500; }
+  .meta { color: #6B6A65; font-size: 13px; }
+  .price { font-family: monospace; font-weight: 500; margin-left: auto; }
+  .badge { font-size: 12px; padding: 3px 8px; border-radius: 6px; }
+  .badge.on { background: #EAF3DE; color: #27500A; }
+  .badge.off { background: #F1EFE8; color: #5F5E5A; }
+  button { cursor: pointer; }
+  #add-form input, #add-form select { display: block; margin: 6px 0; padding: 6px; width: 100%; box-sizing: border-box; }
+  code { background: #F1EFE8; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+  <h2>Your components</h2>
+  <p class="meta" id="stripe-status">loading...</p>
+  <div id="components"></div>
+
+  <h3>Add a component</h3>
+  <form id="add-form">
+    <input name="name" placeholder="Component name" required />
+    <input name="category" placeholder="Category (e.g. forms)" required />
+    <input name="framework" placeholder="Framework (e.g. react-tailwind)" required />
+    <input name="price_usd" type="number" value="10" />
+    <textarea name="code" placeholder="Paste component code" rows="4" style="width:100%; box-sizing:border-box;"></textarea>
+    <button type="submit">Add component</button>
+  </form>
+
+  <h3>Recent sales</h3>
+  <div id="sales" class="meta"></div>
+
+  <h3>Discovery file</h3>
+  <p class="meta">Agents read this automatically: <code id="discovery-url"></code></p>
+
+<script>
+async function load() {
+  const res = await fetch('/api/dashboard');
+  const data = await res.json();
+
+  document.getElementById('stripe-status').textContent =
+    data.stripe_connect.connected ? 'Stripe connected' : 'Stripe not connected';
+  document.getElementById('discovery-url').textContent = data.discovery_file_url;
+
+  const list = document.getElementById('components');
+  list.innerHTML = '';
+  data.components.forEach((c) => {
+    const el = document.createElement('div');
+    el.className = 'card';
+    el.innerHTML = `
+      <div>
+        <div class="name">${c.name}</div>
+        <div class="meta">${c.framework} · ${c.category} · ${c.sold_count} sold</div>
+      </div>
+      <div class="price">$${c.price_usd}</div>
+      <span class="badge ${c.gated ? 'on' : 'off'}">${c.gated ? 'Gated' : 'Public'}</span>
+      <button data-id="${c.component_id}" class="toggle">${c.gated ? 'Un-gate' : 'Gate'}</button>
+    `;
+    list.appendChild(el);
+  });
+
+  document.querySelectorAll('.toggle').forEach((btn) => {
+    btn.onclick = async () => {
+      await fetch(`/api/components/${btn.dataset.id}/toggle-gate`, { method: 'POST' });
+      load();
+    };
+  });
+
+  const sales = document.getElementById('sales');
+  sales.innerHTML = data.recent_sales.length
+    ? data.recent_sales.map((s) => `${s.transaction_id} — $${s.amount_usd} — ${s.component_id}`).join('<br/>')
+    : 'No sales yet.';
+}
+
+document.getElementById('add-form').onsubmit = async (e) => {
+  e.preventDefault();
+  const form = new FormData(e.target);
+  await fetch('/api/components', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: form.get('name'),
+      category: form.get('category'),
+      framework: form.get('framework'),
+      price_usd: Number(form.get('price_usd')),
+      code: form.get('code'),
+    }),
+  });
+  e.target.reset();
+  load();
+};
+
+load();
+</script>
+</body>
+</html>
