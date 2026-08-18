@@ -49,6 +49,21 @@ async function main() {
   const purchaseResult = parse(purchase);
   console.log(JSON.stringify(purchaseResult, null, 2));
 
+  // P1: purchases only succeed once the designer has completed real Stripe
+  // Connect onboarding (POST /api/stripe/connect on the gate-kit, then the
+  // hosted onboarding flow). Until then this is the correct, expected
+  // response — not a bug. See gate-kit/README section on P1 status.
+  if (purchaseResult.error === 'seller_not_onboarded') {
+    console.log('\n(seller has not completed Stripe Connect onboarding yet — this is the correct P1 gate, not a failure)');
+    await client.close();
+    return;
+  }
+  if (purchaseResult.error === 'buyer_payment_method_required') {
+    console.log('\n(no saved payment method for this buyer_token — run `node scripts/create-test-buyer.js tok_dev_9f1a` in gate-kit/ first)');
+    await client.close();
+    return;
+  }
+
   console.log('\n=== 5. get_asset (download purchased files) ===');
   const asset = await client.callTool({
     name: 'get_asset',

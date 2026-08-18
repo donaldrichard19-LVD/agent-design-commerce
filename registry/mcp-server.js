@@ -123,6 +123,38 @@ server.registerTool(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ component_id, buyer_token, confirmed_by_human }),
     });
+    let result = await res.json();
+
+    // P1: completion is webhook-driven on the gate-kit side, so a purchase
+    // can come back 'pending' even after the gate-kit's own bounded wait.
+    // Poll a few more times before handing the agent a non-final result —
+    // in the common case (webhook already landed) this loop never runs.
+    if (result.status === 'pending' && result.poll_url) {
+      for (let i = 0; i < 10 && result.status === 'pending'; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        const pollRes = await fetch(result.poll_url);
+        result = await pollRes.json();
+      }
+    }
+    return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+  }
+);
+
+server.registerTool(
+  'check_purchase_status',
+  {
+    title: 'Check purchase status',
+    description: 'Check on a purchase that purchase_component returned as still pending. Returns the download token once the payment has cleared.',
+    inputSchema: { component_id: z.string(), transaction_id: z.string() },
+  },
+  async ({ component_id, transaction_id }) => {
+    const { components } = loadIndex();
+    const c = components.find((x) => x.component_id === component_id);
+    if (!c) {
+      return { content: [{ type: 'text', text: JSON.stringify({ error: 'not_found' }) }], isError: true };
+    }
+    const statusUrl = `${c.seller.site_url}/api/purchase/${transaction_id}`;
+    const res = await fetch(statusUrl);
     const result = await res.json();
     return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
   }

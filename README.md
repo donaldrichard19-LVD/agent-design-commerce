@@ -49,21 +49,61 @@ Point your MCP host's config at `node /path/to/registry/mcp-server.js`. It expos
 ```
 node test-client.js
 ```
-This is what was run to validate the build: search finds the checkout form, `get_component` returns full detail, a purchase attempt without `confirmed_by_human: true` is correctly rejected, a confirmed purchase succeeds and returns a download token, and `get_asset` delivers the actual component files.
+Search finds the checkout form, `get_component` returns full detail, a purchase attempt without `confirmed_by_human: true` is correctly rejected — and, as of P1, a confirmed purchase now correctly stops at `seller_not_onboarded` until the designer has completed real Stripe Connect onboarding (see below). That gate replaces P0's always-succeeds mock.
 
-## What's mocked vs. production-shaped
+## What's mocked vs. production-shaped (P0 baseline)
 
 | Piece | Status |
 |---|---|
 | Discovery file schema, MCP tool shapes, human-in-the-loop gate | Production-shaped — this is the real contract |
-| Payment | Mocked. `gate-kit/server.js` has inline comments marking exactly where a real Stripe PaymentIntent + webhook confirmation replaces the synchronous mock |
 | Registry crawling | Real polling logic, but the seed list is one local domain — production points it at real designer domains on a schedule |
 | Designer dashboard | Functional (add/gate/toggle components, view sales) but unstyled — this is the piece the build plan flags as the real engineering investment for P1 |
 
-## Next step, per the build plan
+## P1: real Stripe Connect (this is now live in `gate-kit/`)
 
-This covers P0's technical validation (protocol works, purchase flow works, agent can complete the loop). What's still manual: getting 3-5 real designers to put real components behind this, and testing whether the delivered code is actually good enough to drop into a real project untouched. That's the part no amount of local testing substitutes for.
+Replaces the mocked payment with a real Connect integration, per `agent-design-commerce-p1-requirements.md` (workstream 1) in Drive:
 
-## P1 status
+- **Onboarding** — `POST /api/stripe/connect` creates a v2 recipient connected account (`dashboard: express`, `fees_collector`/`losses_collector: application`, `stripe_balance.stripe_transfers` capability) and returns a hosted Account Link. This replaces the legacy OAuth flow the P0 comment described — Stripe's current guidance is v2 Accounts + Account Links, not `stripe.oauth.token()`.
+- **Purchase** — `POST /api/purchase` creates a real destination-charge PaymentIntent (`transfer_data.destination` + optional `application_fee_amount`, off-session against a saved buyer payment method). It does **not** decide completion itself — that only ever happens inside the `payment_intent.succeeded` webhook handler (`POST /webhooks/stripe`, signature-verified). The request handler waits briefly for that webhook to land (fast in practice) and falls back to a `status: "processing"` + poll URL if it doesn't.
+- **Idempotency** — retried purchases for the same `buyer_token` + `component_id` reuse the existing PaymentIntent instead of double-charging (dedupe key passed as the Stripe idempotency key too).
+- **Buyers** — since this is a machine-to-machine purchase (no browser at purchase time), a buyer's payment method has to be saved once, out of band. `scripts/create-test-buyer.js <buyer_token>` does this in test mode with a saved test card. Production replaces that script with a one-time Stripe Checkout Session in `setup` mode.
+- **Registry** — `mcp-server.js`'s `purchase_component` tool polls the gate-kit's status endpoint a few more times if it comes back `processing`; a new `check_purchase_status` tool lets an agent check later.
 
-See `agent-design-commerce-p1-requirements.md` in Drive for the full P1 scope. This local project is where P1 workstream 1 (real Stripe Connect) is being built, replacing the mock in `gate-kit/server.js`.
+### Running the P1 flow locally
+
+```
+cd gate-kit
+cp .env.example .env   # fill in your own Stripe test keys
+npm install
+npm start
+
+# in another terminal — forwards webhooks to your local server:
+stripe listen --forward-to localhost:3001/webhooks/stripe
+# copy the printed whsec_... into .env as STRIPE_WEBHOOK_SECRET, restart npm start
+
+# register a test buyer's saved card:
+node scripts/create-test-buyer.js tok_dev_9f1a
+
+# from the dashboard (http://localhost:3001) or via POST /api/stripe/connect,
+# complete Stripe's hosted onboarding for the designer's connected account
+```
+
+### What was and wasn't live-validated
+
+Built and tested against a real Stripe test-mode sandbox (`stripe sandbox create`) in this session:
+
+| Path | Live-tested |
+|---|---|
+| Buyer setup (Customer + saved test card) | ✅ |
+| `seller_not_onboarded` gate before onboarding | ✅ |
+| Clean, non-crashing error handling on an invalid Stripe request (proves the catch path a declined card would also hit) | ✅ |
+| Webhook signature verification (valid signature accepted, forged signature rejected with 400) | ✅ |
+| `payment_intent.succeeded` → `completeSale` (download token issued, `sold_count` incremented) | ✅ |
+| Webhook idempotency (same event delivered twice → sale completes once, no double-increment) | ✅ |
+| Asset delivery via the issued download token | ✅ |
+| Full `search_components` → `get_component` → `purchase_component` → `get_asset` MCP chain | ✅ (stops correctly at `seller_not_onboarded`, as expected pre-onboarding) |
+| v2 connected-account creation + Account Link onboarding, and a real destination charge against an active connected account | ❌ — the auto-provisioned sandbox's restricted key doesn't have Connect platform access ("claimable sandbox key with limited permissions"); needs the sandbox claimed via browser (`stripe sandbox claim` / the claim URL) or a real Stripe account with Connect enabled. Written per Stripe's current v2 Connect docs, not yet exercised against a live connected account. |
+
+## Next step, per the build plan / P1 requirements
+
+Outstanding from P1 workstream 1: validate the Connect onboarding + destination-charge path against a real (claimed) Stripe account. Outstanding from P1 overall (workstreams 2–5, unstarted): recruiting 3-5 real designers, production registry crawling, the designer dashboard rebuild, and delivered-code quality validation. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.

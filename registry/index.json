@@ -1,0 +1,58 @@
+{
+  "components": [
+    {
+      "component_id": "cmp_8f2a1c",
+      "name": "Multi-step checkout form",
+      "category": "forms",
+      "framework": "react-tailwind",
+      "style_tags": [
+        "minimal",
+        "high-density",
+        "dark-mode-ready"
+      ],
+      "price_usd": 10,
+      "license_type": "non-exclusive",
+      "license_url": "http://localhost:3001/license",
+      "preview_url": "http://localhost:3001/components/cmp_8f2a1c/preview.png",
+      "detail_url": "http://localhost:3001/api/components/cmp_8f2a1c",
+      "purchase_endpoint": "http://localhost:3001/api/purchase",
+      "seller": {
+        "name": "Priya Ramesh",
+        "seller_id": "dsn_priya_r",
+        "site_url": "http://localhost:3001",
+        "credibility": [
+          "Ex-Shopify design systems lead"
+        ],
+        "contact": "priya@example.com"
+      },
+      "indexed_at": "2026-08-18T18:08:57.438Z"
+    },
+    {
+      "component_id": "cmp_9b3d2e",
+      "name": "Command palette",
+      "category": "navigation",
+      "framework": "react-tailwind",
+      "style_tags": [
+        "keyboard-first",
+        "minimal"
+      ],
+      "price_usd": 10,
+      "license_type": "non-exclusive",
+      "license_url": "http://localhost:3001/license",
+      "preview_url": "http://localhost:3001/components/cmp_9b3d2e/preview.png",
+      "detail_url": "http://localhost:3001/api/components/cmp_9b3d2e",
+      "purchase_endpoint": "http://localhost:3001/api/purchase",
+      "seller": {
+        "name": "Priya Ramesh",
+        "seller_id": "dsn_priya_r",
+        "site_url": "http://localhost:3001",
+        "credibility": [
+          "Ex-Shopify design systems lead"
+        ],
+        "contact": "priya@example.com"
+      },
+      "indexed_at": "2026-08-18T18:08:57.438Z"
+    }
+  ],
+  "crawled_at": "2026-08-18T18:08:57.438Z"
+}
