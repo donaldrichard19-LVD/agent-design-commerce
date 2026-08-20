@@ -19,7 +19,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const stripe = require('./lib/stripe');
-const { getBuyer } = require('./lib/buyers');
+const { getBuyer, registerBuyer } = require('./lib/buyers');
 
 const DATA_PATH = path.join(__dirname, 'data', 'seed.json');
 const PORT = process.env.PORT || 3001;
@@ -404,6 +404,34 @@ app.post('/api/components', (req, res) => {
   });
   saveData(data);
   res.status(201).json({ component_id });
+});
+
+// ---- Dev-only: register a test buyer against a remote instance ----
+// Mirrors scripts/create-test-buyer.js exactly, but over HTTP, since that
+// script writes to this process's local data/buyers.json — which only
+// exists on whatever machine is actually running the server. Only ever
+// works in Stripe test mode: pm_card_visa is a Stripe test-mode-only
+// payment method and attaching it against a live-mode key fails outright.
+app.post('/api/dev/test-buyer', async (req, res) => {
+  const buyerToken = (req.body && req.body.buyer_token) || 'tok_dev_' + crypto.randomBytes(4).toString('hex');
+  try {
+    const customer = await stripe.customers.create({
+      email: `${buyerToken}@example.com`,
+      name: 'Test Buyer',
+      metadata: { buyer_token: buyerToken },
+    });
+    const paymentMethod = await stripe.paymentMethods.attach('pm_card_visa', { customer: customer.id });
+
+    registerBuyer(buyerToken, {
+      stripeCustomerId: customer.id,
+      stripePaymentMethodId: paymentMethod.id,
+    });
+
+    res.status(201).json({ buyer_token: buyerToken, stripe_customer_id: customer.id });
+  } catch (err) {
+    console.error('test-buyer registration error:', err.type, err.message);
+    res.status(502).json({ error: 'test_buyer_registration_failed', message: err.message });
+  }
 });
 
 app.post('/api/components/:id/toggle-gate', (req, res) => {
