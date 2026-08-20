@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: agent-commerce-gate-kit
+    runtime: node
+    rootDir: gate-kit
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: PLATFORM_ACCOUNT_ID
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: PLATFORM_FEE_BPS
+        value: "0"
+      - key: BASE_URL
+        value: https://agent-commerce-gate-kit.onrender.com
