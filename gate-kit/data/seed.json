@@ -9,8 +9,8 @@
     "contact": "priya@example.com"
   },
   "stripe_connect": {
-    "connected": false,
-    "connected_account_id": null
+    "connected": true,
+    "connected_account_id": "acct_1U6aIbAE2xG9FfFX"
   },
   "components": [
     {
