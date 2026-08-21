@@ -3,65 +3,393 @@
 <head>
 <meta charset="utf-8" />
 <title>Agent commerce — dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  body { font-family: -apple-system, sans-serif; max-width: 640px; margin: 40px auto; color: #14161A; }
-  .card { border: 1px solid #E3E2DD; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-  .card .name { font-weight: 500; }
-  .meta { color: #6B6A65; font-size: 13px; }
-  .price { font-family: monospace; font-weight: 500; margin-left: auto; }
-  .badge { font-size: 12px; padding: 3px 8px; border-radius: 6px; }
-  .badge.on { background: #EAF3DE; color: #27500A; }
-  .badge.off { background: #F1EFE8; color: #5F5E5A; }
-  button { cursor: pointer; }
-  #add-form input, #add-form select { display: block; margin: 6px 0; padding: 6px; width: 100%; box-sizing: border-box; }
-  code { background: #F1EFE8; padding: 1px 5px; border-radius: 4px; }
+  :root {
+    --surface-page: #F5F7FA;
+    --surface-card: #FFFFFF;
+    --surface-sunken: #EDF0F5;
+    --surface-hover: #F2F5F9;
+    --border-subtle: #DFE4EC;
+    --border-default: #CBD3E0;
+    --text-primary: #161C25;
+    --text-secondary: #55606F;
+    --text-tertiary: #737F92;
+    --blue-500: #1A73E8;
+    --warning-bg: #FDF3DD;
+    --warning-fg: #92660B;
+    --warning-dot: #D89A1F;
+    --success-bg: #E4F5EA;
+    --success-fg: #1B7A3D;
+    --success-dot: #2FA85C;
+    --danger-bg: #FBE7E7;
+    --danger-fg: #B3261E;
+    --danger-dot: #E0453B;
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --shadow-sm: 0 1px 2px rgba(22, 28, 37, 0.06), 0 1px 1px rgba(22, 28, 37, 0.04);
+    --font-serif: "Newsreader", Georgia, serif;
+    --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+  }
+
+  .header {
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-subtle);
+    height: 64px;
+  }
+
+  .header-inner {
+    max-width: 900px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .wordmark {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+  }
+
+  .main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 88px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .page-heading {
+    font-family: var(--font-serif);
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.022em;
+    margin: 0;
+  }
+
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-padded { padding: 24px; }
+
+  .card-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 2px;
+  }
+
+  .card-subtitle {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0 0 20px;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex: none;
+  }
+
+  .badge.warning { background: var(--warning-bg); color: var(--warning-fg); }
+  .badge.warning .dot { background: var(--warning-dot); }
+  .badge.success { background: var(--success-bg); color: var(--success-fg); }
+  .badge.success .dot { background: var(--success-dot); }
+  .badge.danger { background: var(--danger-bg); color: var(--danger-fg); }
+  .badge.danger .dot { background: var(--danger-dot); }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  th.col-price, td.col-price { text-align: right; }
+  th.col-status, td.col-status { text-align: center; }
+  th.col-action, td.col-action { text-align: right; }
+
+  tbody tr { transition: background-color 120ms ease; }
+  tbody tr:hover { background: var(--surface-hover); }
+  tbody tr:not(:last-child) td { border-bottom: 1px solid var(--border-subtle); }
+
+  td { padding: 16px 20px; vertical-align: middle; }
+
+  .component-name { font-size: 17px; font-weight: 500; }
+  .component-meta { font-size: 13px; color: var(--text-tertiary); margin-top: 2px; }
+
+  .price {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  button {
+    font-family: var(--font-sans);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: transform 80ms ease, filter 120ms ease, background-color 120ms ease;
+  }
+
+  button:active { transform: scale(0.985); }
+
+  .btn-secondary {
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+  }
+
+  .btn-secondary:hover { transform: translateY(-1px); filter: brightness(0.95); }
+
+  .btn-primary {
+    background: var(--blue-500);
+    border: none;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 10px 18px;
+    align-self: flex-start;
+  }
+
+  .btn-primary:hover { transform: translateY(-1px); filter: brightness(0.95); }
+
+  /* Form */
+  form { display: flex; flex-direction: column; gap: 14px; }
+
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field-narrow { width: 160px; }
+
+  input, textarea {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--surface-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 9px 12px;
+    outline: none;
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--blue-500);
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.16);
+  }
+
+  textarea {
+    font-family: var(--font-mono);
+    background: var(--surface-sunken);
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .empty-state { color: var(--text-tertiary); font-size: 14px; }
+
+  .sale-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .sale-row:last-child { border-bottom: none; }
+  .sale-amount { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--success-fg); }
+
+  /* Discovery row */
+  .discovery-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+  }
+
+  .discovery-row svg { flex: none; color: var(--text-tertiary); }
+
+  .discovery-url {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-secondary);
+    word-break: break-all;
+  }
+
+  @media (max-width: 640px) {
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tbody tr {
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      padding: 4px 0;
+    }
+    tbody tr:not(:last-child) td { border-bottom: none; }
+    td { padding: 6px 16px; text-align: left !important; }
+    td.col-action { padding-top: 4px; padding-bottom: 14px; }
+    .field-row { grid-template-columns: 1fr; }
+    .field-narrow { width: 100%; }
+  }
 </style>
 </head>
 <body>
-  <h2>Your components</h2>
-  <p class="meta" id="stripe-status">loading...</p>
-  <div id="components"></div>
+  <div class="header">
+    <div class="header-inner">
+      <div class="wordmark">Agent Commerce Stack</div>
+      <span id="stripe-badge" class="badge danger"><span class="dot"></span>Stripe not connected</span>
+    </div>
+  </div>
 
-  <h3>Add a component</h3>
-  <form id="add-form">
-    <input name="name" placeholder="Component name" required />
-    <input name="category" placeholder="Category (e.g. forms)" required />
-    <input name="framework" placeholder="Framework (e.g. react-tailwind)" required />
-    <input name="price_usd" type="number" value="10" />
-    <textarea name="code" placeholder="Paste component code" rows="4" style="width:100%; box-sizing:border-box;"></textarea>
-    <button type="submit">Add component</button>
-  </form>
+  <div class="main">
+    <h1 class="page-heading">Your components</h1>
 
-  <h3>Recent sales</h3>
-  <div id="sales" class="meta"></div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th class="col-price">Price</th>
+            <th class="col-status">Status</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="components"></tbody>
+      </table>
+    </div>
 
-  <h3>Discovery file</h3>
-  <p class="meta">Agents read this automatically: <code id="discovery-url"></code></p>
+    <div class="card card-padded">
+      <p class="card-title">Add a component</p>
+      <p class="card-subtitle">Publish a new gated component for agent purchase</p>
+      <form id="add-form">
+        <div>
+          <label for="f-name">Component name</label>
+          <input id="f-name" name="name" placeholder="e.g. PricingTable" required />
+        </div>
+        <div class="field-row">
+          <div>
+            <label for="f-category">Category</label>
+            <input id="f-category" name="category" placeholder="e.g. forms" required />
+          </div>
+          <div>
+            <label for="f-framework">Framework</label>
+            <input id="f-framework" name="framework" placeholder="e.g. react-tailwind" required />
+          </div>
+        </div>
+        <div class="field-narrow">
+          <label for="f-price">Price (USD)</label>
+          <input id="f-price" name="price_usd" type="number" value="10" min="0" step="1" />
+        </div>
+        <div>
+          <label for="f-code">Component code</label>
+          <textarea id="f-code" name="code" rows="6" placeholder="Paste component code"></textarea>
+        </div>
+        <button type="submit" class="btn-primary">Add component</button>
+      </form>
+    </div>
+
+    <div class="card card-padded">
+      <p class="card-title">Recent sales</p>
+      <div id="sales" class="empty-state">No sales yet.</div>
+    </div>
+
+    <div class="card card-padded">
+      <p class="card-title">Discovery file</p>
+      <p class="card-subtitle">Agents read this automatically</p>
+      <div class="discovery-row">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+          <path d="M14 2v6h6"></path>
+        </svg>
+        <span class="discovery-url" id="discovery-url"></span>
+      </div>
+    </div>
+  </div>
 
 <script>
 async function load() {
   const res = await fetch('/api/dashboard');
   const data = await res.json();
 
-  document.getElementById('stripe-status').textContent =
-    data.stripe_connect.connected ? 'Stripe connected' : 'Stripe not connected';
+  const stripeBadge = document.getElementById('stripe-badge');
+  const connected = !!(data.stripe_connect && data.stripe_connect.connected);
+  stripeBadge.className = `badge ${connected ? 'success' : 'danger'}`;
+  stripeBadge.innerHTML = `<span class="dot"></span>${connected ? 'Stripe connected' : 'Stripe not connected'}`;
+
   document.getElementById('discovery-url').textContent = data.discovery_file_url;
 
   const list = document.getElementById('components');
   list.innerHTML = '';
   data.components.forEach((c) => {
-    const el = document.createElement('div');
-    el.className = 'card';
-    el.innerHTML = `
-      <div>
-        <div class="name">${c.name}</div>
-        <div class="meta">${c.framework} · ${c.category} · ${c.sold_count} sold</div>
-      </div>
-      <div class="price">$${c.price_usd}</div>
-      <span class="badge ${c.gated ? 'on' : 'off'}">${c.gated ? 'Gated' : 'Public'}</span>
-      <button data-id="${c.component_id}" class="toggle">${c.gated ? 'Un-gate' : 'Gate'}</button>
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>
+        <div class="component-name">${c.name}</div>
+        <div class="component-meta">${c.framework} · ${c.category} · ${c.sold_count} sold</div>
+      </td>
+      <td class="col-price price">$${c.price_usd}</td>
+      <td class="col-status">
+        <span class="badge ${c.gated ? 'warning' : 'success'}"><span class="dot"></span>${c.gated ? 'Gated' : 'Open'}</span>
+      </td>
+      <td class="col-action">
+        <button data-id="${c.component_id}" class="toggle btn-secondary">${c.gated ? 'Un-gate' : 'Gate'}</button>
+      </td>
     `;
-    list.appendChild(el);
+    list.appendChild(row);
   });
 
   document.querySelectorAll('.toggle').forEach((btn) => {
@@ -72,9 +400,15 @@ async function load() {
   });
 
   const sales = document.getElementById('sales');
-  sales.innerHTML = data.recent_sales.length
-    ? data.recent_sales.map((s) => `${s.transaction_id} — $${s.amount_usd} — ${s.component_id}`).join('<br/>')
-    : 'No sales yet.';
+  if (data.recent_sales.length) {
+    sales.classList.remove('empty-state');
+    sales.innerHTML = data.recent_sales
+      .map((s) => `<div class="sale-row"><span>${s.transaction_id} — ${s.component_id}</span><span class="sale-amount">$${s.amount_usd}</span></div>`)
+      .join('');
+  } else {
+    sales.classList.add('empty-state');
+    sales.textContent = 'No sales yet.';
+  }
 }
 
 document.getElementById('add-form').onsubmit = async (e) => {
