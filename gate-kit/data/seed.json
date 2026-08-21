@@ -10,7 +10,7 @@
   },
   "stripe_connect": {
     "connected": true,
-    "connected_account_id": "acct_1U6aIbAE2xG9FfFX"
+    "connected_account_id": "acct_1U6i1hDO6LnxIz7l"
   },
   "components": [
     {
@@ -25,7 +25,7 @@
       ],
       "price_usd": 10,
       "gated": true,
-      "sold_count": 340,
+      "sold_count": 341,
       "license_type": "non-exclusive",
       "full_description": "A three-step checkout form with inline validation, a progress indicator, and keyboard-accessible navigation between steps.",
       "dependencies": [
@@ -66,7 +66,7 @@
       ],
       "price_usd": 10,
       "gated": true,
-      "sold_count": 118,
+      "sold_count": 119,
       "license_type": "non-exclusive",
       "full_description": "A keyboard-first command palette (cmd+k) with fuzzy search and grouped results.",
       "dependencies": [
@@ -91,5 +91,48 @@
       "install_instructions": "npm install cmdk"
     }
   ],
-  "sales": []
+  "sales": [
+    {
+      "transaction_id": "pi_3U6iESDO6LUr92PK2upaO7uT",
+      "dedupe_key": "067796ba50977921939384f401387cd7043350177191fbdd1d8e36af8aa7d4f7",
+      "component_id": "cmp_8f2a1c",
+      "buyer_token": "tok_dev_9f1a",
+      "amount_usd": 10,
+      "status": "pending",
+      "at": "2026-08-21T02:31:01.697Z"
+    },
+    {
+      "transaction_id": "pi_3U6iG0DO6LUr92PK2dBcwBbS",
+      "dedupe_key": "8ee1c85a7cab0c38b435d40d2f1407bdd3891eeb11d3667f92ce3a7cdfcbed94",
+      "component_id": "cmp_9b3d2e",
+      "buyer_token": "tok_dev_9f1a",
+      "amount_usd": 10,
+      "status": "pending",
+      "at": "2026-08-21T02:32:36.905Z"
+    },
+    {
+      "transaction_id": "pi_3U6iIMDO6LUr92PK20hFRq09",
+      "dedupe_key": "34949ed24f5cce2982fdb754c506e07d273de7b0276911938f438db681a00717",
+      "component_id": "cmp_8f2a1c",
+      "buyer_token": "tok_dev_live_check",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T02:35:02.795Z",
+      "download_token": "dl_943968e1fc584b8a",
+      "download_token_expires_at": "2026-08-21T02:50:03.047Z",
+      "completed_at": "2026-08-21T02:35:03.047Z"
+    },
+    {
+      "transaction_id": "pi_3U6iJIDO6LUr92PK1wpgHfW7",
+      "dedupe_key": "5dfec2aff471173c6d25f8b2265d94262ea617a0480d631cd24bfe75f5570436",
+      "component_id": "cmp_9b3d2e",
+      "buyer_token": "tok_dev_mcp_check",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T02:36:01.061Z",
+      "download_token": "dl_435647bfd2db864e",
+      "download_token_expires_at": "2026-08-21T02:51:01.460Z",
+      "completed_at": "2026-08-21T02:36:01.460Z"
+    }
+  ]
 }

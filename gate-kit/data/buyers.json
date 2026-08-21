@@ -1,7 +1,17 @@
 {
   "tok_dev_9f1a": {
-    "stripe_customer_id": "cus_V63WvQwdXzkKtR",
-    "stripe_payment_method_id": "pm_1U5rP5AE2xvHtmmJrq24d4e4",
-    "registered_at": "2026-08-18T18:06:27.567Z"
+    "stripe_customer_id": "cus_V6uv9OYu6WkRs4",
+    "stripe_payment_method_id": "pm_1U6h5DDO6LUr92PKP2UkOfLE",
+    "registered_at": "2026-08-21T01:17:24.100Z"
+  },
+  "tok_dev_live_check": {
+    "stripe_customer_id": "cus_V6wARImGsFeYS3",
+    "stripe_payment_method_id": "pm_1U6iIIDO6LUr92PKXRDrjuhN",
+    "registered_at": "2026-08-21T02:34:59.036Z"
+  },
+  "tok_dev_mcp_check": {
+    "stripe_customer_id": "cus_V6wBDgec3i8gHI",
+    "stripe_payment_method_id": "pm_1U6iIvDO6LUr92PKp6agmhyL",
+    "registered_at": "2026-08-21T02:35:37.978Z"
   }
 }
