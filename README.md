@@ -56,7 +56,7 @@ Search finds the checkout form, `get_component` returns full detail, a purchase 
 | Piece | Status |
 |---|---|
 | Discovery file schema, MCP tool shapes, human-in-the-loop gate | Production-shaped — this is the real contract |
-| Registry crawling | Real polling logic, but the seed list is one local domain — production points it at real designer domains on a schedule |
+| Registry crawling | Production-shaped as of P1 workstream 3: validates every discovery file against `protocol/schema/agent-commerce.schema.json` (ajv), and `npm run crawl:watch` runs it on a cron schedule (`CRAWL_CRON`, default every 15m) instead of a one-off manual pass. Still gated on workstream 2: the seed list (`registry/seed-domains.json`) is one local domain until there are real designers to crawl. |
 | Designer dashboard | Functional (add/gate/toggle components, view sales) but unstyled — this is the piece the build plan flags as the real engineering investment for P1 |
 
 ## P1: real Stripe Connect (this is now live in `gate-kit/`)
@@ -108,4 +108,4 @@ Workstream 1 is now fully validated end to end, including the one gap flagged ab
 
 ## Next step, per the build plan / P1 requirements
 
-Workstream 1 (real Stripe Connect) is complete. Outstanding from P1 overall (workstreams 2–5, unstarted): recruiting 3-5 real designers, production registry crawling, the designer dashboard rebuild, and delivered-code quality validation. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.
+Workstreams 1 (real Stripe Connect) and 3 (production registry crawling) are complete. Outstanding from P1 overall: workstream 2, recruiting 3-5 real designers (blocks giving the crawler real domains to point at); workstream 4, the designer dashboard rebuild; workstream 5, delivered-code quality validation. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.

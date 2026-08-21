@@ -1,23 +1,29 @@
-// P1 build note: this is the "poller" from the build plan — a cron/scheduled
-// job in production, run manually here. Real version also validates against
-// protocol/schema/agent-commerce.schema.json before ingesting; this MVP does
-// a lighter shape check inline to keep the demo dependency-free.
+// The "poller" from the build plan. Two modes:
+//   npm run crawl        - one-off pass, exits when done (CI, manual runs)
+//   npm run crawl:watch  - runs on a schedule (CRAWL_CRON, default every 15m)
+//                          for a long-lived production poller process
+//
+// Validates every discovery file against the real protocol schema
+// (protocol/schema/agent-commerce.schema.json) before ingesting it — a
+// domain that returns a shape agents can't rely on gets skipped, not
+// silently indexed.
 
 const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
+const cron = require('node-cron');
+const Ajv = require('ajv');
+const addFormats = require('ajv-formats');
 
 const SEEDS_PATH = path.join(__dirname, 'seed-domains.json');
 const INDEX_PATH = path.join(__dirname, 'index.json');
+const SCHEMA_PATH = path.join(__dirname, '..', 'protocol', 'schema', 'agent-commerce.schema.json');
+const CRAWL_CRON = process.env.CRAWL_CRON || '*/15 * * * *';
 
-function isValidDiscoveryFile(doc) {
-  return (
-    doc &&
-    doc.protocol_version &&
-    doc.seller && doc.seller.seller_id &&
-    Array.isArray(doc.components)
-  );
-}
+const ajv = new Ajv({ allErrors: true, strict: false });
+addFormats(ajv);
+const schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, 'utf8'));
+const validateDiscoveryFile = ajv.compile(schema);
 
 async function crawlDomain(domain) {
   const url = `${domain}/.well-known/agent-commerce.json`;
@@ -28,8 +34,9 @@ async function crawlDomain(domain) {
       return [];
     }
     const doc = await res.json();
-    if (!isValidDiscoveryFile(doc)) {
-      console.log(`[skip] ${domain} — failed schema check`);
+    if (!validateDiscoveryFile(doc)) {
+      const errors = ajv.errorsText(validateDiscoveryFile.errors, { separator: '; ' });
+      console.log(`[skip] ${domain} — failed schema validation: ${errors}`);
       return [];
     }
     console.log(`[ok] ${domain} — ${doc.components.length} component(s) from ${doc.seller.name}`);
@@ -44,7 +51,7 @@ async function crawlDomain(domain) {
   }
 }
 
-async function main() {
+async function crawlOnce() {
   const seeds = JSON.parse(fs.readFileSync(SEEDS_PATH, 'utf8'));
   const all = [];
   for (const domain of seeds) {
@@ -52,7 +59,22 @@ async function main() {
     all.push(...components);
   }
   fs.writeFileSync(INDEX_PATH, JSON.stringify({ components: all, crawled_at: new Date().toISOString() }, null, 2));
-  console.log(`\nindexed ${all.length} component(s) across ${seeds.length} domain(s) -> ${INDEX_PATH}`);
+  console.log(`indexed ${all.length} component(s) across ${seeds.length} domain(s) -> ${INDEX_PATH}`);
 }
 
-main();
+async function main() {
+  if (process.argv.includes('--watch')) {
+    console.log(`crawler running on schedule "${CRAWL_CRON}" (set CRAWL_CRON to override)`);
+    await crawlOnce();
+    cron.schedule(CRAWL_CRON, () => {
+      crawlOnce().catch((err) => console.error('crawl run failed:', err));
+    });
+  } else {
+    await crawlOnce();
+  }
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
