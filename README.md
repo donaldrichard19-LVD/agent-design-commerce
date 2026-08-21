@@ -15,10 +15,28 @@ gate-kit/       what a designer runs (b)
   data/seed.json    demo designer + 2 components (Priya Ramesh, from the earlier spec)
 
 registry/       what agents query (c)
-  crawler.js        polls seed domains, builds index.json
+  crawler.js        polls seed domains on a schedule, validates + builds index.json
+  server.js         self-serve domain submission (form + API), guards against SSRF
   mcp-server.js     the actual MCP server — search/get/purchase/get_asset
   test-client.js    drives mcp-server.js over stdio to prove it works
 ```
+
+## Registry: self-serve domain submission (P1 workstream 2/3)
+
+A designer can add themselves to the registry without anyone hand-editing `registry/seed-domains.json` — the manual step P1's designer-onboarding acceptance criteria explicitly calls out as needing to go away.
+
+```
+cd registry
+npm install
+npm run serve
+# -> http://localhost:3002 (submission form)
+```
+
+`POST /api/submit-domain` (what the form calls) fetches `{domain}/.well-known/agent-commerce.json`, validates it against `protocol/schema/agent-commerce.schema.json` (the same validator `crawler.js` uses), and on success appends the domain to `seed-domains.json` — picked up automatically by the next `crawl:watch` run, no manual step in between.
+
+Since this fetches a URL an anonymous visitor supplies, `registry/lib/ssrf-guard.js` rejects non-http(s) schemes and any hostname/resolved IP in loopback, private, or link-local ranges (localhost, 127.0.0.1, 10.0.0.0/8, 192.168.0.0/16, 169.254.0.0/16 incl. cloud metadata endpoints, etc.) before ever fetching it. This is a reasonable guard for a prototype's public form, not a DNS-rebinding-proof implementation — the actual fetch re-resolves the hostname rather than pinning the IP that was checked. For local testing against your own `gate-kit` instance, set `ALLOW_PRIVATE_SUBMIT_TARGETS=true` to bypass the guard.
+
+**Known gap, same shape as gate-kit's:** `seed-domains.json` is written to at runtime and would be reset by Render's free-tier redeploy, same issue the last few gate-kit commits worked around for `seed.json`. Not yet addressed here — worth fixing the same way (bake state back in and commit) if this gets real submissions before workstream 3's planned move to a real datastore replacing the flat `index.json`/`seed-domains.json` files entirely.
 
 ## Run it yourself
 
@@ -110,4 +128,4 @@ Workstream 1 is now fully validated end to end, including the one gap flagged ab
 
 ## Next step, per the build plan / P1 requirements
 
-Workstreams 1 (real Stripe Connect) and 3 (production registry crawling) are complete. Outstanding from P1 overall: workstream 2, recruiting 3-5 real designers (blocks giving the crawler real domains to point at); workstream 4, the designer dashboard rebuild; workstream 5, delivered-code quality validation. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.
+Workstreams 1 (real Stripe Connect) and 3 (production registry crawling) are complete. Workstream 2's engineering half is done too — self-serve domain submission (above) — but its actual acceptance criterion, "3-5 designers identified and recruited," is explicitly scoped in the requirements doc as "a manual/BD task, not engineering," so it's still outstanding until real designers exist to submit through it. Outstanding from P1 overall: workstream 4, the designer dashboard rebuild; workstream 5, delivered-code quality validation. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.

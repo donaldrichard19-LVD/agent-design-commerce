@@ -12,18 +12,11 @@ const fetch = require('node-fetch');
 const fs = require('fs');
 const path = require('path');
 const cron = require('node-cron');
-const Ajv = require('ajv');
-const addFormats = require('ajv-formats');
+const { validateDiscoveryFile } = require('./lib/validate-discovery-file');
 
 const SEEDS_PATH = path.join(__dirname, 'seed-domains.json');
 const INDEX_PATH = path.join(__dirname, 'index.json');
-const SCHEMA_PATH = path.join(__dirname, '..', 'protocol', 'schema', 'agent-commerce.schema.json');
 const CRAWL_CRON = process.env.CRAWL_CRON || '*/15 * * * *';
-
-const ajv = new Ajv({ allErrors: true, strict: false });
-addFormats(ajv);
-const schema = JSON.parse(fs.readFileSync(SCHEMA_PATH, 'utf8'));
-const validateDiscoveryFile = ajv.compile(schema);
 
 async function crawlDomain(domain) {
   const url = `${domain}/.well-known/agent-commerce.json`;
@@ -34,8 +27,8 @@ async function crawlDomain(domain) {
       return [];
     }
     const doc = await res.json();
-    if (!validateDiscoveryFile(doc)) {
-      const errors = ajv.errorsText(validateDiscoveryFile.errors, { separator: '; ' });
+    const { valid, errors } = validateDiscoveryFile(doc);
+    if (!valid) {
       console.log(`[skip] ${domain} — failed schema validation: ${errors}`);
       return [];
     }

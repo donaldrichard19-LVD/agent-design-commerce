@@ -19,3 +19,11 @@ services:
         value: "0"
       - key: BASE_URL
         value: https://agent-commerce-gate-kit.onrender.com
+
+  - type: web
+    name: agent-commerce-registry-submit
+    runtime: node
+    rootDir: registry
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run serve
