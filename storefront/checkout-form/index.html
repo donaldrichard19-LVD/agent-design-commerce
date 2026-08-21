@@ -14,6 +14,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WCAG AA Accessible Multi-Step Checkout Form — React + Tailwind Component">
 <meta name="twitter:description" content="A WCAG AA accessible, keyboard-navigable multi-step checkout form component for React + Tailwind projects. $10.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMTMiIHk9IjkiIHdpZHRoPSIzOCIgaGVpZ2h0PSIxNSIgcng9IjcuNSIgZmlsbD0iIzFBNzNFOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTcgMzIgMTYuNSkiLz48cmVjdCB4PSI5IiB5PSIyNSIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjE1IiByeD0iNy41IiBmaWxsPSIjMEU5RjZFIiB0cmFuc2Zvcm09InJvdGF0ZSg0IDMyIDMyLjUpIi8+PHJlY3QgeD0iMTYiIHk9IjQxIiB3aWR0aD0iMzQiIGhlaWdodD0iMTUiIHJ4PSI3LjUiIGZpbGw9IiNDNzdEMEEiIHRyYW5zZm9ybT0icm90YXRlKC01IDMyIDQ4LjUpIi8+PC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -80,7 +81,8 @@
     max-width: 1080px; margin: 0 auto; height: 100%;
     display: flex; align-items: center; padding: 0 32px; gap: 32px;
   }
-  .wordmark { font-family: "Newsreader", serif; font-size: 19px; font-weight: 600; letter-spacing: -0.03em; }
+  .wordmark { font-family: "Newsreader", serif; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+  .brand-lockup { display: flex; align-items: center; gap: 10px; }
   .nav-links { flex: 1; display: flex; gap: 24px; font-size: 15px; color: var(--text-secondary); }
   .nav-links a { color: var(--text-secondary); }
   .nav-links a:hover { color: var(--blue-700); }
@@ -155,7 +157,14 @@
 
 <div class="header">
   <div class="header-inner">
-    <div class="wordmark">Open Commerce Stack</div>
+    <div class="brand-lockup">
+      <svg width="40" height="40" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+      </svg>
+      <div class="wordmark">Open Commerce Stack</div>
+    </div>
     <div class="nav-links">
       <a href="/">Components</a>
       <a href="mailto:priya@example.com">Sellers</a>
