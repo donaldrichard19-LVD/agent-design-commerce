@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://agent-commerce.dev/schema/component-detail.schema.json",
+  "$id": "https://open-commerce.dev/schema/component-detail.schema.json",
   "title": "Component Detail",
   "description": "Fetched from a component's detail_url before purchase. Gives an agent enough to evaluate fit without exposing the paid asset.",
   "type": "object",
