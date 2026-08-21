@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://checkout-form-product.vercel.app/sitemap.xml

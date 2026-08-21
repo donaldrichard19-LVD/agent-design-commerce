@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>React + Tailwind Design Components by Priya Ramesh — Accessible, Agent-Purchasable</title>
+<meta name="description" content="Accessible React + Tailwind components — WCAG AA checkout forms, keyboard-first command palettes — by Priya Ramesh, ex-Shopify design systems lead. $10 each, purchasable by AI agents.">
+<link rel="canonical" href="https://checkout-form-product.vercel.app/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="React + Tailwind Design Components by Priya Ramesh">
+<meta property="og:description" content="Accessible React + Tailwind components — WCAG AA checkout forms, keyboard-first command palettes. $10 each, purchasable by AI agents.">
+<meta property="og:url" content="https://checkout-form-product.vercel.app/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React + Tailwind Design Components by Priya Ramesh">
+<meta name="twitter:description" content="Accessible React + Tailwind components. $10 each, purchasable by AI agents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface-page: #F5F7FA;
+    --surface-card: #FFFFFF;
+    --surface-sunken: #EDF0F5;
+    --surface-hover: #F2F5F9;
+    --border-subtle: #DFE4EC;
+    --text-primary: #161C25;
+    --text-secondary: #55606F;
+    --text-tertiary: #737F92;
+    --blue-100: #DCE9FC;
+    --blue-500: #1A73E8;
+    --blue-700: #1552B0;
+    --radius-lg: 12px;
+    --radius-sm: 6px;
+    --shadow-sm: 0 1px 2px rgba(22,28,37,.06), 0 1px 1px rgba(22,28,37,.04);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  a { color: var(--blue-500); text-decoration: none; }
+  a:hover { text-decoration: underline; color: var(--blue-700); }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 32px 88px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  /* Header block */
+  .header-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+  }
+
+  h1 {
+    font-family: "Newsreader", serif;
+    font-size: clamp(22px, 5vw, 28px);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    line-height: 1.25;
+    margin: 0 0 8px;
+  }
+
+  .byline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--blue-100);
+    color: var(--blue-700);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .byline-name { color: var(--text-primary); font-weight: 500; }
+  .byline-role { color: var(--text-tertiary); font-size: 14px; }
+
+  .company-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 2px;
+  }
+
+  .company-badge {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--surface-sunken);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .intro {
+    font-size: 17px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    max-width: 620px;
+    margin: 0;
+  }
+
+  /* Component cards */
+  .components {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    display: block;
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 24px 28px;
+    color: inherit;
+  }
+
+  .card:hover { text-decoration: none; border-color: var(--border-subtle); }
+
+  .card h2 {
+    font-family: "Newsreader", serif;
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0 0 14px;
+    color: var(--text-primary);
+  }
+
+  .card .desc {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    white-space: nowrap;
+    transition: background-color 120ms ease;
+  }
+
+  .card:hover .tag { background: var(--surface-hover); }
+
+  .price {
+    font-family: "Newsreader", serif;
+    font-size: 20px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-primary);
+  }
+
+  /* Discovery footnote */
+  .agent-note {
+    background: var(--surface-sunken);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    font-size: 13px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+  }
+
+  .agent-note code {
+    font-family: "JetBrains Mono", monospace;
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header-block">
+    <div class="eyebrow">Design Components</div>
+    <h1>React + Tailwind Components</h1>
+    <div class="byline">
+      <span class="avatar">PR</span>
+      <a class="byline-name" href="mailto:priya@example.com">Priya Ramesh</a>
+      <span class="byline-role">— Ex-Shopify design systems lead</span>
+      <span class="company-badges">
+        <span class="company-badge" title="Shopify">S</span>
+      </span>
+    </div>
+    <p class="intro">
+      Accessible, drop-in React + Tailwind components. Each one is $10, non-exclusive
+      license, and discoverable and purchasable directly by AI agents via the
+      <a href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json">agent commerce protocol</a>,
+      not just by humans browsing this page.
+    </p>
+  </div>
+
+  <div class="components">
+    <a class="card" href="/checkout-form/">
+      <h2>Multi-step Checkout Form</h2>
+      <p class="desc">A WCAG AA accessible, keyboard-navigable three-step checkout form with inline validation and a progress indicator.</p>
+      <div class="tags">
+        <span class="tag">forms</span>
+        <span class="tag">WCAG AA</span>
+        <span class="tag">keyboard navigable</span>
+      </div>
+      <div class="price">$10.00</div>
+    </a>
+
+    <a class="card" href="/command-palette/">
+      <h2>Command Palette (Cmd+K)</h2>
+      <p class="desc">A keyboard-first Cmd+K command palette built on cmdk, with fuzzy search and grouped results.</p>
+      <div class="tags">
+        <span class="tag">navigation</span>
+        <span class="tag">cmdk</span>
+        <span class="tag">keyboard-first</span>
+      </div>
+      <div class="price">$10.00</div>
+    </a>
+  </div>
+
+  <div class="agent-note">
+    Every component page here carries a machine-readable <code>schema.org</code> Product/Offer
+    block plus an <code>agentCommerce</code> extension, describing price, license, and how to
+    purchase and download it programmatically — readable by search crawlers and AI agents,
+    invisible to human visitors.
+  </div>
+
+</div>
+
+</body>
+</html>

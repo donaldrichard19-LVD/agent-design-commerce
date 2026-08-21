@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keyboard-First Command Palette (Cmd+K) — React + Tailwind Component ($10)</title>
+<meta name="description" content="A keyboard-first Cmd+K command palette component for React + Tailwind apps, built on cmdk with fuzzy search and grouped results. WCAG AA, $10, purchasable by AI agents.">
+<link rel="canonical" href="https://checkout-form-product.vercel.app/command-palette">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="product">
+<meta property="og:title" content="Keyboard-First Command Palette (Cmd+K) — React + Tailwind Component">
+<meta property="og:description" content="A keyboard-first Cmd+K command palette component for React + Tailwind apps, built on cmdk with fuzzy search and grouped results. $10.">
+<meta property="og:url" content="https://checkout-form-product.vercel.app/command-palette">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Keyboard-First Command Palette (Cmd+K) — React + Tailwind Component">
+<meta name="twitter:description" content="A keyboard-first Cmd+K command palette component for React + Tailwind apps, built on cmdk. $10.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Command Palette",
+  "description": "A keyboard-first Cmd+K command palette component with fuzzy search and grouped results, for React + Tailwind projects.",
+  "offers": {
+    "@type": "Offer",
+    "price": "10.00",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://checkout-form-product.vercel.app/command-palette"
+  },
+  "agentCommerce": {
+    "protocol_version": "0.1",
+    "component_id": "cmp_9b3d2e",
+    "seller": "Priya Ramesh",
+    "purchase_endpoint": "https://agent-commerce-gate-kit.onrender.com/api/purchase",
+    "detail_url": "https://agent-commerce-gate-kit.onrender.com/api/components/cmp_9b3d2e",
+    "license_type": "non-exclusive",
+    "confirmed_by_human_required": true
+  }
+}
+</script>
+<style>
+  :root {
+    --surface-page: #F5F7FA;
+    --surface-card: #FFFFFF;
+    --surface-sunken: #EDF0F5;
+    --surface-accent-soft: #DCE9FC;
+    --border-subtle: #DFE4EC;
+    --text-primary: #161C25;
+    --text-secondary: #55606F;
+    --text-tertiary: #737F92;
+    --blue-100: #DCE9FC;
+    --blue-500: #1A73E8;
+    --blue-700: #1552B0;
+    --green-100: #E1F5EA;
+    --green-500: #1E9E5A;
+    --radius-lg: 12px;
+    --radius-sm: 6px;
+    --shadow-sm: 0 1px 2px rgba(22,28,37,.06), 0 1px 1px rgba(22,28,37,.04);
+    --shadow-lg: 0 12px 24px -8px rgba(22,28,37,.14), 0 4px 8px -2px rgba(22,28,37,.06);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  a { color: var(--blue-500); text-decoration: none; }
+  a:hover { text-decoration: underline; color: var(--blue-700); }
+  .header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-subtle);
+    height: 64px;
+  }
+  .header-inner {
+    max-width: 1080px; margin: 0 auto; height: 100%;
+    display: flex; align-items: center; padding: 0 32px; gap: 32px;
+  }
+  .wordmark { font-family: "Newsreader", serif; font-size: 19px; font-weight: 600; letter-spacing: -0.03em; }
+  .nav-links { flex: 1; display: flex; gap: 24px; font-size: 15px; color: var(--text-secondary); }
+  .nav-links a { color: var(--text-secondary); }
+  .nav-links a:hover { color: var(--blue-700); }
+  .ghost-btn {
+    border: 1px solid var(--border-subtle); background: transparent; border-radius: var(--radius-sm);
+    padding: 7px 14px; font-size: 14px; font-family: inherit; color: var(--text-primary); cursor: pointer;
+  }
+  .ghost-btn:hover { transform: translateY(-1px); filter: brightness(0.95); }
+  .body-wrap { max-width: 1080px; margin: 0 auto; padding: 48px 32px 88px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 40px; align-items: start; }
+  .main-col { display: flex; flex-direction: column; gap: 32px; }
+  .aside-col { position: sticky; top: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .header-block { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+  .category-label { font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--blue-500); }
+  h1 { font-family: "Newsreader", serif; font-size: 42px; font-weight: 400; letter-spacing: -0.022em; line-height: 1.06; margin: 0; }
+  .byline { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-tertiary); }
+  .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--blue-100); color: var(--blue-700); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: "Instrument Sans", sans-serif; }
+  .byline a { color: var(--text-primary); font-weight: 500; }
+  .description { font-size: 17px; color: var(--text-secondary); line-height: 1.55; max-width: 560px; margin: 0; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag { height: 26px; display: flex; align-items: center; border: 1px solid var(--border-subtle); background: var(--surface-card); font-size: 13px; padding: 0 10px; border-radius: var(--radius-sm); color: var(--text-secondary); }
+  .card { background: var(--surface-card); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; }
+  .card-header { display: flex; align-items: baseline; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid var(--border-subtle); }
+  .card-header .titles { display: flex; flex-direction: column; gap: 2px; }
+  .card-title { font-size: 15px; font-weight: 600; }
+  .card-subtitle { font-size: 13px; color: var(--text-tertiary); font-family: "JetBrains Mono", monospace; }
+  .copy-btn { display: flex; align-items: center; gap: 6px; border: 1px solid var(--border-subtle); background: transparent; border-radius: var(--radius-sm); padding: 6px 12px; font-size: 13px; font-family: "Instrument Sans", sans-serif; color: var(--text-secondary); cursor: pointer; }
+  .copy-btn:hover { transform: translateY(-1px); filter: brightness(0.97); }
+  .copy-btn:active { transform: scale(0.985); }
+  pre { margin: 0; padding: 20px 24px; background: var(--surface-sunken); font-family: "JetBrains Mono", monospace; font-size: 13px; line-height: 1.75; color: var(--text-secondary); overflow-x: auto; }
+  .dep-row { display: flex; align-items: center; gap: 10px; padding: 14px 24px; border-top: 1px solid var(--border-subtle); }
+  .dep-row:first-child { border-top: none; }
+  .dep-icon { color: var(--text-tertiary); flex-shrink: 0; }
+  .dep-name { font-family: "JetBrains Mono", monospace; font-size: 15px; }
+  .dep-version { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--text-tertiary); }
+  .dep-note { margin-left: auto; font-size: 13px; color: var(--text-tertiary); }
+  .card-body { padding: 20px 24px; }
+  .card-body p.intro { font-size: 15px; color: var(--text-secondary); margin: 0 0 20px; }
+  .step { display: flex; gap: 12px; margin-bottom: 16px; }
+  .step:last-of-type { margin-bottom: 0; }
+  .step-badge { width: 22px; height: 22px; border-radius: 50%; background: var(--blue-100); color: var(--blue-700); font-family: "JetBrains Mono", monospace; font-size: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-title { font-size: 15px; font-weight: 700; margin: 0 0 2px; }
+  .step-desc { font-size: 13px; color: var(--text-tertiary); margin: 0; }
+  .divider { border: none; border-top: 1px solid var(--border-subtle); margin: 20px 0; }
+  .fine-print { font-size: 12px; color: var(--text-tertiary); }
+  .price-card { padding: 24px; box-shadow: var(--shadow-lg); }
+  .price-row { display: flex; align-items: baseline; gap: 8px; }
+  .price { font-family: "Newsreader", serif; font-size: 32px; font-weight: 500; }
+  .price-label { font-size: 13px; color: var(--text-tertiary); }
+  .sub-line { font-size: 13px; color: var(--text-tertiary); margin: 4px 0 0; }
+  .disclaimer { font-size: 12px; color: var(--text-tertiary); text-align: center; margin: 16px 0 0; }
+  .spec-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .spec-row { display: flex; justify-content: space-between; font-size: 13px; }
+  .spec-label { color: var(--text-tertiary); }
+  .spec-value { color: var(--text-primary); }
+  .trust-card { padding: 20px 24px; }
+  .badge-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; }
+  .badge.success { background: var(--green-100); color: var(--green-500); }
+  .badge.accent { background: var(--blue-100); color: var(--blue-700); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .caption { font-size: 13px; color: var(--text-tertiary); margin: 10px 0 0; }
+  .sibling-note { max-width: 1080px; margin: 0 auto; padding: 0 32px 48px; font-size: 13px; color: var(--text-tertiary); }
+  .sibling-note a { color: var(--blue-500); }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .aside-col { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="wordmark">Agent Commerce Stack</div>
+    <div class="nav-links">
+      <a href="/">Components</a>
+      <a href="mailto:priya@example.com">Sellers</a>
+      <a href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json">Protocol</a>
+      <a href="https://github.com/donaldrichard19-LVD/agent-design-commerce">Docs</a>
+    </div>
+    <button class="ghost-btn" type="button">Sign in</button>
+  </div>
+</div>
+
+<div class="body-wrap">
+  <div class="grid">
+
+    <div class="main-col">
+
+      <div class="header-block">
+        <div class="category-label">Navigation · React + Tailwind</div>
+        <h1>Command Palette (Cmd+K)</h1>
+        <div class="byline">
+          <span class="avatar">PR</span>
+          <span><a href="mailto:priya@example.com">Priya Ramesh</a> — design systems lead</span>
+        </div>
+        <p class="description">A keyboard-first Cmd+K command palette built on cmdk, with fuzzy search and grouped results — drop it into an existing app for fast, keyboard-driven navigation.</p>
+        <div class="tags">
+          <span class="tag">keyboard-first</span>
+          <span class="tag">minimal</span>
+          <span class="tag">cmdk</span>
+          <span class="tag">fuzzy search</span>
+          <span class="tag">WCAG AA</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="titles">
+            <div class="card-title">Preview</div>
+            <div class="card-subtitle">CommandPalette.tsx</div>
+          </div>
+          <button class="copy-btn" type="button" onclick="copyCode(this)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+        </div>
+        <pre id="code-block">export function CommandPalette({ commands }) {
+  // cmd+k listener + fuzzy match
+}</pre>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="titles">
+            <div class="card-title">Dependencies</div>
+            <div class="card-subtitle" style="font-family: 'Instrument Sans', sans-serif;">Installed alongside the component</div>
+          </div>
+        </div>
+        <div class="dep-row">
+          <span class="dep-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
+          <span class="dep-name">cmdk</span>
+          <span class="dep-version">^1.0.0</span>
+          <span class="dep-note">command menu primitive</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="titles">
+            <div class="card-title">How purchase works</div>
+            <div class="card-subtitle" style="font-family: 'Instrument Sans', sans-serif;">Agent commerce protocol</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="intro">An AI agent acting on a buyer's behalf can evaluate and purchase this component directly — no human checkout required.</p>
+          <div class="step">
+            <span class="step-badge">1</span>
+            <div><p class="step-title">Agent discovers the listing</p><p class="step-desc">Via this page's structured offer data, or the protocol's discovery file.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-badge">2</span>
+            <div><p class="step-title">Buyer confirms the purchase</p><p class="step-desc">The agent must pass explicit human confirmation before any charge is made.</p></div>
+          </div>
+          <div class="step">
+            <span class="step-badge">3</span>
+            <div><p class="step-title">Component is delivered</p><p class="step-desc">A download token is issued once payment clears.</p></div>
+          </div>
+          <hr class="divider">
+          <p class="fine-print">This page carries a machine-readable <code>schema.org</code> Product/Offer block plus an <code>agentCommerce</code> extension in its <code>&lt;head&gt;</code>.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="aside-col">
+      <div class="card price-card">
+        <div class="price-row">
+          <span class="price">$10.00</span>
+          <span class="price-label">one-time</span>
+        </div>
+        <p class="sub-line">Non-exclusive licence · unlimited projects</p>
+        <p class="disclaimer">Human checkout isn't available on this listing yet.</p>
+        <hr class="divider">
+        <div class="spec-list">
+          <div class="spec-row"><span class="spec-label">Licence</span><span class="spec-value">Non-exclusive</span></div>
+          <div class="spec-row"><span class="spec-label">Framework</span><span class="spec-value">React + Tailwind</span></div>
+          <div class="spec-row"><span class="spec-label">Styling</span><span class="spec-value">Tailwind CSS</span></div>
+          <div class="spec-row"><span class="spec-label">Updates</span><span class="spec-value">Included</span></div>
+          <div class="spec-row"><span class="spec-label">Published</span><span class="spec-value">Aug 2026</span></div>
+        </div>
+      </div>
+
+      <div class="card trust-card">
+        <div class="badge-row">
+          <span class="badge success"><span class="dot"></span>Verified seller</span>
+          <span class="badge accent">Agent-ready</span>
+        </div>
+        <p class="caption">Source reviewed for install-time side effects. Refundable within 14 days.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sibling-note">
+  Also by Priya Ramesh: <a href="/checkout-form/">WCAG AA Accessible Multi-Step Checkout Form</a> — a React + Tailwind component, $10.
+</div>
+
+<script>
+function copyCode(btn) {
+  const text = document.getElementById('code-block').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.innerHTML;
+    btn.innerHTML = 'Copied!';
+    setTimeout(() => btn.innerHTML = original, 1500);
+  });
+}
+</script>
+
+</body>
+</html>
