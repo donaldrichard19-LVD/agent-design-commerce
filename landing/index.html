@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Commerce Stack — Let agents buy what you've made</title>
+<meta name="description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it. No migration, no dashboard, no rebuilding what already works.">
+<link rel="canonical" href="https://checkout-form-product.vercel.app/">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Open Commerce Stack — Let agents buy what you've made">
+<meta property="og:description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Open Commerce Stack">
+<meta name="twitter:description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMTMiIHk9IjkiIHdpZHRoPSIzOCIgaGVpZ2h0PSIxNSIgcng9IjcuNSIgZmlsbD0iIzFBNzNFOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTcgMzIgMTYuNSkiLz48cmVjdCB4PSI5IiB5PSIyNSIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjE1IiByeD0iNy41IiBmaWxsPSIjMEU5RjZFIiB0cmFuc2Zvcm09InJvdGF0ZSg0IDMyIDMyLjUpIi8+PHJlY3QgeD0iMTYiIHk9IjQxIiB3aWR0aD0iMzQiIGhlaWdodD0iMTUiIHJ4PSI3LjUiIGZpbGw9IiNDNzdEMEEiIHRyYW5zZm9ybT0icm90YXRlKC01IDMyIDQ4LjUpIi8+PC9zdmc+">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface-page: #F5F7FA;
+    --surface-card: #FFFFFF;
+    --surface-sunken: #EDF0F5;
+    --surface-hover: #F2F5F9;
+    --border-subtle: #DFE4EC;
+    --border-default: #CBD3E0;
+    --text-primary: #161C25;
+    --text-secondary: #55606F;
+    --text-tertiary: #737F92;
+    --blue-100: #DCE9FC;
+    --blue-500: #1A73E8;
+    --blue-700: #1552B0;
+    --green-500: #0E9F6E;
+    --amber-500: #C77D0A;
+    --radius-lg: 12px;
+    --radius-md: 8px;
+    --radius-sm: 6px;
+    --shadow-sm: 0 1px 2px rgba(22,28,37,.06), 0 1px 1px rgba(22,28,37,.04);
+    --shadow-lg: 0 4px 10px rgba(22,28,37,.07), 0 16px 32px rgba(22,28,37,.09);
+    --font-serif: "Newsreader", Georgia, serif;
+    --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  a { color: var(--blue-500); text-decoration: none; }
+  a:hover { text-decoration: underline; color: var(--blue-700); }
+
+  .marker {
+    background: rgba(26, 115, 232, 0.24);
+    border-radius: 0.6em 0.4em 0.5em 0.35em;
+    padding: 0.02em 0.18em;
+  }
+
+  section { padding: 72px 32px; }
+  .section-inner { max-width: 1080px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--blue-500); margin: 0 0 12px;
+  }
+  .section-heading {
+    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
+    font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 16px; max-width: 720px;
+  }
+  .section-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; max-width: 620px; margin: 0 0 32px; }
+
+  /* Header */
+  .header {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--surface-card);
+    border-bottom: 1px solid var(--border-subtle);
+    height: 64px;
+  }
+  .header-inner {
+    max-width: 1080px; margin: 0 auto; height: 100%;
+    display: flex; align-items: center; padding: 0 32px; gap: 32px;
+  }
+  .wordmark { font-family: var(--font-serif); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+  .brand-lockup { display: flex; align-items: center; gap: 10px; }
+  .nav-links { flex: 1; display: flex; gap: 24px; font-size: 15px; color: var(--text-secondary); }
+  .nav-links a { color: var(--text-secondary); }
+  .nav-links a:hover { color: var(--blue-700); text-decoration: none; }
+
+  button { font-family: var(--font-sans); cursor: pointer; border-radius: var(--radius-md); transition: transform 80ms ease, filter 120ms ease; border: none; }
+  button:active { transform: scale(0.985); }
+  .btn-primary {
+    background: var(--blue-500); color: #FFFFFF; font-size: 14px; font-weight: 500;
+    padding: 10px 18px; border-radius: var(--radius-sm);
+  }
+  .btn-primary:hover { filter: brightness(0.94); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent; border: 1px solid var(--border-default); color: var(--text-primary);
+    font-size: 14px; font-weight: 500; padding: 9px 17px; border-radius: var(--radius-sm);
+  }
+  .btn-ghost:hover { transform: translateY(-1px); filter: brightness(0.97); }
+  .btn-inverse {
+    background: #FFFFFF; color: var(--text-primary); font-size: 15px; font-weight: 600;
+    padding: 12px 22px; border-radius: var(--radius-sm);
+  }
+  .btn-inverse:hover { filter: brightness(0.96); transform: translateY(-1px); }
+  .btn-outline-inverse {
+    background: transparent; border: 1px solid rgba(255,255,255,0.35); color: #FFFFFF;
+    font-size: 15px; font-weight: 500; padding: 11px 21px; border-radius: var(--radius-sm);
+  }
+  .btn-outline-inverse:hover { background: rgba(255,255,255,0.08); }
+
+  /* Hero */
+  .hero { padding: 80px 32px 96px; }
+  .hero-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) 420px; gap: 56px; align-items: center; }
+  .hero-heading {
+    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.022em; line-height: 1.08;
+    font-size: clamp(32px, 4.6vw, 48px); margin: 14px 0 20px;
+  }
+  .hero-body { font-size: 18px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; max-width: 520px; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+  .hero-footnote { font-size: 13px; color: var(--text-tertiary); }
+
+  .code-panel {
+    background: #161C25;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+  }
+  .code-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .code-panel-title { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.55); }
+  .copy-btn {
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: none;
+    font-size: 12px; padding: 5px 10px; border-radius: 6px; font-family: var(--font-sans);
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.15); }
+  .code-panel pre {
+    margin: 0; padding: 18px 20px; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; color: #DCE9FC;
+  }
+  .code-panel .tok-key { color: #7FB7FF; }
+  .code-panel .tok-str { color: #A8E6C9; }
+  .code-panel .tok-punc { color: rgba(255,255,255,0.4); }
+
+  /* How it works */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .step-card {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm); padding: 24px; display: flex; flex-direction: column; gap: 12px;
+  }
+  .step-num {
+    width: 26px; height: 26px; border-radius: 50%; background: var(--blue-100); color: var(--blue-700);
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    display: flex; align-items: center; justify-content: center; flex: none;
+  }
+  .step-title { font-size: 16px; font-weight: 600; }
+  .step-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* Trust bar */
+  .trust-section { background: var(--surface-card); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
+  .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
+  .trust-item { display: flex; flex-direction: column; gap: 6px; }
+  .trust-lead { font-size: 15px; font-weight: 600; }
+  .trust-detail { font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* For sellers */
+  .sellers-grid { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: 48px; align-items: start; }
+  .checklist { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .checklist li { display: flex; gap: 12px; font-size: 15px; color: var(--text-primary); line-height: 1.5; }
+  .checklist .check {
+    width: 20px; height: 20px; border-radius: 50%; background: var(--green-500); color: #fff;
+    flex: none; display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  }
+
+  .dashboard-preview {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm); overflow: hidden;
+  }
+  .dashboard-preview-header { padding: 16px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; }
+  .dashboard-preview-title { font-size: 13px; font-weight: 600; }
+  .dashboard-badge {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500;
+    padding: 3px 9px; border-radius: 999px; background: #E4F5EA; color: #1B7A3D;
+  }
+  .dashboard-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: #2FA85C; }
+  .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
+  .dashboard-row:last-child { border-bottom: none; }
+  .dashboard-row-name { font-weight: 500; }
+  .dashboard-row-meta { color: var(--text-tertiary); font-size: 12px; margin-top: 2px; }
+  .dashboard-price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+  .dashboard-preview-footer { padding: 12px 18px; }
+  .dashboard-link { font-size: 12.5px; }
+
+  /* For builders */
+  .builders-section { background: #161C25; color: #FFFFFF; }
+  .builders-section .section-body { color: rgba(255,255,255,0.68); }
+  .tool-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+  .tool-pill {
+    font-family: var(--font-mono); font-size: 13px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14); border-radius: var(--radius-sm); padding: 8px 14px; color: #DCE9FC;
+  }
+
+  /* Footer CTA */
+  .footer-cta { background: var(--blue-500); color: #FFFFFF; }
+  .footer-cta-heading {
+    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
+    font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 24px; max-width: 640px;
+  }
+  .footer-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  footer { padding: 40px 32px; }
+  .footer-inner {
+    max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between;
+    align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .footer-links { display: flex; gap: 20px; font-size: 13.5px; color: var(--text-tertiary); flex-wrap: wrap; }
+  .footer-links a { color: var(--text-tertiary); }
+  .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--text-tertiary); }
+
+  @media (max-width: 860px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    .sellers-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 520px) {
+    .trust-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="brand-lockup">
+      <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+      </svg>
+      <div class="wordmark">Open Commerce Stack</div>
+    </div>
+    <div class="nav-links">
+      <a href="#how-it-works">How it works</a>
+      <a href="#for-sellers">For sellers</a>
+      <a href="#for-builders">For builders</a>
+    </div>
+    <a class="btn-primary" href="#for-sellers">Start selling</a>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="section-eyebrow">Commerce is opening up</div>
+      <h1 class="hero-heading"><span class="marker">You</span> made something great. What if an <span class="marker">agent</span> could buy it?</h1>
+      <p class="hero-body">
+        Your next customer might not arrive by clicking through a storefront. They might come through an agent.
+        Add one small snippet to a page you already have, and agents can see what you sell, what it costs, and
+        how to buy it. No migration, no dashboard, no rebuilding what already works.
+      </p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#how-it-works" style="font-size:15px; padding:12px 22px;">Get your snippet</a>
+        <a class="btn-ghost" href="https://checkout-form-product.vercel.app/checkout-form/" style="font-size:15px; padding:11px 21px;" target="_blank" rel="noopener">See it in action</a>
+      </div>
+      <div class="hero-footnote">We're starting with design components — wherever you're starting, there's a place to begin.</div>
+    </div>
+
+    <div class="code-panel">
+      <div class="code-panel-header">
+        <span class="code-panel-title">what an agent reads</span>
+        <button class="copy-btn" type="button" id="hero-copy-btn">Copy</button>
+      </div>
+      <pre id="hero-code"><span class="tok-punc">{</span>
+  <span class="tok-key">"@context"</span><span class="tok-punc">:</span> <span class="tok-str">"https://schema.org"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"@type"</span><span class="tok-punc">:</span> <span class="tok-str">"Product"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"Multi-step Checkout Form"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"offers"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="tok-key">"@type"</span><span class="tok-punc">:</span> <span class="tok-str">"Offer"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"price"</span><span class="tok-punc">:</span> <span class="tok-str">"10.00"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"priceCurrency"</span><span class="tok-punc">:</span> <span class="tok-str">"USD"</span>
+  <span class="tok-punc">},</span>
+  <span class="tok-key">"openCommerce"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
+    <span class="tok-key">"component_id"</span><span class="tok-punc">:</span> <span class="tok-str">"cmp_8f2a1c"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"purchase_endpoint"</span><span class="tok-punc">:</span> <span class="tok-str">"…/purchase"</span><span class="tok-punc">,</span>
+    <span class="tok-key">"license_type"</span><span class="tok-punc">:</span> <span class="tok-str">"non-exclusive"</span>
+  <span class="tok-punc">}</span>
+<span class="tok-punc">}</span></pre>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-heading">Two steps to get ready. Then an agent can buy.</h2>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Add the embed</div>
+        <div class="step-desc">One JSON-LD block in the page you already have. It speaks standard schema.org Product and Offer data, plus a little extra for agents that can read more. If you only do one thing, do this.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Publish your catalog</div>
+        <div class="step-desc">A <code>.well-known/agent-commerce.json</code> that lists everything you sell in a single fetch. Now an agent can see your whole shelf, not just the page it landed on.</div>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">An agent buys</div>
+        <div class="step-desc">It finds what it needs, a person confirms the purchase, and Stripe pays out to your account directly. Nothing sits between you and getting paid.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-section">
+  <div class="section-inner">
+    <div class="trust-grid">
+      <div class="trust-item">
+        <div class="trust-lead">A person always says yes.</div>
+        <div class="trust-detail">Every purchase carries <code>confirmed_by_human</code>, so an agent can't complete a charge on its own.</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-lead">Money goes straight to you.</div>
+        <div class="trust-detail">Payments run as Stripe Connect destination charges into your own account, and we never touch card data.</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-lead">Nothing completes on a hunch.</div>
+        <div class="trust-detail">A purchase is only final on a signature-checked <code>payment_intent.succeeded</code> webhook.</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-lead">What you sell stays yours.</div>
+        <div class="trust-detail">Download links are single-use tokens that expire, not permanent URLs.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="for-sellers">
+  <div class="section-inner">
+    <div class="sellers-grid">
+      <div>
+        <div class="section-eyebrow">For sellers</div>
+        <h2 class="section-heading">A new kind of <span class="marker">customer</span> is finding its way to you. We'll help you get <span class="marker">ready</span>.</h2>
+        <ul class="checklist">
+          <li><span class="check">✓</span> Publish what you've made — name, category, framework, price, code</li>
+          <li><span class="check">✓</span> Gate it or open it up whenever you like — you stay in control</li>
+          <li><span class="check">✓</span> Connect Stripe once, and purchases pay out to you directly — no card handling on your end</li>
+          <li><span class="check">✓</span> See exactly what agents read about you, in your own discovery file</li>
+        </ul>
+        <a class="btn-primary" style="font-size:15px; padding:12px 22px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
+      </div>
+
+      <div class="dashboard-preview">
+        <div class="dashboard-preview-header">
+          <span class="dashboard-preview-title">Your components</span>
+          <span class="dashboard-badge"><span class="dot"></span>Stripe connected</span>
+        </div>
+        <div class="dashboard-row">
+          <div>
+            <div class="dashboard-row-name">Multi-step checkout form</div>
+            <div class="dashboard-row-meta">forms · react-tailwind</div>
+          </div>
+          <div class="dashboard-price">$10.00</div>
+        </div>
+        <div class="dashboard-row">
+          <div>
+            <div class="dashboard-row-name">Command palette</div>
+            <div class="dashboard-row-meta">navigation · react-tailwind</div>
+          </div>
+          <div class="dashboard-price">$10.00</div>
+        </div>
+        <div class="dashboard-preview-footer">
+          <a class="dashboard-link" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">See the live dashboard →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="for-builders" class="builders-section">
+  <div class="section-inner">
+    <div class="section-eyebrow" style="color:#7FB7FF;">For builders</div>
+    <h2 class="section-heading" style="color:#FFFFFF;"><span class="marker">You're</span> building with agents. Let's help you find what you need to get <span class="marker">launch</span> ready.</h2>
+    <p class="section-body">Your agent can already understand, decide, and act. When it's ready to buy something, four tools are all it takes.</p>
+    <div class="tool-pills">
+      <span class="tool-pill">search_components</span>
+      <span class="tool-pill">get_component</span>
+      <span class="tool-pill">purchase_component</span>
+      <span class="tool-pill">get_asset</span>
+    </div>
+    <div style="margin-top: 28px;">
+      <a class="btn-outline-inverse" href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json" target="_blank" rel="noopener">See a live discovery file</a>
+    </div>
+  </div>
+</section>
+
+<section class="footer-cta">
+  <div class="section-inner">
+    <h2 class="footer-cta-heading">You've created something great. We'll help with the commerce part.</h2>
+    <div class="footer-cta-actions">
+      <a class="btn-inverse" href="#how-it-works">Get your snippet</a>
+      <a class="btn-outline-inverse" href="#for-sellers">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+      </svg>
+      Open Commerce Stack
+    </div>
+    <div class="footer-links">
+      <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">Storefront</a>
+      <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Seller dashboard</a>
+      <a href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json" target="_blank" rel="noopener">Protocol</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('hero-copy-btn').addEventListener('click', function () {
+    const text = document.getElementById('hero-code').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('hero-copy-btn');
+      const original = btn.textContent;
+      btn.textContent = 'Copied';
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  });
+</script>
+
+</body>
+</html>
