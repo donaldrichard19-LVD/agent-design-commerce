@@ -25,7 +25,7 @@
       ],
       "price_usd": 10,
       "gated": true,
-      "sold_count": 341,
+      "sold_count": 343,
       "license_type": "non-exclusive",
       "full_description": "A three-step checkout form with inline validation, a progress indicator, and keyboard-accessible navigation between steps.",
       "dependencies": [
@@ -41,19 +41,15 @@
         "wcag_level": "AA",
         "keyboard_nav": true
       },
-      "code_preview_snippet": "export function CheckoutForm({ onSubmit }) {\n  const [step, setStep] = useState(1);\n  // ...\n}",
+      "code_preview_snippet": "export function CheckoutForm({ onSubmit }: CheckoutFormProps) {\n  const [step, setStep] = useState(1);\n  const { register, handleSubmit, setError, formState: { errors } } = useForm<CheckoutFormData>();\n  // zod-validated, labeled fields, focus management between steps\n}",
       "compatibility_score": 0.94,
       "files": [
         {
           "path": "CheckoutForm.tsx",
-          "content": "// CheckoutForm.tsx\nimport { useState } from 'react';\nimport { useForm } from 'react-hook-form';\n\nexport function CheckoutForm({ onSubmit }) {\n  const [step, setStep] = useState(1);\n  const { register, handleSubmit, formState } = useForm();\n\n  return (\n    <form onSubmit={handleSubmit(onSubmit)} className=\"max-w-md mx-auto space-y-4\">\n      {step === 1 && (\n        <fieldset className=\"space-y-2\">\n          <legend className=\"font-medium\">Shipping</legend>\n          <input {...register('address')} placeholder=\"Address\" className=\"w-full border rounded-md px-3 py-2\" />\n        </fieldset>\n      )}\n      {step === 2 && (\n        <fieldset className=\"space-y-2\">\n          <legend className=\"font-medium\">Payment</legend>\n          <input {...register('card')} placeholder=\"Card number\" className=\"w-full border rounded-md px-3 py-2\" />\n        </fieldset>\n      )}\n      {step === 3 && (\n        <fieldset className=\"space-y-2\">\n          <legend className=\"font-medium\">Review</legend>\n          <button type=\"submit\" className=\"w-full bg-black text-white rounded-md py-2\">Place order</button>\n        </fieldset>\n      )}\n      <div className=\"flex justify-between\">\n        {step > 1 && <button type=\"button\" onClick={() => setStep(step - 1)}>Back</button>}\n        {step < 3 && <button type=\"button\" onClick={() => setStep(step + 1)}>Next</button>}\n      </div>\n    </form>\n  );\n}\n"
-        },
-        {
-          "path": "CheckoutForm.module.css",
-          "content": "/* CheckoutForm.module.css */\n.progress {\n  display: flex;\n  gap: 8px;\n}\n"
+          "content": "// CheckoutForm.tsx\nimport { useEffect, useRef, useState } from 'react';\nimport { useForm } from 'react-hook-form';\nimport { z } from 'zod';\n\nconst checkoutSchema = z.object({\n  address: z.string().min(1, 'Address is required'),\n  card: z.string().min(1, 'Card number is required'),\n});\n\ntype CheckoutFormData = z.infer<typeof checkoutSchema>;\n\ninterface CheckoutFormProps {\n  onSubmit: (data: CheckoutFormData) => void;\n}\n\nexport function CheckoutForm({ onSubmit }: CheckoutFormProps) {\n  const [step, setStep] = useState(1);\n  const { register, handleSubmit, setError, formState: { errors } } = useForm<CheckoutFormData>();\n  const stepHeadingRef = useRef<HTMLLegendElement>(null);\n\n  useEffect(() => {\n    stepHeadingRef.current?.focus();\n  }, [step]);\n\n  const onValidSubmit = (data: CheckoutFormData) => {\n    const result = checkoutSchema.safeParse(data);\n    if (!result.success) {\n      for (const issue of result.error.issues) {\n        setError(issue.path[0] as keyof CheckoutFormData, { message: issue.message });\n      }\n      return;\n    }\n    onSubmit(result.data);\n  };\n\n  return (\n    <form onSubmit={handleSubmit(onValidSubmit)} className=\"max-w-md mx-auto space-y-4\">\n      <div aria-live=\"polite\" className=\"sr-only\">Step {step} of 3</div>\n      {step === 1 && (\n        <fieldset className=\"space-y-2\">\n          <legend ref={stepHeadingRef} tabIndex={-1} className=\"font-medium outline-none\">Shipping</legend>\n          <label htmlFor=\"address\" className=\"block text-sm font-medium\">Address</label>\n          <input id=\"address\" {...register('address')} className=\"w-full border rounded-md px-3 py-2\" />\n          {errors.address && <p role=\"alert\" className=\"text-sm text-red-600\">{errors.address.message}</p>}\n        </fieldset>\n      )}\n      {step === 2 && (\n        <fieldset className=\"space-y-2\">\n          <legend ref={stepHeadingRef} tabIndex={-1} className=\"font-medium outline-none\">Payment</legend>\n          <label htmlFor=\"card\" className=\"block text-sm font-medium\">Card number</label>\n          <input id=\"card\" {...register('card')} className=\"w-full border rounded-md px-3 py-2\" />\n          {errors.card && <p role=\"alert\" className=\"text-sm text-red-600\">{errors.card.message}</p>}\n        </fieldset>\n      )}\n      {step === 3 && (\n        <fieldset className=\"space-y-2\">\n          <legend ref={stepHeadingRef} tabIndex={-1} className=\"font-medium outline-none\">Review</legend>\n          <button\n            type=\"submit\"\n            className=\"w-full text-white rounded-md py-2\"\n            style={{ backgroundColor: 'var(--color-brand-primary, #000000)' }}\n          >\n            Place order\n          </button>\n        </fieldset>\n      )}\n      <div className=\"flex justify-between\">\n        {step > 1 && <button type=\"button\" onClick={() => setStep(step - 1)}>Back</button>}\n        {step < 3 && <button type=\"button\" onClick={() => setStep(step + 1)}>Next</button>}\n      </div>\n    </form>\n  );\n}\n"
         }
       ],
-      "install_instructions": "npm install react-hook-form zod"
+      "install_instructions": "npm install react-hook-form zod\n\nRequires Tailwind CSS already configured in your project (this component uses Tailwind utility classes; installing react-hook-form and zod alone will not style it)."
     },
     {
       "component_id": "cmp_9b3d2e",
@@ -66,7 +62,7 @@
       ],
       "price_usd": 10,
       "gated": true,
-      "sold_count": 119,
+      "sold_count": 121,
       "license_type": "non-exclusive",
       "full_description": "A keyboard-first command palette (cmd+k) with fuzzy search and grouped results.",
       "dependencies": [
@@ -80,15 +76,15 @@
         "wcag_level": "AA",
         "keyboard_nav": true
       },
-      "code_preview_snippet": "export function CommandPalette({ commands }) {\n  // cmd+k listener + fuzzy match\n}",
+      "code_preview_snippet": "export function CommandPalette({ commands, open, onOpenChange }: CommandPaletteProps) {\n  // typed props, styled overlay (color.surface.overlay) + rounded panel (radius.lg)\n}",
       "compatibility_score": 0.89,
       "files": [
         {
           "path": "CommandPalette.tsx",
-          "content": "// CommandPalette.tsx\nimport { Command } from 'cmdk';\n\nexport function CommandPalette({ commands, open, onOpenChange }) {\n  return (\n    <Command.Dialog open={open} onOpenChange={onOpenChange} label=\"Command palette\">\n      <Command.Input placeholder=\"Type a command...\" />\n      <Command.List>\n        {commands.map((c) => (\n          <Command.Item key={c.id} onSelect={c.action}>{c.label}</Command.Item>\n        ))}\n      </Command.List>\n    </Command.Dialog>\n  );\n}\n"
+          "content": "// CommandPalette.tsx\nimport { Command } from 'cmdk';\n\nexport interface CommandPaletteCommand {\n  id: string;\n  label: string;\n  action: () => void;\n}\n\ninterface CommandPaletteProps {\n  commands: CommandPaletteCommand[];\n  open: boolean;\n  onOpenChange: (open: boolean) => void;\n}\n\nexport function CommandPalette({ commands, open, onOpenChange }: CommandPaletteProps) {\n  return (\n    <Command.Dialog\n      open={open}\n      onOpenChange={onOpenChange}\n      label=\"Command palette\"\n      overlayClassName=\"fixed inset-0 bg-[var(--color-surface-overlay,rgba(0,0,0,0.4))]\"\n      contentClassName=\"rounded-lg\"\n    >\n      <Command.Input placeholder=\"Type a command...\" />\n      <Command.List>\n        {commands.map((c) => (\n          <Command.Item key={c.id} onSelect={c.action}>{c.label}</Command.Item>\n        ))}\n      </Command.List>\n    </Command.Dialog>\n  );\n}\n"
         }
       ],
-      "install_instructions": "npm install cmdk"
+      "install_instructions": "npm install cmdk\n\nRequires Tailwind CSS already configured in your project for the overlay/radius styling (cmdk itself ships unstyled)."
     }
   ],
   "sales": [
@@ -133,6 +129,54 @@
       "download_token": "dl_435647bfd2db864e",
       "download_token_expires_at": "2026-08-21T02:51:01.460Z",
       "completed_at": "2026-08-21T02:36:01.460Z"
+    },
+    {
+      "transaction_id": "pi_3U6tm2DO6LUr92PK1krzE0Li",
+      "dedupe_key": "975857271b58ca6a1f06af09d7b37d77b9ca6be4b7afb8cf3ce9b31baa5cf888",
+      "component_id": "cmp_8f2a1c",
+      "buyer_token": "tok_ws5_checkout",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T14:50:27.137Z",
+      "download_token": "dl_d609ce1dde5983d9",
+      "download_token_expires_at": "2026-08-21T15:05:27.501Z",
+      "completed_at": "2026-08-21T14:50:27.501Z"
+    },
+    {
+      "transaction_id": "pi_3U6tnNDO6LUr92PK2PyyhFqV",
+      "dedupe_key": "41f9d77256fbce4f9280490008ceb62a12247d450b08267998e6c449f7d4c574",
+      "component_id": "cmp_9b3d2e",
+      "buyer_token": "tok_ws5_checkout",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T14:51:49.852Z",
+      "download_token": "dl_90204b897ec832dc",
+      "download_token_expires_at": "2026-08-21T15:06:50.121Z",
+      "completed_at": "2026-08-21T14:51:50.121Z"
+    },
+    {
+      "transaction_id": "pi_3U6u6iDO6LUr92PK2XrKRFA2",
+      "dedupe_key": "f7aaf7b383c976a09799311ed41b01a96e0a60bf9429d8b7f72a83059da4ba52",
+      "component_id": "cmp_8f2a1c",
+      "buyer_token": "tok_ws5_verify2",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T15:11:49.167Z",
+      "download_token": "dl_042def9b6a1c39f8",
+      "download_token_expires_at": "2026-08-21T15:26:49.455Z",
+      "completed_at": "2026-08-21T15:11:49.455Z"
+    },
+    {
+      "transaction_id": "pi_3U6u6kDO6LUr92PK2FBLkx8Q",
+      "dedupe_key": "79a63ecbb1a7ca43895d25be7b4ba2315bde4dfdfec4d9c1cf2d080aba862376",
+      "component_id": "cmp_9b3d2e",
+      "buyer_token": "tok_ws5_verify2",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T15:11:50.932Z",
+      "download_token": "dl_2b0e5d064c3c5676",
+      "download_token_expires_at": "2026-08-21T15:26:51.217Z",
+      "completed_at": "2026-08-21T15:11:51.217Z"
     }
   ]
 }

@@ -13,5 +13,15 @@
     "stripe_customer_id": "cus_V6wBDgec3i8gHI",
     "stripe_payment_method_id": "pm_1U6iIvDO6LUr92PKp6agmhyL",
     "registered_at": "2026-08-21T02:35:37.978Z"
+  },
+  "tok_ws5_checkout": {
+    "stripe_customer_id": "cus_V781uezeewdnmx",
+    "stripe_payment_method_id": "pm_1U6tlmDO6LUr92PKBb94aJFE",
+    "registered_at": "2026-08-21T14:50:10.704Z"
+  },
+  "tok_ws5_verify2": {
+    "stripe_customer_id": "cus_V78Nr6Q3KdTfN3",
+    "stripe_payment_method_id": "pm_1U6u6aDO6LUr92PKjZoxJtS7",
+    "registered_at": "2026-08-21T15:11:41.372Z"
   }
 }

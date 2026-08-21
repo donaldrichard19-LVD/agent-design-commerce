@@ -126,6 +126,27 @@ Workstream 1 is now fully validated end to end, including the one gap flagged ab
 
 **Production (`agent-commerce-gate-kit.onrender.com`), not just local, is now live-validated too.** Deploying the new connected-account ID without also updating Render's `STRIPE_SECRET_KEY`/`STRIPE_PUBLISHABLE_KEY` (set directly in Render's dashboard, not synced from `render.yaml`) briefly broke production purchases with `No such destination` — the discovery file advertised a connected account the configured key couldn't reach. There was also no webhook endpoint registered against the live URL at all, which would have left completions stuck pending indefinitely even with the right key. Both are fixed: a real webhook endpoint (`we_1U6ikHDO6LUr92PKqvLicyQG`) is registered for `payment_intent.succeeded`/`payment_intent.payment_failed`, Render's env vars match the claimed sandbox, and a real `purchase_component` call against the live URL completed on the first attempt — `payment_intent.succeeded` → `completeSale` → asset delivered via `GET /api/download/:token`, all over the public internet, not localhost.
 
+## Workstream 5 dry run: delivered-code quality (seed components)
+
+Workstream 5's actual acceptance criterion is "for each real component from workstream 2" — blocked, same as workstream 2's own recruiting step, since no real designers exist yet. What's done here is a dry run of the *validation process itself* against the two seed/demo components, since they're what currently stands in as the project's reference example.
+
+Method: pulled each component through the real MCP chain (`search_components` → `get_component` → `purchase_component` → `get_asset`, real Stripe test-mode charge), then dropped the delivered files into a fresh `npm create vite -- --template react-ts` project using *only* the declared `dependencies`/`install_instructions` — nothing extra.
+
+**Found, and fixed:**
+
+| Component | Was promised | Was actually true | Fix |
+|---|---|---|---|
+| Both | Ships as `.tsx` (implies TypeScript) | Failed `tsc -b` in a stock Vite React-TS scaffold — untyped props (`implicitly has an 'any' type`) | Added proper prop interfaces / zod-inferred types to both |
+| Checkout Form | `dependencies: ["zod"]` | `zod` was never imported or used | Added a real schema, validated via `safeParse` in the submit handler, errors surfaced through `formState.errors` |
+| Checkout Form | `accessibility.wcag_level: "AA"` | Inputs had no `<label>`, just `placeholder` — a standard AA failure; no focus movement between steps | Added labeled inputs and focus management (`ref` + `useEffect` moving focus to each step's legend) |
+| Checkout Form | `design_tokens_used: ["color.brand.primary", ...]` | The submit button used literal `bg-black`, not any token | Now reads `var(--color-brand-primary, #000000)` — a real, verifiable CSS custom property with a sensible fallback |
+| Both | `framework: "react-tailwind"` | Tailwind wasn't in `dependencies`/`install_instructions` at all — following the instructions exactly ships an unstyled component | `install_instructions` now states the Tailwind-already-configured prerequisite explicitly, rather than implying `npm install` alone covers it (which no single install line honestly can, since Tailwind needs build-tool config) |
+| Command Palette | `design_tokens_used: ["color.surface.overlay", "radius.lg"]` | Zero styling props anywhere in the file | Wired real `cmdk` props (`overlayClassName`, `contentClassName` — verified against `cmdk`'s own `.d.ts`, not guessed) referencing the same CSS-custom-property pattern |
+
+Re-verified after the fix: both components pulled fresh through the same real MCP chain, dropped into a clean scaffold, `tsc -b && vite build` — clean build, no errors, on both.
+
+One process note worth keeping: an earlier draft of the Command Palette fix used a fabricated `overlayStyle` prop that doesn't exist on `cmdk`'s `Dialog` — caught by checking the library's actual `.d.ts` before shipping it, not by assuming the analogous-sounding prop name was real. Exactly the class of gap this workstream exists to catch, this time caught before delivery instead of after.
+
 ## Next step, per the build plan / P1 requirements
 
-Workstreams 1 (real Stripe Connect) and 3 (production registry crawling) are complete. Workstream 2's engineering half is done too — self-serve domain submission (above) — but its actual acceptance criterion, "3-5 designers identified and recruited," is explicitly scoped in the requirements doc as "a manual/BD task, not engineering," so it's still outstanding until real designers exist to submit through it. Outstanding from P1 overall: workstream 4, the designer dashboard rebuild; workstream 5, delivered-code quality validation. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.
+Workstreams 1 (real Stripe Connect) and 3 (production registry crawling) are complete. Workstream 2's engineering half is done too — self-serve domain submission (above) — but its actual acceptance criterion, "3-5 designers identified and recruited," is explicitly scoped in the requirements doc as "a manual/BD task, not engineering," so it's still outstanding until real designers exist to submit through it. Workstream 5 is dry-run validated against the seed components (above) but, like workstream 2, its real acceptance criterion needs real designer components to run against. Outstanding from P1 overall: workstream 4, the designer dashboard rebuild. See `agent-design-commerce-p1-requirements.md` in Drive for full scope.
