@@ -87,7 +87,7 @@ Money flows buyer → Stripe Connect → seller directly. The registry, if used 
 - Their `.well-known` discovery file URL, shown so they can verify what agents actually read
 - A "Connect with Stripe" flow (Stripe Connect Express) so purchases pay out to them directly — no card handling on their end
 
-**Onboarding pitch, per the v0 spec's own target:** "under 30 minutes from 'I have a component' to 'it's purchasable by an agent.'" Good candidate for a landing-page stat/claim.
+**Onboarding pitch:** the v0 spec's own stated *target* is "under 30 minutes from 'I have a component' to 'it's purchasable by an agent.'" That's an aspirational goal from the spec doc, not a measured result — nobody's timed a real seller through the flow yet (see P1 requirements, workstream 2). The actual flow today is two steps (connect Stripe, publish one component) with no account-creation step at all, since there's no auth. Prefer copy grounded in that real shape ("two steps, no account to create") over restating an unverified minute count — landing-page copy in this brief has been updated accordingly (2026-08-21).
 
 **Live reference pages** (use these as visual/content reference, not to copy pixel-for-pixel — they're already on the Open Commerce Stack design system):
 - Seller dashboard: `agent-commerce-gate-kit.onrender.com` (source: `gate-kit/public/index.html`)
@@ -158,7 +158,7 @@ The dashboard and storefront pages already ship a defined "Open Commerce Stack" 
 2. Hero: the core reframe — "the open web is the discovery surface, not a registry" — with the embed as the headline product
 3. How it works: the 3-layer explainer (embed → discovery file → registry), with the JSON-LD code sample
 4. Trust bar: human-confirmed purchases, real Stripe Connect, signature-verified webhooks, expiring download tokens
-5. For sellers: dashboard preview (gate/ungate, publish, sales, discovery URL), "under 30 minutes" onboarding claim
+5. For sellers: dashboard preview (gate/ungate, publish, sales, discovery URL), "two steps, no account to create" onboarding framing
 6. Live example: pull in the real Priya Ramesh listings (checkout form, command palette) as social proof / a live demo link
 7. For agents/builders: MCP registry tools (`search_components`, `get_component`, `purchase_component`, `get_asset`) for anyone building an agent host integration
 8. Footer CTA + links to the live storefront and dashboard
