@@ -23,5 +23,10 @@
     "stripe_customer_id": "cus_V78Nr6Q3KdTfN3",
     "stripe_payment_method_id": "pm_1U6u6aDO6LUr92PKjZoxJtS7",
     "registered_at": "2026-08-21T15:11:41.372Z"
+  },
+  "tok_auth_verify": {
+    "stripe_customer_id": "cus_V7DWmivHrFXrBe",
+    "stripe_payment_method_id": "pm_1U6z5HDO6LUr92PKManuKeXH",
+    "registered_at": "2026-08-21T20:30:40.536Z"
   }
 }

@@ -1,17 +1,24 @@
 {
-  "seller": {
-    "name": "Priya Ramesh",
-    "seller_id": "dsn_priya_r",
-    "site_url": "http://localhost:3001",
-    "credibility": [
-      "Ex-Shopify design systems lead"
-    ],
-    "contact": "priya@example.com"
-  },
-  "stripe_connect": {
-    "connected": true,
-    "connected_account_id": "acct_1U6i1hDO6LnxIz7l"
-  },
+  "sellers": [
+    {
+      "name": "Priya Ramesh",
+      "seller_id": "dsn_priya_r",
+      "site_url": "http://localhost:3001",
+      "credibility": [
+        "Ex-Shopify design systems lead"
+      ],
+      "contact": "priya@example.com",
+      "email": "priya@example.com",
+      "stripe_connect": {
+        "connected": true,
+        "connected_account_id": "acct_1U6i1hDO6LnxIz7l"
+      },
+      "password_hash": "e11fd429f875922987dfd773df1a5fba9d84f8f9b8d4460d3f7342bebf3bba707db25d426c9b93440305c8c27688c8ff153a1c1e9d0732b50ed2c5f95898abfb",
+      "password_salt": "f011d1bf820157857d83234c5b073681",
+      "legacy_root": true,
+      "created_at": "2026-08-21T20:29:52.564Z"
+    }
+  ],
   "components": [
     {
       "component_id": "cmp_8f2a1c",
@@ -25,7 +32,7 @@
       ],
       "price_usd": 10,
       "gated": true,
-      "sold_count": 343,
+      "sold_count": 344,
       "license_type": "non-exclusive",
       "full_description": "A three-step checkout form with inline validation, a progress indicator, and keyboard-accessible navigation between steps.",
       "dependencies": [
@@ -49,7 +56,8 @@
           "content": "// CheckoutForm.tsx\nimport { useEffect, useRef, useState } from 'react';\nimport { useForm } from 'react-hook-form';\nimport { z } from 'zod';\n\nconst checkoutSchema = z.object({\n  address: z.string().min(1, 'Address is required'),\n  card: z.string().min(1, 'Card number is required'),\n});\n\ntype CheckoutFormData = z.infer<typeof checkoutSchema>;\n\ninterface CheckoutFormProps {\n  onSubmit: (data: CheckoutFormData) => void;\n}\n\nexport function CheckoutForm({ onSubmit }: CheckoutFormProps) {\n  const [step, setStep] = useState(1);\n  const { register, handleSubmit, setError, formState: { errors } } = useForm<CheckoutFormData>();\n  const stepHeadingRef = useRef<HTMLLegendElement>(null);\n\n  useEffect(() => {\n    stepHeadingRef.current?.focus();\n  }, [step]);\n\n  const onValidSubmit = (data: CheckoutFormData) => {\n    const result = checkoutSchema.safeParse(data);\n    if (!result.success) {\n      for (const issue of result.error.issues) {\n        setError(issue.path[0] as keyof CheckoutFormData, { message: issue.message });\n      }\n      return;\n    }\n    onSubmit(result.data);\n  };\n\n  return (\n    <form onSubmit={handleSubmit(onValidSubmit)} className=\"max-w-md mx-auto space-y-4\">\n      <div aria-live=\"polite\" className=\"sr-only\">Step {step} of 3</div>\n      {step === 1 && (\n        <fieldset className=\"space-y-2\">\n          <legend ref={stepHeadingRef} tabIndex={-1} className=\"font-medium outline-none\">Shipping</legend>\n          <label htmlFor=\"address\" className=\"block text-sm font-medium\">Address</label>\n          <input id=\"address\" {...register('address')} className=\"w-full border rounded-md px-3 py-2\" />\n          {errors.address && <p role=\"alert\" className=\"text-sm text-red-600\">{errors.address.message}</p>}\n        </fieldset>\n      )}\n      {step === 2 && (\n        <fieldset className=\"space-y-2\">\n          <legend ref={stepHeadingRef} tabIndex={-1} className=\"font-medium outline-none\">Payment</legend>\n          <label htmlFor=\"card\" className=\"block text-sm font-medium\">Card number</label>\n          <input id=\"card\" {...register('card')} className=\"w-full border rounded-md px-3 py-2\" />\n          {errors.card && <p role=\"alert\" className=\"text-sm text-red-600\">{errors.card.message}</p>}\n        </fieldset>\n      )}\n      {step === 3 && (\n        <fieldset className=\"space-y-2\">\n          <legend ref={stepHeadingRef} tabIndex={-1} className=\"font-medium outline-none\">Review</legend>\n          <button\n            type=\"submit\"\n            className=\"w-full text-white rounded-md py-2\"\n            style={{ backgroundColor: 'var(--color-brand-primary, #000000)' }}\n          >\n            Place order\n          </button>\n        </fieldset>\n      )}\n      <div className=\"flex justify-between\">\n        {step > 1 && <button type=\"button\" onClick={() => setStep(step - 1)}>Back</button>}\n        {step < 3 && <button type=\"button\" onClick={() => setStep(step + 1)}>Next</button>}\n      </div>\n    </form>\n  );\n}\n"
         }
       ],
-      "install_instructions": "npm install react-hook-form zod\n\nRequires Tailwind CSS already configured in your project (this component uses Tailwind utility classes; installing react-hook-form and zod alone will not style it)."
+      "install_instructions": "npm install react-hook-form zod\n\nRequires Tailwind CSS already configured in your project (this component uses Tailwind utility classes; installing react-hook-form and zod alone will not style it).",
+      "seller_id": "dsn_priya_r"
     },
     {
       "component_id": "cmp_9b3d2e",
@@ -84,7 +92,8 @@
           "content": "// CommandPalette.tsx\nimport { Command } from 'cmdk';\n\nexport interface CommandPaletteCommand {\n  id: string;\n  label: string;\n  action: () => void;\n}\n\ninterface CommandPaletteProps {\n  commands: CommandPaletteCommand[];\n  open: boolean;\n  onOpenChange: (open: boolean) => void;\n}\n\nexport function CommandPalette({ commands, open, onOpenChange }: CommandPaletteProps) {\n  return (\n    <Command.Dialog\n      open={open}\n      onOpenChange={onOpenChange}\n      label=\"Command palette\"\n      overlayClassName=\"fixed inset-0 bg-[var(--color-surface-overlay,rgba(0,0,0,0.4))]\"\n      contentClassName=\"rounded-lg\"\n    >\n      <Command.Input placeholder=\"Type a command...\" />\n      <Command.List>\n        {commands.map((c) => (\n          <Command.Item key={c.id} onSelect={c.action}>{c.label}</Command.Item>\n        ))}\n      </Command.List>\n    </Command.Dialog>\n  );\n}\n"
         }
       ],
-      "install_instructions": "npm install cmdk\n\nRequires Tailwind CSS already configured in your project for the overlay/radius styling (cmdk itself ships unstyled)."
+      "install_instructions": "npm install cmdk\n\nRequires Tailwind CSS already configured in your project for the overlay/radius styling (cmdk itself ships unstyled).",
+      "seller_id": "dsn_priya_r"
     }
   ],
   "sales": [
@@ -95,7 +104,8 @@
       "buyer_token": "tok_dev_9f1a",
       "amount_usd": 10,
       "status": "pending",
-      "at": "2026-08-21T02:31:01.697Z"
+      "at": "2026-08-21T02:31:01.697Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6iG0DO6LUr92PK2dBcwBbS",
@@ -104,7 +114,8 @@
       "buyer_token": "tok_dev_9f1a",
       "amount_usd": 10,
       "status": "pending",
-      "at": "2026-08-21T02:32:36.905Z"
+      "at": "2026-08-21T02:32:36.905Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6iIMDO6LUr92PK20hFRq09",
@@ -116,7 +127,8 @@
       "at": "2026-08-21T02:35:02.795Z",
       "download_token": "dl_943968e1fc584b8a",
       "download_token_expires_at": "2026-08-21T02:50:03.047Z",
-      "completed_at": "2026-08-21T02:35:03.047Z"
+      "completed_at": "2026-08-21T02:35:03.047Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6iJIDO6LUr92PK1wpgHfW7",
@@ -128,7 +140,8 @@
       "at": "2026-08-21T02:36:01.061Z",
       "download_token": "dl_435647bfd2db864e",
       "download_token_expires_at": "2026-08-21T02:51:01.460Z",
-      "completed_at": "2026-08-21T02:36:01.460Z"
+      "completed_at": "2026-08-21T02:36:01.460Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6tm2DO6LUr92PK1krzE0Li",
@@ -140,7 +153,8 @@
       "at": "2026-08-21T14:50:27.137Z",
       "download_token": "dl_d609ce1dde5983d9",
       "download_token_expires_at": "2026-08-21T15:05:27.501Z",
-      "completed_at": "2026-08-21T14:50:27.501Z"
+      "completed_at": "2026-08-21T14:50:27.501Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6tnNDO6LUr92PK2PyyhFqV",
@@ -152,7 +166,8 @@
       "at": "2026-08-21T14:51:49.852Z",
       "download_token": "dl_90204b897ec832dc",
       "download_token_expires_at": "2026-08-21T15:06:50.121Z",
-      "completed_at": "2026-08-21T14:51:50.121Z"
+      "completed_at": "2026-08-21T14:51:50.121Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6u6iDO6LUr92PK2XrKRFA2",
@@ -164,7 +179,8 @@
       "at": "2026-08-21T15:11:49.167Z",
       "download_token": "dl_042def9b6a1c39f8",
       "download_token_expires_at": "2026-08-21T15:26:49.455Z",
-      "completed_at": "2026-08-21T15:11:49.455Z"
+      "completed_at": "2026-08-21T15:11:49.455Z",
+      "seller_id": "dsn_priya_r"
     },
     {
       "transaction_id": "pi_3U6u6kDO6LUr92PK2FBLkx8Q",
@@ -176,7 +192,21 @@
       "at": "2026-08-21T15:11:50.932Z",
       "download_token": "dl_2b0e5d064c3c5676",
       "download_token_expires_at": "2026-08-21T15:26:51.217Z",
-      "completed_at": "2026-08-21T15:11:51.217Z"
+      "completed_at": "2026-08-21T15:11:51.217Z",
+      "seller_id": "dsn_priya_r"
+    },
+    {
+      "transaction_id": "pi_3U6z5MDO6LUr92PK12CYxl8c",
+      "dedupe_key": "cdb5b6fc6683ef7d1c854c601763d6e8490c95ee89bb5ca3daf9f542adda1f2b",
+      "component_id": "cmp_8f2a1c",
+      "seller_id": "dsn_priya_r",
+      "buyer_token": "tok_auth_verify",
+      "amount_usd": 10,
+      "status": "completed",
+      "at": "2026-08-21T20:30:45.484Z",
+      "download_token": "dl_91d6c69f3c69637f",
+      "download_token_expires_at": "2026-08-21T20:45:45.872Z",
+      "completed_at": "2026-08-21T20:30:45.872Z"
     }
   ]
 }

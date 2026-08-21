@@ -277,6 +277,30 @@
     word-break: break-all;
   }
 
+  .hidden { display: none !important; }
+
+  .auth-wrap {
+    max-width: 380px;
+    margin: 88px auto;
+    padding: 0 32px;
+  }
+
+  .auth-toggle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 16px;
+  }
+
+  .auth-toggle a { color: var(--blue-500); cursor: pointer; }
+
+  .field-error {
+    font-size: 13px;
+    color: var(--danger-fg);
+    margin: -4px 0 0;
+    min-height: 1em;
+  }
+
   @media (max-width: 640px) {
     thead { display: none; }
     table, tbody, tr, td { display: block; width: 100%; }
@@ -305,11 +329,54 @@
         </svg>
         <div class="wordmark">Open Commerce Stack</div>
       </div>
-      <span id="stripe-badge" class="badge danger"><span class="dot"></span>Stripe not connected</span>
+      <div id="header-actions" class="hidden" style="display: flex; align-items: center; gap: 12px;">
+        <span id="stripe-badge" class="badge danger"><span class="dot"></span>Stripe not connected</span>
+        <button id="logout-btn" class="btn-secondary">Log out</button>
+      </div>
     </div>
   </div>
 
-  <div class="main">
+  <div id="auth-wrap" class="auth-wrap hidden">
+    <div class="card card-padded">
+      <p class="card-title" id="auth-title">Sign in</p>
+      <p class="card-subtitle" id="auth-subtitle">Welcome back</p>
+
+      <form id="login-form">
+        <div>
+          <label for="li-email">Email</label>
+          <input id="li-email" type="email" required />
+        </div>
+        <div>
+          <label for="li-password">Password</label>
+          <input id="li-password" type="password" required minlength="8" />
+        </div>
+        <p class="field-error" id="login-error"></p>
+        <button type="submit" class="btn-primary">Sign in</button>
+      </form>
+
+      <form id="signup-form" class="hidden">
+        <div>
+          <label for="su-name">Your name</label>
+          <input id="su-name" required />
+        </div>
+        <div>
+          <label for="su-email">Email</label>
+          <input id="su-email" type="email" required />
+        </div>
+        <div>
+          <label for="su-password">Password</label>
+          <input id="su-password" type="password" required minlength="8" />
+        </div>
+        <p class="field-error" id="signup-error"></p>
+        <button type="submit" class="btn-primary">Create account</button>
+      </form>
+
+      <p class="auth-toggle"><a id="show-signup">Need an account? Sign up</a></p>
+      <p class="auth-toggle hidden" id="show-login-wrap"><a id="show-login">Already have an account? Sign in</a></p>
+    </div>
+  </div>
+
+  <div id="main" class="main hidden">
     <h1 class="page-heading">Your components</h1>
 
     <div class="card">
@@ -375,8 +442,32 @@
   </div>
 
 <script>
+function showAuth() {
+  document.getElementById('auth-wrap').classList.remove('hidden');
+  document.getElementById('main').classList.add('hidden');
+  document.getElementById('header-actions').classList.add('hidden');
+}
+
+function showDashboard() {
+  document.getElementById('auth-wrap').classList.add('hidden');
+  document.getElementById('main').classList.remove('hidden');
+  document.getElementById('header-actions').classList.remove('hidden');
+}
+
+async function checkSession() {
+  const res = await fetch('/api/auth/session');
+  const data = await res.json();
+  if (data.authenticated) {
+    showDashboard();
+    load();
+  } else {
+    showAuth();
+  }
+}
+
 async function load() {
   const res = await fetch('/api/dashboard');
+  if (res.status === 401) return showAuth();
   const data = await res.json();
 
   const stripeBadge = document.getElementById('stripe-badge');
@@ -408,7 +499,8 @@ async function load() {
 
   document.querySelectorAll('.toggle').forEach((btn) => {
     btn.onclick = async () => {
-      await fetch(`/api/components/${btn.dataset.id}/toggle-gate`, { method: 'POST' });
+      const res = await fetch(`/api/components/${btn.dataset.id}/toggle-gate`, { method: 'POST' });
+      if (res.status === 401) return showAuth();
       load();
     };
   });
@@ -428,7 +520,7 @@ async function load() {
 document.getElementById('add-form').onsubmit = async (e) => {
   e.preventDefault();
   const form = new FormData(e.target);
-  await fetch('/api/components', {
+  const res = await fetch('/api/components', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -439,11 +531,82 @@ document.getElementById('add-form').onsubmit = async (e) => {
       code: form.get('code'),
     }),
   });
+  if (res.status === 401) return showAuth();
   e.target.reset();
   load();
 };
 
-load();
+document.getElementById('logout-btn').onclick = async () => {
+  await fetch('/api/auth/logout', { method: 'POST' });
+  showAuth();
+};
+
+document.getElementById('show-signup').onclick = () => {
+  document.getElementById('login-form').classList.add('hidden');
+  document.getElementById('signup-form').classList.remove('hidden');
+  document.getElementById('show-signup').parentElement.classList.add('hidden');
+  document.getElementById('show-login-wrap').classList.remove('hidden');
+  document.getElementById('auth-title').textContent = 'Create your account';
+  document.getElementById('auth-subtitle').textContent = 'Publish your first component in a couple of minutes';
+};
+
+document.getElementById('show-login').onclick = () => {
+  document.getElementById('signup-form').classList.add('hidden');
+  document.getElementById('login-form').classList.remove('hidden');
+  document.getElementById('show-login-wrap').classList.add('hidden');
+  document.getElementById('show-signup').parentElement.classList.remove('hidden');
+  document.getElementById('auth-title').textContent = 'Sign in';
+  document.getElementById('auth-subtitle').textContent = 'Welcome back';
+};
+
+document.getElementById('login-form').onsubmit = async (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('login-error');
+  errorEl.textContent = '';
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: document.getElementById('li-email').value,
+      password: document.getElementById('li-password').value,
+    }),
+  });
+  if (!res.ok) {
+    errorEl.textContent = 'That email and password don’t match an account.';
+    return;
+  }
+  e.target.reset();
+  showDashboard();
+  load();
+};
+
+document.getElementById('signup-form').onsubmit = async (e) => {
+  e.preventDefault();
+  const errorEl = document.getElementById('signup-error');
+  errorEl.textContent = '';
+  const res = await fetch('/api/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: document.getElementById('su-name').value,
+      email: document.getElementById('su-email').value,
+      password: document.getElementById('su-password').value,
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    errorEl.textContent =
+      body.error === 'email_already_registered'
+        ? 'That email already has an account — sign in instead.'
+        : body.message || 'Could not create your account. Check your details and try again.';
+    return;
+  }
+  e.target.reset();
+  showDashboard();
+  load();
+};
+
+checkSession();
 </script>
 </body>
 </html>
