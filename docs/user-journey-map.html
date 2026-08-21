@@ -1,0 +1,397 @@
+<title>Open Commerce Stack Journey Map</title>
+<style>
+  :root {
+    --surface-page: #F5F7FA;
+    --surface-card: #FFFFFF;
+    --surface-sunken: #EDF0F5;
+    --border-subtle: #DFE4EC;
+    --border-default: #CBD3E0;
+    --text-primary: #161C25;
+    --text-secondary: #55606F;
+    --text-tertiary: #737F92;
+    --blue-500: #1A73E8;
+    --green-500: #0E9F6E;
+    --amber-500: #C77D0A;
+    --shadow-sm: 0 1px 2px rgba(22,28,37,.06), 0 1px 1px rgba(22,28,37,.04);
+    --font-serif: "Newsreader", Georgia, serif;
+    --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --surface-page: #10141B;
+      --surface-card: #171D27;
+      --surface-sunken: #1D2431;
+      --border-subtle: #2A3241;
+      --border-default: #3A4457;
+      --text-primary: #EDF1F7;
+      --text-secondary: #A8B3C4;
+      --text-tertiary: #7A879C;
+      --blue-500: #5B9DF5;
+      --green-500: #3FC088;
+      --amber-500: #E0A23D;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 1px 1px rgba(0,0,0,.2);
+    }
+  }
+  :root[data-theme="dark"] {
+    --surface-page: #10141B;
+    --surface-card: #171D27;
+    --surface-sunken: #1D2431;
+    --border-subtle: #2A3241;
+    --border-default: #3A4457;
+    --text-primary: #EDF1F7;
+    --text-secondary: #A8B3C4;
+    --text-tertiary: #7A879C;
+    --blue-500: #5B9DF5;
+    --green-500: #3FC088;
+    --amber-500: #E0A23D;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.3), 0 1px 1px rgba(0,0,0,.2);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 44px;
+  }
+
+  .doc-header { display: flex; flex-direction: column; gap: 14px; }
+  .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--blue-500);
+  }
+  h1 {
+    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12;
+    font-size: clamp(28px, 4vw, 38px); margin: 0; text-wrap: balance;
+  }
+  .doc-sub { font-size: 16px; color: var(--text-secondary); max-width: 66ch; margin: 0; }
+  .doc-meta { font-size: 12.5px; color: var(--text-tertiary); font-family: var(--font-mono); }
+
+  /* Legend */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 20px; align-items: center;
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 10px;
+    box-shadow: var(--shadow-sm); padding: 14px 18px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-secondary); }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .legend-dot.live { background: var(--green-500); }
+  .legend-dot.gap { background: var(--amber-500); }
+  .legend-dot.external { background: var(--text-tertiary); }
+  .legend-swatch {
+    width: 22px; height: 14px; border-radius: 4px; border: 1px dashed var(--border-default);
+    background: var(--surface-sunken); flex: none;
+  }
+
+  /* Lane sections */
+  .lane { display: flex; flex-direction: column; gap: 14px; }
+  .lane-heading { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .lane-title {
+    font-family: var(--font-serif); font-weight: 500; font-size: 21px; letter-spacing: -0.01em; margin: 0;
+  }
+  .lane-role { font-size: 13px; color: var(--text-tertiary); }
+
+  figure { margin: 0; }
+  .diagram-frame {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 12px;
+    box-shadow: var(--shadow-sm); padding: 18px 20px; overflow-x: auto;
+  }
+  .diagram-frame svg { max-width: 100%; height: auto; display: block; }
+  figcaption { font-size: 13px; color: var(--text-secondary); margin-top: 10px; max-width: 72ch; }
+  figcaption code { font-family: var(--font-mono); font-size: 12px; background: var(--surface-sunken); padding: 1px 5px; border-radius: 4px; }
+
+  /* SVG element styling */
+  .box-live { fill: var(--surface-card); stroke: var(--blue-500); stroke-width: 1.3; }
+  .box-live-alt { fill: var(--surface-card); stroke: var(--green-500); stroke-width: 1.3; }
+  .box-external { fill: var(--surface-sunken); stroke: var(--border-default); stroke-width: 1.2; stroke-dasharray: 4 3; }
+  .box-gap { fill: var(--surface-sunken); stroke: var(--amber-500); stroke-width: 1.2; stroke-dasharray: 4 3; }
+  .box-title { fill: var(--text-primary); font-family: var(--font-sans); font-weight: 600; font-size: 12.5px; }
+  .box-sub { fill: var(--text-tertiary); font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.04em; }
+  .flow-arrow { stroke: var(--text-tertiary); stroke-width: 1.4; fill: none; }
+  .flow-arrow-dashed { stroke: var(--text-tertiary); stroke-width: 1.2; fill: none; stroke-dasharray: 3 3; }
+  .flow-label { fill: var(--text-secondary); font-family: var(--font-sans); font-size: 11px; }
+  .status-dot-live { fill: var(--green-500); }
+  .status-dot-gap { fill: var(--amber-500); }
+  .status-dot-external { fill: var(--text-tertiary); }
+
+  /* Gaps callout */
+  .callout {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-left: 3px solid var(--amber-500);
+    border-radius: 8px; padding: 18px 22px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .callout h2 {
+    font-family: var(--font-serif); font-weight: 500; font-size: 17px; margin: 0; letter-spacing: -0.005em;
+  }
+  .callout ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .callout li { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+  .callout li b { color: var(--text-primary); font-weight: 600; }
+
+  footer { border-top: 1px solid var(--border-subtle); padding-top: 20px; }
+  .footer-links { display: flex; flex-wrap: wrap; gap: 16px; font-family: var(--font-mono); font-size: 12.5px; }
+  .footer-links a { color: var(--blue-500); text-decoration: none; }
+  .footer-links a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .lane { animation: none; }
+  }
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<div class="page">
+
+  <div class="doc-header">
+    <div class="eyebrow">Open Commerce Stack — internal reference</div>
+    <h1>Who lands where, and what happens next</h1>
+    <p class="doc-sub">
+      Three people touch this project today — a seller publishing a component, a human's AI agent buying one,
+      and a builder wiring up their own agent host. Each crosses a different set of pages, hosted on three
+      different services, with real API calls and real money in between. This maps what's actually live versus
+      what's still a gap, not the intended design.
+    </p>
+    <div class="doc-meta">as of 2026-08-21 · agent-design-commerce</div>
+  </div>
+
+  <div class="legend" role="group" aria-label="Diagram legend">
+    <div class="legend-item"><span class="legend-dot live"></span> Live &amp; functional</div>
+    <div class="legend-item"><span class="legend-dot gap"></span> Gap — not built / not deployed</div>
+    <div class="legend-item"><span class="legend-dot external"></span> Outside this project's pages</div>
+    <div class="legend-item"><span class="legend-swatch" aria-hidden="true"></span> Dashed border = external or unbuilt</div>
+  </div>
+
+  <!-- ===================== LANE 1: SELLER ===================== -->
+  <div class="lane">
+    <div class="lane-heading">
+      <h2 class="lane-title">The seller</h2>
+      <span class="lane-role">a designer publishing components — e.g. Priya Ramesh, the live example</span>
+    </div>
+    <figure>
+      <div class="diagram-frame">
+        <svg viewBox="0 0 1080 260" role="img" aria-label="Seller journey: a prospective seller has no live channel to discover the landing page today; from the landing page they click through to the seller dashboard on Render, where connecting Stripe branches out to Stripe's own hosted onboarding before returning, and adding a component publishes a live discovery file.">
+          <defs>
+            <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
+            </marker>
+          </defs>
+
+          <!-- Box A: prospective seller -->
+          <rect x="10" y="98" width="150" height="64" rx="8" class="box-gap"></rect>
+          <text x="85" y="124" text-anchor="middle" class="box-title">Prospective seller</text>
+          <text x="85" y="142" text-anchor="middle" class="box-sub">NO CHANNEL YET</text>
+
+          <line x1="160" y1="130" x2="280" y2="130" class="flow-arrow-dashed" marker-end="url(#arrow1)"></line>
+          <text x="220" y="118" text-anchor="middle" class="flow-label">told directly</text>
+
+          <!-- Box B: landing page -->
+          <rect x="280" y="98" width="160" height="64" rx="8" class="box-live"></rect>
+          <text x="360" y="124" text-anchor="middle" class="box-title">Landing page</text>
+          <text x="360" y="142" text-anchor="middle" class="box-sub">VERCEL · STANDALONE</text>
+
+          <line x1="440" y1="130" x2="560" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="500" y="118" text-anchor="middle" class="flow-label">Start selling</text>
+
+          <!-- Box C: seller dashboard -->
+          <rect x="560" y="98" width="180" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="650" y="124" text-anchor="middle" class="box-title">Seller dashboard</text>
+          <text x="650" y="142" text-anchor="middle" class="box-sub">RENDER · gate-kit</text>
+
+          <!-- branch down: Stripe -->
+          <line x1="610" y1="162" x2="610" y2="200" class="flow-arrow-dashed" marker-end="url(#arrow1)"></line>
+          <text x="604" y="184" text-anchor="end" class="flow-label">Connect Stripe</text>
+          <rect x="550" y="200" width="200" height="52" rx="8" class="box-external"></rect>
+          <text x="650" y="222" text-anchor="middle" class="box-title">Stripe hosted onboarding</text>
+          <text x="650" y="238" text-anchor="middle" class="box-sub">EXTERNAL · connect.stripe.com</text>
+          <line x1="690" y1="200" x2="690" y2="162" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="696" y="184" class="flow-label">connected ✓</text>
+
+          <line x1="740" y1="130" x2="860" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="800" y="118" text-anchor="middle" class="flow-label">Add component</text>
+
+          <!-- Box D: discovery file live -->
+          <rect x="860" y="98" width="210" height="64" rx="8" class="box-live"></rect>
+          <text x="965" y="120" text-anchor="middle" class="box-title">Discovery file + listing</text>
+          <text x="965" y="136" text-anchor="middle" class="box-sub">.well-known/agent-commerce.json</text>
+          <text x="965" y="150" text-anchor="middle" class="box-sub">now visible to agents</text>
+        </svg>
+      </div>
+      <figcaption>
+        There's no live path to the landing page yet — it isn't linked from anywhere, so today a seller only
+        finds it if told directly. Once there, <code>Connect Stripe</code> is the one real onboarding step, and
+        it hands off to Stripe's own hosted flow before control returns to the dashboard.
+        A separate, not-yet-public path — a self-serve <code>registry/</code> domain submission form — exists
+        for a seller running their <em>own</em> site rather than using this project's shared gate-kit instance.
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- ===================== LANE 2: BUYER'S AGENT ===================== -->
+  <div class="lane">
+    <div class="lane-heading">
+      <h2 class="lane-title">The buyer's agent</h2>
+      <span class="lane-role">a human's AI agent, buying on their behalf — the human never visits a page in this project</span>
+    </div>
+    <figure>
+      <div class="diagram-frame">
+        <svg viewBox="0 0 1080 280" role="img" aria-label="Buyer's agent journey: a human and their agent host discover a component through one of two real paths, either the registry's MCP tools or by reading a live JSON-LD embed on a storefront listing page, both converging on human confirmation, a real Stripe purchase, a signature-checked webhook, and delivered files.">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
+            </marker>
+          </defs>
+
+          <!-- Box: human + agent host -->
+          <rect x="10" y="98" width="170" height="64" rx="8" class="box-external"></rect>
+          <text x="95" y="124" text-anchor="middle" class="box-title">Human + agent host</text>
+          <text x="95" y="142" text-anchor="middle" class="box-sub">EXTERNAL · chat UI</text>
+
+          <!-- top branch: MCP -->
+          <line x1="180" y1="120" x2="180" y2="50" class="flow-arrow"></line>
+          <line x1="180" y1="50" x2="232" y2="50" class="flow-arrow" marker-end="url(#arrow2)"></line>
+          <rect x="232" y="18" width="190" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="327" y="42" text-anchor="middle" class="box-title">Registry MCP tools</text>
+          <text x="327" y="58" text-anchor="middle" class="box-sub">LOCAL · search_components</text>
+          <text x="327" y="72" text-anchor="middle" class="box-sub">get_component</text>
+
+          <!-- bottom branch: storefront embed -->
+          <line x1="180" y1="140" x2="180" y2="210" class="flow-arrow"></line>
+          <line x1="180" y1="210" x2="232" y2="210" class="flow-arrow" marker-end="url(#arrow2)"></line>
+          <rect x="232" y="178" width="190" height="64" rx="8" class="box-live">
+</rect>
+          <text x="327" y="200" text-anchor="middle" class="box-title">Storefront listing page</text>
+          <text x="327" y="216" text-anchor="middle" class="box-sub">VERCEL · reads JSON-LD embed</text>
+          <text x="327" y="230" text-anchor="middle" class="box-sub">directly, no registry needed</text>
+
+          <!-- merge to confirm -->
+          <line x1="422" y1="50" x2="470" y2="50" class="flow-arrow"></line>
+          <line x1="470" y1="50" x2="470" y2="130" class="flow-arrow"></line>
+          <line x1="422" y1="210" x2="470" y2="210" class="flow-arrow"></line>
+          <line x1="470" y1="210" x2="470" y2="130" class="flow-arrow"></line>
+          <line x1="470" y1="130" x2="512" y2="130" class="flow-arrow" marker-end="url(#arrow2)"></line>
+
+          <rect x="512" y="98" width="170" height="64" rx="8" class="box-gap"></rect>
+          <text x="597" y="120" text-anchor="middle" class="box-title">Human confirms</text>
+          <text x="597" y="136" text-anchor="middle" class="box-sub">confirmed_by_human: true</text>
+          <text x="597" y="150" text-anchor="middle" class="box-sub">the one required gate</text>
+
+          <line x1="682" y1="130" x2="734" y2="130" class="flow-arrow" marker-end="url(#arrow2)"></line>
+
+          <rect x="734" y="98" width="160" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="814" y="120" text-anchor="middle" class="box-title">Purchase API</text>
+          <text x="814" y="136" text-anchor="middle" class="box-sub">RENDER · Stripe charge</text>
+          <text x="814" y="150" text-anchor="middle" class="box-sub">destination charge</text>
+
+          <line x1="894" y1="130" x2="946" y2="130" class="flow-arrow" marker-end="url(#arrow2)"></line>
+
+          <rect x="946" y="98" width="124" height="64" rx="8" class="box-live">
+</rect>
+          <text x="1008" y="120" text-anchor="middle" class="box-title">Webhook</text>
+          <text x="1008" y="136" text-anchor="middle" class="box-sub">signature-checked</text>
+          <text x="1008" y="150" text-anchor="middle" class="box-sub">→ files delivered</text>
+        </svg>
+      </div>
+      <figcaption>
+        Two real, independent discovery paths converge on the same purchase flow: an MCP-connected agent host
+        can call the registry's tools directly, or <em>any</em> browsing/search agent can land on a storefront
+        listing page and read the live <code>schema.org</code> + <code>openCommerce</code> JSON-LD embed on the
+        page — verified to point at real, working endpoints, not placeholders. Either way, nothing completes
+        without <code>confirmed_by_human: true</code>, and nothing is final until the signature-checked
+        <code>payment_intent.succeeded</code> webhook fires.
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- ===================== LANE 3: BUILDER ===================== -->
+  <div class="lane">
+    <div class="lane-heading">
+      <h2 class="lane-title">The builder</h2>
+      <span class="lane-role">a developer wiring their own agent host up to the protocol</span>
+    </div>
+    <figure>
+      <div class="diagram-frame">
+        <svg viewBox="0 0 1240 180" role="img" aria-label="Builder journey: a developer starts at the landing page's for-builders section, follows a link to a real live discovery file, then clones the registry code and configures their own agent host to talk to the local MCP server over stdio.">
+          <defs>
+            <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
+            </marker>
+          </defs>
+
+          <rect x="10" y="58" width="170" height="64" rx="8" class="box-external"></rect>
+          <text x="95" y="84" text-anchor="middle" class="box-title">Developer</text>
+          <text x="95" y="102" text-anchor="middle" class="box-sub">EXTERNAL · own machine</text>
+
+          <line x1="180" y1="90" x2="270" y2="90" class="flow-arrow" marker-end="url(#arrow3)"></line>
+          <text x="225" y="78" text-anchor="middle" class="flow-label">for builders</text>
+
+          <rect x="270" y="58" width="180" height="64" rx="8" class="box-live"></rect>
+          <text x="360" y="84" text-anchor="middle" class="box-title">Landing page</text>
+          <text x="360" y="102" text-anchor="middle" class="box-sub">VERCEL · #for-builders</text>
+
+          <line x1="450" y1="90" x2="540" y2="90" class="flow-arrow" marker-end="url(#arrow3)"></line>
+          <text x="495" y="78" text-anchor="middle" class="flow-label">real example</text>
+
+          <rect x="540" y="58" width="200" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="640" y="80" text-anchor="middle" class="box-title">Live discovery file</text>
+          <text x="640" y="96" text-anchor="middle" class="box-sub">RENDER · real seller data</text>
+          <text x="640" y="110" text-anchor="middle" class="box-sub">not a mock</text>
+
+          <line x1="740" y1="90" x2="830" y2="90" class="flow-arrow" marker-end="url(#arrow3)"></line>
+          <text x="785" y="78" text-anchor="middle" class="flow-label">clone + wire</text>
+
+          <rect x="830" y="58" width="150" height="64" rx="8" class="box-external"></rect>
+          <text x="905" y="80" text-anchor="middle" class="box-title">Their own machine</text>
+          <text x="905" y="96" text-anchor="middle" class="box-sub">EXTERNAL</text>
+          <text x="905" y="110" text-anchor="middle" class="box-sub">MCP host config</text>
+
+          <line x1="980" y1="90" x2="1070" y2="90" class="flow-arrow" marker-end="url(#arrow3)"></line>
+
+          <rect x="1070" y="58" width="160" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="1150" y="80" text-anchor="middle" class="box-title">mcp-server.js</text>
+          <text x="1150" y="96" text-anchor="middle" class="box-sub">LOCAL · stdio</text>
+          <text x="1150" y="110" text-anchor="middle" class="box-sub">4 tools ready</text>
+        </svg>
+      </div>
+      <figcaption>
+        The most linear of the three — every step is real. The discovery file the landing page links to is the
+        actual live data, not a sample. The last hop happens entirely on the builder's own machine: their agent
+        host spawns <code>mcp-server.js</code> over stdio, per the README's own install instructions.
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- ===================== GAPS CALLOUT ===================== -->
+  <div class="callout">
+    <h2>What this map makes visible</h2>
+    <ul>
+      <li><b>The landing page has no live inbound path.</b> It's fully built and deployed, but nothing else in the project links to it yet — every visit today has to be a direct link someone was handed.</li>
+      <li><b>Human checkout doesn't exist.</b> A person who lands on a storefront listing page reads the same embed an agent would, but there's no "buy" button wired up for them — only agents can actually complete a purchase today.</li>
+      <li><b>The registry submission form isn't public.</b> It runs locally (<code>localhost:3002</code>) with a working SSRF guard and real schema validation, but nothing points a real seller at it yet.</li>
+      <li><b>The seller dashboard has no multi-tenant auth.</b> "Let's get you set up" is a real, live link — but it lands on Priya's already-configured account and sales data, not a blank signup, since there's no login system yet.</li>
+      <li><b>Two agent discovery paths exist independently.</b> The registry (MCP) and the open-web embed (schema.org JSON-LD) both work today and neither depends on the other — an agent doesn't need to know about the registry at all if it just reads a page.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <div class="footer-links">
+      <a href="https://open-commerce-stack.vercel.app/" target="_blank" rel="noopener">open-commerce-stack.vercel.app</a>
+      <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">checkout-form-product.vercel.app</a>
+      <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">agent-commerce-gate-kit.onrender.com</a>
+    </div>
+  </footer>
+
+</div>
