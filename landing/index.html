@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open Commerce: Sell to agents</title>
-<meta name="description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it. No migration, no dashboard, no rebuilding what already works.">
-<link rel="canonical" href="https://checkout-form-product.vercel.app/">
+<meta name="description" content="Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.">
+<link rel="canonical" href="https://open-commerce-stack.vercel.app/">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Open Commerce: Sell to agents">
-<meta property="og:description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it.">
+<meta property="og:description" content="Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Open Commerce">
-<meta name="twitter:description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it.">
+<meta name="twitter:description" content="Open Commerce is a suite of tools that allow agents to discover and purchase on your website.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMTMiIHk9IjkiIHdpZHRoPSIzOCIgaGVpZ2h0PSIxNSIgcng9IjcuNSIgZmlsbD0iIzFBNzNFOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTcgMzIgMTYuNSkiLz48cmVjdCB4PSI5IiB5PSIyNSIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjE1IiByeD0iNy41IiBmaWxsPSIjMEU5RjZFIiB0cmFuc2Zvcm09InJvdGF0ZSg0IDMyIDMyLjUpIi8+PHJlY3QgeD0iMTYiIHk9IjQxIiB3aWR0aD0iMzQiIGhlaWdodD0iMTUiIHJ4PSI3LjUiIGZpbGw9IiNDNzdEMEEiIHRyYW5zZm9ybT0icm90YXRlKC01IDMyIDQ4LjUpIi8+PC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,29 +25,56 @@
     --surface-hover: #F2F5F9;
     --border-subtle: #DFE4EC;
     --border-default: #CBD3E0;
+
     --text-primary: #161C25;
     --text-secondary: #55606F;
     --text-tertiary: #737F92;
+    --text-accent: #1A73E8;
+    --text-success: #1B7A3D;
+
     --blue-100: #DCE9FC;
     --blue-500: #1A73E8;
     --blue-700: #1552B0;
     --green-500: #0E9F6E;
     --amber-500: #C77D0A;
+
     --ink-950: #161C25;
+    --ink-400: #55606F;
+    --ink-300: #8A93A3;
+    --ink-100: #DCE0E7;
     --ink-0: #FFFFFF;
+
+    --success-bg: #E4F5EA;
+    --success-fg: #1B7A3D;
+    --success-dot: #2FA85C;
+    --warning-bg: #FDF3DD;
+    --warning-fg: #92660B;
+    --warning-dot: #D89A1F;
+
     --radius-lg: 12px;
     --radius-md: 8px;
     --radius-sm: 6px;
     --shadow-sm: 0 1px 2px rgba(22,28,37,.06), 0 1px 1px rgba(22,28,37,.04);
     --shadow-lg: 0 4px 10px rgba(22,28,37,.07), 0 16px 32px rgba(22,28,37,.09);
+
+    --font-display: "Newsreader", Georgia, serif;
     --font-serif: "Newsreader", Georgia, serif;
     --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --tracking-display: -0.022em;
+    --leading-display: 1.1;
+    --text-display-md: 48px;
+    --text-display-sm: 36px;
+
+    --max-width: 1140px;
   }
 
   * { box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
 
   body {
     margin: 0;
@@ -58,7 +85,7 @@
     line-height: 1.5;
   }
 
-  a { color: var(--blue-500); text-decoration: none; }
+  a { color: var(--text-accent); text-decoration: none; }
   a:hover { text-decoration: underline; color: var(--blue-700); }
 
   .sr-only {
@@ -66,68 +93,59 @@
     overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
   }
 
+  .brand-rule {
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-500), var(--green-500), var(--amber-500));
+  }
+
   .marker {
     background: color-mix(in oklab, var(--blue-500) 32%, transparent);
     border-radius: 0.6em 0.4em 0.5em 0.35em;
     padding: 0.02em 0.18em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
   .marker-green {
     background: color-mix(in oklab, var(--green-500) 42%, transparent);
     border-radius: 0.6em 0.4em 0.5em 0.35em;
     padding: 0.02em 0.18em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
-  .rotator {
-    display: inline-block;
-    overflow: hidden;
-    height: 1.15em;
-    vertical-align: bottom;
-  }
-  .rotator-inner {
-    display: flex;
-    flex-direction: column;
-    animation: rotate-words 5.7s infinite;
-  }
-  .rotator-inner span {
-    display: block;
-    height: 1.15em;
-    line-height: 1.15em;
-    white-space: nowrap;
-  }
+  .rotator { display: inline-block; overflow: hidden; height: 1.15em; vertical-align: bottom; }
+  .rotator-inner { display: flex; flex-direction: column; animation: rotate-words 5.7s ease infinite; }
+  .rotator-inner span { display: block; height: 1.15em; line-height: 1.15em; white-space: nowrap; }
   @keyframes rotate-words {
     0%, 22% { transform: translateY(0); }
-    28%, 47% { transform: translateY(-1.15em); }
-    53%, 72% { transform: translateY(-2.3em); }
-    78%, 100% { transform: translateY(-3.45em); }
+    33%, 55% { transform: translateY(-1.15em); }
+    66%, 88% { transform: translateY(-2.3em); }
+    99%, 100% { transform: translateY(-3.45em); }
   }
   @media (prefers-reduced-motion: reduce) {
     .rotator-inner { animation: none; }
   }
 
   section { padding: 72px 32px; }
-  .section-inner { max-width: 1080px; margin: 0 auto; }
+  .section-inner { max-width: var(--max-width); margin: 0 auto; }
   .section-eyebrow {
     font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-    color: var(--blue-500); margin: 0 0 12px;
+    color: var(--text-accent); margin: 0 0 12px;
   }
   .section-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
-    font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 16px; max-width: 720px;
+    font-family: var(--font-display); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
+    font-size: clamp(26px, 3.6vw, var(--text-display-sm)); margin: 0 0 16px; max-width: 720px;
   }
   .section-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; max-width: 620px; margin: 0 0 32px; }
 
   /* Header */
-  .header {
-    position: sticky; top: 0; z-index: 20;
-    background: var(--surface-card);
-    border-bottom: 1px solid var(--border-subtle);
-    height: 64px;
-  }
+  .header { position: sticky; top: 0; z-index: 20; background: var(--surface-card); }
+  .header-bar { border-bottom: 1px solid var(--border-subtle); height: 64px; }
   .header-inner {
-    max-width: 1080px; margin: 0 auto; height: 100%;
+    max-width: var(--max-width); margin: 0 auto; height: 100%;
     display: flex; align-items: center; padding: 0 32px; gap: 32px;
   }
-  .wordmark { font-family: var(--font-serif); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+  .wordmark { font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
   .brand-lockup { display: flex; align-items: center; gap: 10px; }
   .nav-links { flex: 1; display: flex; gap: 24px; font-size: 15px; color: var(--text-secondary); }
   .nav-links a { color: var(--text-secondary); }
@@ -136,7 +154,7 @@
   button { font-family: var(--font-sans); cursor: pointer; border-radius: var(--radius-md); transition: transform 80ms ease, filter 120ms ease; border: none; }
   button:active { transform: scale(0.985); }
   .btn-primary {
-    background: var(--blue-500); color: #FFFFFF; font-size: 14px; font-weight: 500;
+    background: var(--text-accent); color: var(--ink-0); font-size: 14px; font-weight: 500;
     padding: 10px 18px; border-radius: var(--radius-sm);
   }
   .btn-primary:hover { filter: brightness(0.94); transform: translateY(-1px); }
@@ -146,32 +164,42 @@
   }
   .btn-ghost:hover { transform: translateY(-1px); filter: brightness(0.97); }
   .btn-inverse {
-    background: #FFFFFF; color: var(--text-primary); font-size: 15px; font-weight: 600;
+    background: var(--ink-0); color: var(--text-primary); font-size: 15px; font-weight: 600;
     padding: 12px 22px; border-radius: var(--radius-sm);
   }
   .btn-inverse:hover { filter: brightness(0.96); transform: translateY(-1px); }
   .btn-outline-inverse {
-    background: transparent; border: 1px solid rgba(255,255,255,0.35); color: #FFFFFF;
+    background: transparent; border: 1px solid rgba(255,255,255,0.35); color: var(--ink-0);
     font-size: 15px; font-weight: 500; padding: 11px 21px; border-radius: var(--radius-sm);
   }
   .btn-outline-inverse:hover { background: rgba(255,255,255,0.08); }
 
   /* Hero */
-  .hero { padding: 80px 32px 96px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); }
-  .hero-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) 420px; gap: 56px; align-items: center; }
+  .hero { padding: 80px 32px 96px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); text-align: center; }
+  .hero-inner { max-width: 680px; margin: 0 auto; }
   .hero-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.022em; line-height: 1.08;
-    font-size: clamp(32px, 4.6vw, 48px); margin: 14px 0 20px;
+    font-family: var(--font-display); font-weight: 400; letter-spacing: var(--tracking-display); line-height: var(--leading-display);
+    font-size: clamp(32px, 4.6vw, var(--text-display-md)); margin: 14px 0 18px;
   }
-  .hero-body { font-size: 18px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; max-width: 520px; }
-  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
-  .hero-footnote { font-size: 13px; color: var(--text-tertiary); }
+  .hero-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; }
+  .hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+
+  .scroll-cue {
+    margin-top: 32px; font-size: 12px; color: var(--text-tertiary);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .scroll-cue svg { animation: sweep 2.4s ease-in-out infinite; }
+  @keyframes sweep { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue svg { animation: none; } }
 
   .code-panel {
-    background: #161C25;
+    background: var(--ink-950);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+    max-width: 520px;
+    margin: 40px auto 0;
+    text-align: left;
   }
   .code-panel-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -214,12 +242,15 @@
   .trust-detail { font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
 
   /* For sellers */
-  #for-sellers { background: color-mix(in oklab, var(--blue-500) 8%, var(--surface-page)); }
+  #for-sellers {
+    background-color: color-mix(in oklab, var(--blue-500) 8%, var(--surface-page));
+    background-image: radial-gradient(circle at 88% 12%, color-mix(in oklab, var(--green-500) 14%, transparent), transparent 60%);
+  }
   .sellers-grid { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: 48px; align-items: start; }
   .checklist { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-direction: column; gap: 14px; }
   .checklist li { display: flex; gap: 12px; font-size: 15px; color: var(--text-primary); line-height: 1.5; }
   .checklist .check {
-    width: 20px; height: 20px; border-radius: 50%; background: var(--green-500); color: #fff;
+    width: 20px; height: 20px; border-radius: 50%; background: var(--green-500); color: var(--ink-0);
     flex: none; display: flex; align-items: center; justify-content: center; margin-top: 1px;
   }
 
@@ -227,95 +258,105 @@
     background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm); overflow: hidden;
   }
-  .dashboard-preview-header { padding: 16px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; }
+  .dashboard-preview-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border-subtle); }
   .dashboard-preview-title { font-size: 13px; font-weight: 600; }
+  .dashboard-preview-subtitle { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
   .dashboard-badge {
     display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500;
-    padding: 3px 9px; border-radius: 999px; background: #E4F5EA; color: #1B7A3D;
+    padding: 3px 9px; border-radius: 999px; background: var(--warning-bg); color: var(--warning-fg);
   }
-  .dashboard-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: #2FA85C; }
-  .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
-  .dashboard-row:last-child { border-bottom: none; }
+  .dashboard-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--warning-dot); }
+  .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; gap: 10px; }
   .dashboard-row-name { font-weight: 500; }
   .dashboard-row-meta { color: var(--text-tertiary); font-size: 12px; margin-top: 2px; }
+  .dashboard-row-right { display: flex; align-items: center; gap: 10px; flex: none; }
   .dashboard-price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-secondary); }
-  .dashboard-preview-footer { padding: 12px 18px; }
-  .dashboard-link { font-size: 12.5px; }
+  .dashboard-preview-footer {
+    padding: 10px 18px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-tertiary);
+    background: var(--surface-sunken);
+  }
 
   /* For builders */
-  #for-builders { background: color-mix(in oklab, var(--green-500) 8%, var(--surface-page)); }
+  #for-builders {
+    background-color: color-mix(in oklab, var(--green-500) 8%, var(--surface-page));
+    background-image: radial-gradient(circle at 12% 85%, color-mix(in oklab, var(--blue-500) 14%, transparent), transparent 60%);
+  }
   .tool-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
   .tool-pill {
     font-family: var(--font-mono); font-size: 13px; background: var(--surface-card);
     border: 1px solid var(--border-default); border-radius: var(--radius-sm); padding: 8px 14px; color: var(--text-primary);
   }
 
-  /* Footer CTA */
-  .footer-cta { background: var(--blue-500); color: #FFFFFF; }
-  .footer-cta-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
-    font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 24px; max-width: 640px;
+  /* Footer (CTA + links, unified dark section) */
+  .site-footer {
+    background-color: var(--ink-950);
+    background-image: radial-gradient(circle at 12% 15%, color-mix(in oklab, var(--amber-500) 16%, transparent), transparent 55%);
+    color: var(--ink-0);
   }
-  .footer-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-
-  footer { padding: 40px 32px; background: var(--ink-950); }
-  .footer-inner {
-    max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between;
-    align-items: center; gap: 24px; flex-wrap: wrap;
+  .footer-cta-heading {
+    font-family: var(--font-display); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
+    font-size: clamp(26px, 3.6vw, var(--text-display-sm)); margin: 0 0 24px; max-width: 640px;
+  }
+  .footer-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+  .footer-links-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
+    padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.12);
   }
   .footer-links { display: flex; gap: 20px; font-size: 13.5px; color: rgba(255,255,255,0.55); flex-wrap: wrap; }
   .footer-links a { color: rgba(255,255,255,0.55); }
   .footer-links a:hover { color: var(--ink-0); }
-  .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.55); }
+  .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.7); }
+  .footer-copyright { font-size: 12.5px; color: rgba(255,255,255,0.4); }
 
+  @media (max-width: 900px) {
+    section { padding: 56px 20px; }
+    .header-inner { padding: 0 20px; }
+    .section-inner { padding: 0; }
+  }
   @media (max-width: 860px) {
-    .hero-inner { grid-template-columns: 1fr; }
     .steps { grid-template-columns: 1fr; }
     .trust-grid { grid-template-columns: repeat(2, 1fr); }
     .sellers-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
+    .footer-links-row { flex-direction: column; align-items: flex-start; }
   }
   @media (max-width: 520px) {
     .trust-grid { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-inner">
-    <div class="brand-lockup">
-      <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
-        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
-        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
-      </svg>
-      <div class="wordmark">Open Commerce</div>
+  <div class="brand-rule"></div>
+  <div class="header-bar">
+    <div class="header-inner">
+      <div class="brand-lockup">
+        <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+          <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+          <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+        </svg>
+        <div class="wordmark">Open Commerce</div>
+      </div>
+      <div class="nav-links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#for-sellers">For sellers</a>
+        <a href="#for-builders">For builders</a>
+      </div>
+      <a class="btn-primary" href="#for-sellers">Start selling</a>
     </div>
-    <div class="nav-links">
-      <a href="#how-it-works">How it works</a>
-      <a href="#for-sellers">For sellers</a>
-      <a href="#for-builders">For builders</a>
-    </div>
-    <a class="btn-primary" href="#for-sellers">Start selling</a>
   </div>
 </div>
 
 <section class="hero">
   <div class="hero-inner">
-    <div>
-      <div class="section-eyebrow">Commerce is opening up</div>
-      <h1 class="hero-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
-      <p class="hero-body">
-        Your next customer might not arrive by clicking through a storefront. They might come through an agent.
-        Add one small snippet to a page you already have, and agents can see what you sell, what it costs, and
-        how to buy it. No migration, no dashboard, no rebuilding what already works.
-      </p>
-      <div class="hero-actions">
-        <a class="btn-primary" href="#how-it-works" style="font-size:15px; padding:12px 22px;">Get your snippet</a>
-        <a class="btn-ghost" href="https://checkout-form-product.vercel.app/checkout-form/" style="font-size:15px; padding:11px 21px;" target="_blank" rel="noopener">See it in action</a>
-      </div>
-      <div class="hero-footnote">We're starting with design components. Wherever you're starting, there's a place to begin.</div>
+    <div class="section-eyebrow">Commerce is opening up</div>
+    <h1 class="hero-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
+    <p class="hero-body">Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#for-sellers" style="font-size:15px; padding:12px 22px;">Start selling</a>
     </div>
 
     <div class="code-panel">
@@ -338,6 +379,11 @@
     <span class="tok-key">"license_type"</span><span class="tok-punc">:</span> <span class="tok-str">"non-exclusive"</span>
   <span class="tok-punc">}</span>
 <span class="tok-punc">}</span></pre>
+    </div>
+
+    <div class="scroll-cue">
+      <span>Keep scrolling</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
   </div>
 </section>
@@ -370,7 +416,7 @@
   <div class="section-inner">
     <div class="trust-grid">
       <div class="trust-item">
-        <div class="trust-lead">A person always says yes.</div>
+        <div class="trust-lead">A human is always in the loop.</div>
         <div class="trust-detail">Every purchase carries <code>confirmed_by_human</code>, so an agent can't complete a charge on its own.</div>
       </div>
       <div class="trust-item">
@@ -400,31 +446,35 @@
           <li><span class="check">✓</span> Connect Stripe once, and purchases pay out to you directly, with no card handling on your end</li>
           <li><span class="check">✓</span> See exactly what agents read about you, in your own discovery file</li>
         </ul>
-        <a class="btn-primary" style="font-size:15px; padding:12px 22px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
+        <a class="btn-ghost" style="font-size:15px; padding:11px 21px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
       </div>
 
       <div class="dashboard-preview">
         <div class="dashboard-preview-header">
-          <span class="dashboard-preview-title">Your components</span>
-          <span class="dashboard-badge"><span class="dot"></span>Stripe connected</span>
+          <div class="dashboard-preview-title">Your components</div>
+          <div class="dashboard-preview-subtitle">A look at the seller view</div>
         </div>
         <div class="dashboard-row">
           <div>
-            <div class="dashboard-row-name">Multi-step checkout form</div>
+            <div class="dashboard-row-name">Multi-step Checkout Form</div>
             <div class="dashboard-row-meta">forms · react-tailwind</div>
           </div>
-          <div class="dashboard-price">$10.00</div>
+          <div class="dashboard-row-right">
+            <span class="dashboard-badge"><span class="dot"></span>Gated</span>
+            <span class="dashboard-price">$10.00</span>
+          </div>
         </div>
-        <div class="dashboard-row">
+        <div class="dashboard-row" style="border-bottom: none;">
           <div>
-            <div class="dashboard-row-name">Command palette</div>
+            <div class="dashboard-row-name">Command Palette (Cmd+K)</div>
             <div class="dashboard-row-meta">navigation · react-tailwind</div>
           </div>
-          <div class="dashboard-price">$10.00</div>
+          <div class="dashboard-row-right">
+            <span class="dashboard-badge"><span class="dot"></span>Gated</span>
+            <span class="dashboard-price">$10.00</span>
+          </div>
         </div>
-        <div class="dashboard-preview-footer">
-          <a class="dashboard-link" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">See the live dashboard →</a>
-        </div>
+        <div class="dashboard-preview-footer">.well-known/agent-commerce.json</div>
       </div>
     </div>
   </div>
@@ -447,30 +497,29 @@
   </div>
 </section>
 
-<section class="footer-cta">
-  <div class="section-inner">
+<footer class="site-footer">
+  <div class="brand-rule"></div>
+  <div class="section-inner" style="padding: 72px 32px 40px;">
     <h2 class="footer-cta-heading"><span class="marker-green">Together</span> we can create commerce that works better for humans and agents.</h2>
     <div class="footer-cta-actions">
       <a class="btn-inverse" href="#for-sellers">Start selling</a>
       <a class="btn-outline-inverse" href="#for-sellers">Contact us</a>
     </div>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
-        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
-        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
-      </svg>
-      Open Commerce
-    </div>
-    <div class="footer-links">
-      <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">Storefront</a>
-      <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Seller dashboard</a>
-      <a href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json" target="_blank" rel="noopener">Protocol</a>
+    <div class="footer-links-row">
+      <div class="footer-brand">
+        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+          <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+          <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+        </svg>
+        Open Commerce
+      </div>
+      <div class="footer-links">
+        <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">Live storefront</a>
+        <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Seller dashboard</a>
+        <a href="https://checkout-form-product.vercel.app/checkout-form/" target="_blank" rel="noopener">Components</a>
+      </div>
+      <div class="footer-copyright">© 2026 Open Commerce</div>
     </div>
   </div>
 </footer>

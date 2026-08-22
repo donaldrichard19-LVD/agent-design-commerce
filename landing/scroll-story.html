@@ -4,15 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Open Commerce: The scroll story</title>
-<meta name="description" content="How a product goes from invisible to agents to purchasable by one, four lines of code and one approval at a time.">
+<meta name="description" content="Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.">
 <link rel="canonical" href="https://open-commerce-stack.vercel.app/scroll-story">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Open Commerce: The scroll story">
-<meta property="og:description" content="How a product goes from invisible to agents to purchasable by one, four lines of code and one approval at a time.">
+<meta property="og:description" content="Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Open Commerce">
-<meta name="twitter:description" content="How a product goes from invisible to agents to purchasable by one, four lines of code and one approval at a time.">
+<meta name="twitter:description" content="Open Commerce is a suite of tools that allow agents to discover and purchase on your website.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMTMiIHk9IjkiIHdpZHRoPSIzOCIgaGVpZ2h0PSIxNSIgcng9IjcuNSIgZmlsbD0iIzFBNzNFOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTcgMzIgMTYuNSkiLz48cmVjdCB4PSI5IiB5PSIyNSIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjE1IiByeD0iNy41IiBmaWxsPSIjMEU5RjZFIiB0cmFuc2Zvcm09InJvdGF0ZSg0IDMyIDMyLjUpIi8+PHJlY3QgeD0iMTYiIHk9IjQxIiB3aWR0aD0iMzQiIGhlaWdodD0iMTUiIHJ4PSI3LjUiIGZpbGw9IiNDNzdEMEEiIHRyYW5zZm9ybT0icm90YXRlKC01IDMyIDQ4LjUpIi8+PC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,29 +25,56 @@
     --surface-hover: #F2F5F9;
     --border-subtle: #DFE4EC;
     --border-default: #CBD3E0;
+
     --text-primary: #161C25;
     --text-secondary: #55606F;
     --text-tertiary: #737F92;
+    --text-accent: #1A73E8;
+    --text-success: #1B7A3D;
+
     --blue-100: #DCE9FC;
     --blue-500: #1A73E8;
     --blue-700: #1552B0;
     --green-500: #0E9F6E;
     --amber-500: #C77D0A;
+
     --ink-950: #161C25;
+    --ink-400: #55606F;
+    --ink-300: #8A93A3;
+    --ink-100: #DCE0E7;
     --ink-0: #FFFFFF;
+
+    --success-bg: #E4F5EA;
+    --success-fg: #1B7A3D;
+    --success-dot: #2FA85C;
+    --warning-bg: #FDF3DD;
+    --warning-fg: #92660B;
+    --warning-dot: #D89A1F;
+
     --radius-lg: 12px;
     --radius-md: 8px;
     --radius-sm: 6px;
     --shadow-sm: 0 1px 2px rgba(22,28,37,.06), 0 1px 1px rgba(22,28,37,.04);
     --shadow-lg: 0 4px 10px rgba(22,28,37,.07), 0 16px 32px rgba(22,28,37,.09);
+
+    --font-display: "Newsreader", Georgia, serif;
     --font-serif: "Newsreader", Georgia, serif;
     --font-sans: "Instrument Sans", -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --tracking-display: -0.022em;
+    --leading-display: 1.1;
+    --text-display-md: 48px;
+    --text-display-sm: 36px;
+
+    --max-width: 1140px;
   }
 
   * { box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
 
   body {
     margin: 0;
@@ -58,62 +85,68 @@
     line-height: 1.5;
   }
 
-  a { color: var(--blue-500); text-decoration: none; }
+  a { color: var(--text-accent); text-decoration: none; }
   a:hover { text-decoration: underline; color: var(--blue-700); }
+  code { font-family: var(--font-mono); }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
   }
 
+  .brand-rule {
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue-500), var(--green-500), var(--amber-500));
+  }
+
   .marker {
     background: color-mix(in oklab, var(--blue-500) 32%, transparent);
     border-radius: 0.6em 0.4em 0.5em 0.35em;
     padding: 0.02em 0.18em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
   .marker-green {
     background: color-mix(in oklab, var(--green-500) 42%, transparent);
     border-radius: 0.6em 0.4em 0.5em 0.35em;
     padding: 0.02em 0.18em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   .rotator { display: inline-block; overflow: hidden; height: 1.15em; vertical-align: bottom; }
-  .rotator-inner { display: flex; flex-direction: column; animation: rotate-words 5.7s infinite; }
+  .rotator-inner { display: flex; flex-direction: column; animation: rotate-words 5.7s ease infinite; }
   .rotator-inner span { display: block; height: 1.15em; line-height: 1.15em; white-space: nowrap; }
   @keyframes rotate-words {
     0%, 22% { transform: translateY(0); }
-    28%, 47% { transform: translateY(-1.15em); }
-    53%, 72% { transform: translateY(-2.3em); }
-    78%, 100% { transform: translateY(-3.45em); }
+    33%, 55% { transform: translateY(-1.15em); }
+    66%, 88% { transform: translateY(-2.3em); }
+    99%, 100% { transform: translateY(-3.45em); }
   }
   @media (prefers-reduced-motion: reduce) {
     .rotator-inner { animation: none; }
   }
 
   section { padding: 72px 32px; }
-  .section-inner { max-width: 1080px; margin: 0 auto; }
+  .section-inner { max-width: var(--max-width); margin: 0 auto; }
   .section-eyebrow {
     font-size: 11px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
-    color: var(--blue-500); margin: 0 0 12px;
+    color: var(--text-accent); margin: 0 0 12px;
   }
   .section-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
-    font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 16px; max-width: 720px;
+    font-family: var(--font-display); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
+    font-size: clamp(26px, 3.6vw, var(--text-display-sm)); margin: 0 0 16px; max-width: 720px;
   }
   .section-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; max-width: 620px; margin: 0 0 32px; }
 
   /* Header */
-  .header {
-    position: sticky; top: 0; z-index: 20;
-    background: var(--surface-card);
-    border-bottom: 1px solid var(--border-subtle);
-    height: 64px;
-  }
+  .header { position: sticky; top: 0; z-index: 30; background: var(--surface-card); }
+  .header-bar { border-bottom: 1px solid var(--border-subtle); height: 64px; }
   .header-inner {
-    max-width: 1080px; margin: 0 auto; height: 100%;
+    max-width: var(--max-width); margin: 0 auto; height: 100%;
     display: flex; align-items: center; padding: 0 32px; gap: 32px;
   }
-  .wordmark { font-family: var(--font-serif); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+  .wordmark { font-family: var(--font-display); font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
   .brand-lockup { display: flex; align-items: center; gap: 10px; }
   .nav-links { flex: 1; display: flex; gap: 24px; font-size: 15px; color: var(--text-secondary); }
   .nav-links a { color: var(--text-secondary); }
@@ -122,7 +155,7 @@
   button { font-family: var(--font-sans); cursor: pointer; border-radius: var(--radius-md); transition: transform 80ms ease, filter 120ms ease; border: none; }
   button:active { transform: scale(0.985); }
   .btn-primary {
-    background: var(--blue-500); color: #FFFFFF; font-size: 14px; font-weight: 500;
+    background: var(--text-accent); color: var(--ink-0); font-size: 14px; font-weight: 500;
     padding: 10px 18px; border-radius: var(--radius-sm);
   }
   .btn-primary:hover { filter: brightness(0.94); transform: translateY(-1px); }
@@ -132,90 +165,209 @@
   }
   .btn-ghost:hover { transform: translateY(-1px); filter: brightness(0.97); }
   .btn-inverse {
-    background: #FFFFFF; color: var(--text-primary); font-size: 15px; font-weight: 600;
+    background: var(--ink-0); color: var(--text-primary); font-size: 15px; font-weight: 600;
     padding: 12px 22px; border-radius: var(--radius-sm);
   }
   .btn-inverse:hover { filter: brightness(0.96); transform: translateY(-1px); }
   .btn-outline-inverse {
-    background: transparent; border: 1px solid rgba(255,255,255,0.35); color: #FFFFFF;
+    background: transparent; border: 1px solid rgba(255,255,255,0.35); color: var(--ink-0);
     font-size: 15px; font-weight: 500; padding: 11px 21px; border-radius: var(--radius-sm);
   }
   .btn-outline-inverse:hover { background: rgba(255,255,255,0.08); }
 
-  /* Intro (compact hero) */
-  .intro { padding: 64px 32px 56px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); text-align: center; }
-  .intro-inner { max-width: 680px; margin: 0 auto; }
-  .intro-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.022em; line-height: 1.1;
-    font-size: clamp(30px, 4.4vw, 44px); margin: 14px 0 18px;
+  /* Hero */
+  .hero { padding: 80px 32px 72px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); text-align: center; }
+  .hero-inner { max-width: 680px; margin: 0 auto; }
+  .hero-heading {
+    font-family: var(--font-display); font-weight: 400; letter-spacing: var(--tracking-display); line-height: var(--leading-display);
+    font-size: clamp(32px, 4.6vw, var(--text-display-md)); margin: 14px 0 18px;
   }
-  .intro-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .hero-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; }
+  .hero-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+
   .scroll-cue {
-    margin-top: 32px; font-size: 12px; color: var(--text-tertiary);
+    margin-top: 28px; font-size: 12px; color: var(--text-tertiary);
     display: flex; flex-direction: column; align-items: center; gap: 6px;
   }
-  .scroll-cue svg { animation: bob 1.6s ease-in-out infinite; }
-  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+  .scroll-cue svg { animation: sweep 2.4s ease-in-out infinite; }
+  @keyframes sweep { 0%, 100% { transform: translateY(0); opacity: 0.5; } 50% { transform: translateY(6px); opacity: 1; } }
   @media (prefers-reduced-motion: reduce) { .scroll-cue svg { animation: none; } }
 
-  /* Story beats */
-  .story { position: relative; background: color-mix(in oklab, var(--amber-500) 6%, var(--surface-page)); padding: 0; }
-  .progress-track {
-    position: fixed; right: 28px; top: 50%; transform: translateY(-50%); z-index: 15;
-    display: flex; flex-direction: column; gap: 14px;
+  /* Story section */
+  .story {
+    position: relative;
+    background: color-mix(in oklab, var(--amber-500) 8%, var(--surface-page));
+    padding: 56px 32px;
   }
-  .progress-dot {
-    width: 9px; height: 9px; border-radius: 50%; background: var(--border-default);
-    border: none; padding: 0; cursor: pointer; transition: background-color 200ms ease, transform 200ms ease;
+  .story-inner {
+    max-width: var(--max-width); margin: 0 auto;
+    display: grid; grid-template-columns: 380px minmax(0,1fr); gap: 56px; align-items: start;
   }
-  .progress-dot.active { background: var(--blue-500); transform: scale(1.3); }
-  @media (max-width: 720px) { .progress-track { display: none; } }
+  .story-stage { position: sticky; top: 92px; display: flex; flex-direction: column; gap: 16px; }
 
-  .beat {
-    min-height: 78vh; display: flex; align-items: center; justify-content: center;
-    padding: 48px 32px; max-width: 780px; margin: 0 auto;
-    opacity: 0; transform: translateY(28px); transition: opacity 640ms ease, transform 640ms ease;
+  .status-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500;
+    padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border-default); color: var(--text-tertiary);
+    background: var(--surface-card);
+    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
   }
-  .beat.in-view { opacity: 1; transform: translateY(0); }
+  .status-pill svg { width: 13px; height: 13px; flex: none; }
+  .status-pill.on {
+    background: color-mix(in oklab, var(--blue-500) 12%, var(--surface-card));
+    border-color: color-mix(in oklab, var(--blue-500) 45%, transparent);
+    color: var(--blue-700);
+  }
+
+  /* PageMock */
+  .page-mock {
+    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm); overflow: hidden; position: relative;
+  }
+  .mock-chrome {
+    display: flex; align-items: center; gap: 6px; padding: 10px 12px; background: var(--surface-sunken);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .mock-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border-default); }
+  .mock-url {
+    margin-left: 8px; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-tertiary);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .mock-sweep {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0;
+    background: linear-gradient(115deg, transparent 30%, color-mix(in oklab, var(--blue-500) 16%, transparent) 50%, transparent 70%);
+    background-size: 220% 220%; background-position: 120% 0;
+  }
+  .page-mock.scanning .mock-sweep { opacity: 1; animation: scan 1.7s linear infinite; }
+  @keyframes scan { from { background-position: 120% 0; } to { background-position: -20% 0; } }
+  .mock-body { padding: 16px; position: relative; }
+  .mock-status-chip {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; font-weight: 500;
+    padding: 3px 8px; border-radius: 999px; margin-bottom: 12px;
+    background: var(--surface-sunken); color: var(--text-tertiary);
+  }
+  .mock-status-chip svg { width: 11px; height: 11px; }
+  .mock-status-chip .icon-on, .mock-status-chip .chip-text-on { display: none; }
+  .page-mock.structured .mock-status-chip { background: var(--success-bg); color: var(--success-fg); }
+  .page-mock.structured .mock-status-chip .icon-off, .page-mock.structured .mock-status-chip .chip-text-off { display: none; }
+  .page-mock.structured .mock-status-chip .icon-on, .page-mock.structured .mock-status-chip .chip-text-on { display: inline; }
+  .mock-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  .mock-meta { font-size: 11.5px; color: var(--text-tertiary); margin-bottom: 8px; }
+  .mock-price { font-family: var(--font-mono); font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+  .mock-skeleton { height: 8px; border-radius: 4px; background: var(--surface-sunken); margin-bottom: 6px; }
+  .mock-buy-btn {
+    margin-top: 10px; width: 100%; background: var(--ink-950); color: var(--ink-0);
+    font-size: 13px; font-weight: 500; padding: 9px; border-radius: var(--radius-sm);
+  }
+  .mock-code-pane {
+    max-height: 0; overflow: hidden; background: var(--ink-950);
+    transition: max-height 480ms ease;
+  }
+  .page-mock.structured .mock-code-pane { max-height: 150px; }
+  .mock-code-pane pre {
+    margin: 0; padding: 14px 16px; font-family: var(--font-mono); font-size: 10.5px; line-height: 1.6; color: #DCE9FC;
+  }
+  .mock-code-pane .tok-key { color: #7FB7FF; }
+  .mock-code-pane .tok-str { color: #A8E6C9; }
+  .mock-code-pane .tok-punc { color: rgba(255,255,255,0.4); }
+  .mock-caret {
+    display: inline-block; width: 6px; height: 11px; background: #A8E6C9; margin-left: 1px;
+    animation: blink 1s step-end infinite; vertical-align: -1px;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* AgentPanel */
+  .agent-panel {
+    background: var(--ink-950); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+    overflow: hidden; color: var(--ink-0);
+  }
+  .agent-panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .agent-panel-title { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); }
+  .agent-badge {
+    font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 999px;
+    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75);
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+  .agent-badge.reading { background: color-mix(in oklab, var(--blue-500) 30%, transparent); color: #BFDBFF; }
+  .agent-badge.paid { background: color-mix(in oklab, var(--green-500) 30%, transparent); color: #B7EFD9; }
+  .agent-panel-body { padding: 14px; min-height: 128px; position: relative; }
+  .agent-state {
+    display: none; flex-direction: column; gap: 8px;
+    animation: pop 450ms ease;
+  }
+  .agent-state.active { display: flex; }
+  @keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .agent-state { animation: none; } }
+
+  .agent-msg { font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.85); }
+  .agent-msg code { font-size: 11px; background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 4px; color: #A8E6C9; }
+  .agent-msg-q { color: rgba(255,255,255,0.55); font-style: italic; }
+  .agent-spin::before {
+    content: ''; display: inline-block; width: 9px; height: 9px; margin-right: 6px;
+    border: 1.5px solid rgba(255,255,255,0.25); border-top-color: rgba(255,255,255,0.8);
+    border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -1px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .agent-spin::before { animation: none; } }
+
+  .agent-catalog-row {
+    display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.75);
+  }
+  .agent-catalog-row:last-child { border-bottom: none; }
+  .agent-catalog-row span { font-family: var(--font-mono); color: rgba(255,255,255,0.55); }
+
+  .agent-approval { display: flex; gap: 8px; margin-top: 4px; }
+  .agent-approve-btn {
+    background: var(--green-500); color: var(--ink-0); font-size: 12.5px; font-weight: 600;
+    padding: 8px 14px; border-radius: var(--radius-sm);
+  }
+  .agent-decline-btn {
+    background: transparent; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.7);
+    font-size: 12.5px; padding: 8px 14px; border-radius: var(--radius-sm);
+  }
+  .agent-payout {
+    margin-top: 6px; padding: 10px 12px; border-radius: var(--radius-sm);
+    background: color-mix(in oklab, var(--green-500) 22%, transparent);
+    font-size: 12.5px; font-weight: 500; color: #D7F5E6;
+  }
+  .agent-payout-sub { font-size: 11.5px; font-weight: 400; color: rgba(255,255,255,0.6); margin-top: 3px; }
+
+  /* Progress rail */
+  .progress-rail { display: flex; gap: 5px; }
+  .rail-segment {
+    flex: 1; height: 4px; border-radius: 2px; background: var(--border-default);
+    transition: background-color 300ms ease;
+  }
+  .rail-segment.filled { background: var(--blue-500); }
+
+  /* Story track (right column) */
+  .story-track { display: flex; flex-direction: column; }
+  .beat {
+    min-height: 92vh; display: flex; align-items: center;
+    opacity: 0.24; transform: translateY(14px); transition: opacity 550ms ease, transform 550ms ease;
+  }
+  .beat.active { opacity: 1; transform: translateY(0); }
   .beat-num {
     font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary);
     letter-spacing: 0.06em; margin-bottom: 14px;
   }
   .beat-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12;
-    font-size: clamp(28px, 5vw, 44px); margin: 0 0 16px;
+    font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12;
+    font-size: clamp(26px, 4vw, 38px); margin: 0 0 14px; max-width: 480px;
   }
-  .beat-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; max-width: 520px; }
+  .beat-body { font-size: 16px; color: var(--text-secondary); line-height: 1.6; max-width: 440px; }
   @media (prefers-reduced-motion: reduce) {
     .beat { opacity: 1; transform: none; transition: none; }
   }
 
-  /* How it works code sample, reused after the story */
-  .code-panel {
-    background: #161C25;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
-    max-width: 560px;
-    margin: 0 auto;
-  }
-  .code-panel-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .code-panel-title { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.55); }
-  .copy-btn {
-    background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border: none;
-    font-size: 12px; padding: 5px 10px; border-radius: 6px; font-family: var(--font-sans);
-  }
-  .copy-btn:hover { background: rgba(255,255,255,0.15); }
-  .code-panel pre {
-    margin: 0; padding: 18px 20px; overflow-x: auto;
-    font-family: var(--font-mono); font-size: 12.5px; line-height: 1.7; color: #DCE9FC;
-  }
-  .code-panel .tok-key { color: #7FB7FF; }
-  .code-panel .tok-str { color: #A8E6C9; }
-  .code-panel .tok-punc { color: rgba(255,255,255,0.4); }
+  /* Mobile stage fallback */
+  .stage-mobile-bar { display: none; }
+
+  /* How it works code sample reuse spacing not needed here */
 
   /* Trust bar */
   .trust-section { background: color-mix(in oklab, var(--green-500) 9%, var(--surface-page)); }
@@ -225,12 +377,15 @@
   .trust-detail { font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
 
   /* For sellers */
-  #for-sellers { background: color-mix(in oklab, var(--blue-500) 8%, var(--surface-page)); }
+  #for-sellers {
+    background-color: color-mix(in oklab, var(--blue-500) 8%, var(--surface-page));
+    background-image: radial-gradient(circle at 88% 12%, color-mix(in oklab, var(--green-500) 14%, transparent), transparent 60%);
+  }
   .sellers-grid { display: grid; grid-template-columns: minmax(0,1fr) 380px; gap: 48px; align-items: start; }
   .checklist { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-direction: column; gap: 14px; }
   .checklist li { display: flex; gap: 12px; font-size: 15px; color: var(--text-primary); line-height: 1.5; }
   .checklist .check {
-    width: 20px; height: 20px; border-radius: 50%; background: var(--green-500); color: #fff;
+    width: 20px; height: 20px; border-radius: 50%; background: var(--green-500); color: var(--ink-0);
     flex: none; display: flex; align-items: center; justify-content: center; margin-top: 1px;
   }
 
@@ -238,169 +393,269 @@
     background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm); overflow: hidden;
   }
-  .dashboard-preview-header { padding: 16px 18px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; }
+  .dashboard-preview-header { padding: 16px 18px 12px; border-bottom: 1px solid var(--border-subtle); }
   .dashboard-preview-title { font-size: 13px; font-weight: 600; }
+  .dashboard-preview-subtitle { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
   .dashboard-badge {
     display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500;
-    padding: 3px 9px; border-radius: 999px; background: #E4F5EA; color: #1B7A3D;
+    padding: 3px 9px; border-radius: 999px; background: var(--warning-bg); color: var(--warning-fg);
   }
-  .dashboard-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: #2FA85C; }
-  .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; }
-  .dashboard-row:last-child { border-bottom: none; }
+  .dashboard-badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--warning-dot); }
+  .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border-subtle); font-size: 13px; gap: 10px; }
   .dashboard-row-name { font-weight: 500; }
   .dashboard-row-meta { color: var(--text-tertiary); font-size: 12px; margin-top: 2px; }
+  .dashboard-row-right { display: flex; align-items: center; gap: 10px; flex: none; }
   .dashboard-price { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-secondary); }
-  .dashboard-preview-footer { padding: 12px 18px; }
-  .dashboard-link { font-size: 12.5px; }
+  .dashboard-preview-footer {
+    padding: 10px 18px; font-family: var(--font-mono); font-size: 11.5px; color: var(--text-tertiary);
+    background: var(--surface-sunken);
+  }
 
   /* For builders */
-  #for-builders { background: color-mix(in oklab, var(--green-500) 8%, var(--surface-page)); }
+  #for-builders {
+    background-color: color-mix(in oklab, var(--green-500) 8%, var(--surface-page));
+    background-image: radial-gradient(circle at 12% 85%, color-mix(in oklab, var(--blue-500) 14%, transparent), transparent 60%);
+  }
   .tool-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
   .tool-pill {
     font-family: var(--font-mono); font-size: 13px; background: var(--surface-card);
     border: 1px solid var(--border-default); border-radius: var(--radius-sm); padding: 8px 14px; color: var(--text-primary);
   }
 
-  /* Footer CTA */
-  .footer-cta { background: var(--blue-500); color: #FFFFFF; }
-  .footer-cta-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
-    font-size: clamp(26px, 3.6vw, 36px); margin: 0 0 24px; max-width: 640px;
+  /* Footer (CTA + links, unified dark section) */
+  .site-footer {
+    background-color: var(--ink-950);
+    background-image: radial-gradient(circle at 12% 15%, color-mix(in oklab, var(--amber-500) 16%, transparent), transparent 55%);
+    color: var(--ink-0);
   }
-  .footer-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-
-  footer { padding: 40px 32px; background: var(--ink-950); }
-  .footer-inner {
-    max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between;
-    align-items: center; gap: 24px; flex-wrap: wrap;
+  .footer-cta-heading {
+    font-family: var(--font-display); font-weight: 400; letter-spacing: -0.018em; line-height: 1.15;
+    font-size: clamp(26px, 3.6vw, var(--text-display-sm)); margin: 0 0 24px; max-width: 640px;
+  }
+  .footer-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+  .footer-links-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap;
+    padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.12);
   }
   .footer-links { display: flex; gap: 20px; font-size: 13.5px; color: rgba(255,255,255,0.55); flex-wrap: wrap; }
   .footer-links a { color: rgba(255,255,255,0.55); }
   .footer-links a:hover { color: var(--ink-0); }
-  .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.55); }
+  .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.7); }
+  .footer-copyright { font-size: 12.5px; color: rgba(255,255,255,0.4); }
 
+  @media (max-width: 900px) {
+    section { padding: 56px 20px; }
+    .header-inner { padding: 0 20px; }
+    .section-inner { padding: 0; }
+    .story { padding: 40px 20px; }
+    .story-inner { grid-template-columns: 1fr; gap: 24px; }
+    .story-stage { position: sticky; top: 64px; z-index: 10; flex-direction: row; align-items: center; gap: 12px; }
+    .status-pills, .agent-panel { display: none; }
+    .page-mock .mock-code-pane, .page-mock .mock-skeleton { display: none; }
+    .stage-mobile-bar {
+      display: flex; align-items: center; gap: 10px; flex: 1;
+      background: var(--surface-card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+      padding: 10px 14px; font-size: 12.5px; color: var(--text-secondary);
+    }
+    .beat { min-height: 78vh; }
+  }
   @media (max-width: 860px) {
     .trust-grid { grid-template-columns: repeat(2, 1fr); }
     .sellers-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
+    .footer-links-row { flex-direction: column; align-items: flex-start; }
   }
   @media (max-width: 520px) {
     .trust-grid { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-inner">
-    <div class="brand-lockup">
-      <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
-        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
-        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
-      </svg>
-      <div class="wordmark">Open Commerce</div>
+  <div class="brand-rule"></div>
+  <div class="header-bar">
+    <div class="header-inner">
+      <div class="brand-lockup">
+        <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+          <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+          <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+        </svg>
+        <div class="wordmark">Open Commerce</div>
+      </div>
+      <div class="nav-links">
+        <a href="#story">How it works</a>
+        <a href="#for-sellers">For sellers</a>
+        <a href="#for-builders">For builders</a>
+      </div>
+      <a class="btn-primary" href="#for-sellers">Start selling</a>
     </div>
-    <div class="nav-links">
-      <a href="/">Standard page</a>
-      <a href="#for-sellers">For sellers</a>
-      <a href="#for-builders">For builders</a>
-    </div>
-    <a class="btn-primary" href="#for-sellers">Start selling</a>
   </div>
 </div>
 
-<section class="intro">
-  <div class="intro-inner">
+<section class="hero">
+  <div class="hero-inner">
     <div class="section-eyebrow">Commerce is opening up</div>
-    <h1 class="intro-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
-    <p class="intro-body">Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.</p>
+    <h1 class="hero-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
+    <p class="hero-body">Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#for-sellers" style="font-size:15px; padding:12px 22px;">Start selling</a>
+    </div>
     <div class="scroll-cue">
-      <span>Scroll</span>
+      <span>Keep scrolling</span>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
   </div>
 </section>
 
 <section class="story" id="story">
-  <nav class="progress-track" aria-label="Story progress">
-    <button class="progress-dot" data-target="beat-1" aria-label="Beat 1"></button>
-    <button class="progress-dot" data-target="beat-2" aria-label="Beat 2"></button>
-    <button class="progress-dot" data-target="beat-3" aria-label="Beat 3"></button>
-    <button class="progress-dot" data-target="beat-4" aria-label="Beat 4"></button>
-    <button class="progress-dot" data-target="beat-5" aria-label="Beat 5"></button>
-    <button class="progress-dot" data-target="beat-6" aria-label="Beat 6"></button>
-  </nav>
+  <div class="story-inner">
 
-  <div class="beat" id="beat-1">
-    <div>
-      <div class="beat-num">01 / 06</div>
-      <h2 class="beat-heading">Agents couldn't <span class="marker">discover</span> your products.</h2>
-      <p class="beat-body">The name, the price, the buy button. All of it written for human eyes. An agent arrives, finds prose, and moves on.</p>
-    </div>
-  </div>
+    <div class="story-stage">
+      <div class="status-pills">
+        <span class="status-pill" id="pill-accessible">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Accessible
+        </span>
+        <span class="status-pill" id="pill-discoverable">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Discoverable
+        </span>
+        <span class="status-pill" id="pill-purchasable">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Purchasable
+        </span>
+      </div>
 
-  <div class="beat" id="beat-2">
-    <div>
-      <div class="beat-num">02 / 06</div>
-      <h2 class="beat-heading"><span class="marker">Add</span> 4 lines of code on your website. That's it.</h2>
-      <p class="beat-body">Standard schema.org Product and Offer data, plus a little extra for agents that can read more.</p>
-    </div>
-  </div>
+      <div class="stage-mobile-bar">
+        <span>Story progress</span>
+        <div class="progress-rail" style="flex:1;">
+          <span class="rail-segment"></span><span class="rail-segment"></span><span class="rail-segment"></span>
+          <span class="rail-segment"></span><span class="rail-segment"></span><span class="rail-segment"></span>
+        </div>
+      </div>
 
-  <div class="beat" id="beat-3">
-    <div>
-      <div class="beat-num">03 / 06</div>
-      <h2 class="beat-heading">Agent ready in <span class="marker">minutes</span>.</h2>
-      <p class="beat-body">A name. A price. A way to buy. In a shape any agent doing an ordinary web search already understands.</p>
-    </div>
-  </div>
-
-  <div class="beat" id="beat-4">
-    <div>
-      <div class="beat-num">04 / 06</div>
-      <h2 class="beat-heading">Create an agent-friendly catalog to <span class="marker">showcase</span> your products.</h2>
-      <p class="beat-body">Publish a discovery file and an agent sees everything you sell, not just the page it happened to land on.</p>
-    </div>
-  </div>
-
-  <div class="beat" id="beat-5">
-    <div>
-      <div class="beat-num">05 / 06</div>
-      <h2 class="beat-heading">The agent <span class="marker">asks</span>. You approve.</h2>
-      <p class="beat-body">Every purchase carries <code>confirmed_by_human</code>. An agent can put something in the basket, but it can't decide for anyone.</p>
-    </div>
-  </div>
-
-  <div class="beat" id="beat-6">
-    <div>
-      <div class="beat-num">06 / 06</div>
-      <h2 class="beat-heading">Purchase <span class="marker">completed</span>.</h2>
-      <p class="beat-body">You get paid out directly.</p>
-      <div style="margin-top: 32px;">
-        <div class="code-panel">
-          <div class="code-panel-header">
-            <span class="code-panel-title">what an agent reads</span>
-            <button class="copy-btn" type="button" id="hero-copy-btn">Copy</button>
+      <div class="page-mock" id="page-mock">
+        <div class="mock-chrome">
+          <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
+          <span class="mock-url">your-site.com/components/checkout-form</span>
+        </div>
+        <div class="mock-sweep"></div>
+        <div class="mock-body">
+          <div class="mock-status-chip">
+            <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" opacity=".3"/><path d="M1 1l22 22M9.9 9.9a3 3 0 104.2 4.2"/></svg>
+            <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12s4.5 10 10 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            <span class="chip-text-off">human-readable only</span>
+            <span class="chip-text-on">structured data present</span>
           </div>
-          <pre id="hero-code"><span class="tok-punc">{</span>
-  <span class="tok-key">"@context"</span><span class="tok-punc">:</span> <span class="tok-str">"https://schema.org"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"@type"</span><span class="tok-punc">:</span> <span class="tok-str">"Product"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"Multi-step Checkout Form"</span><span class="tok-punc">,</span>
-  <span class="tok-key">"offers"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
-    <span class="tok-key">"@type"</span><span class="tok-punc">:</span> <span class="tok-str">"Offer"</span><span class="tok-punc">,</span>
-    <span class="tok-key">"price"</span><span class="tok-punc">:</span> <span class="tok-str">"10.00"</span><span class="tok-punc">,</span>
-    <span class="tok-key">"priceCurrency"</span><span class="tok-punc">:</span> <span class="tok-str">"USD"</span>
-  <span class="tok-punc">},</span>
-  <span class="tok-key">"openCommerce"</span><span class="tok-punc">:</span> <span class="tok-punc">{</span>
-    <span class="tok-key">"component_id"</span><span class="tok-punc">:</span> <span class="tok-str">"cmp_8f2a1c"</span><span class="tok-punc">,</span>
-    <span class="tok-key">"purchase_endpoint"</span><span class="tok-punc">:</span> <span class="tok-str">"…/purchase"</span><span class="tok-punc">,</span>
-    <span class="tok-key">"license_type"</span><span class="tok-punc">:</span> <span class="tok-str">"non-exclusive"</span>
-  <span class="tok-punc">}</span>
-<span class="tok-punc">}</span></pre>
+          <div class="mock-title">Multi-step Checkout Form</div>
+          <div class="mock-meta">forms · react-tailwind</div>
+          <div class="mock-price">$10.00</div>
+          <div class="mock-skeleton"></div>
+          <div class="mock-skeleton" style="width:70%"></div>
+          <button class="mock-buy-btn" type="button">Buy $10.00</button>
+        </div>
+        <div class="mock-code-pane">
+          <pre><span class="tok-punc">{</span> <span class="tok-key">"@type"</span><span class="tok-punc">:</span> <span class="tok-str">"Product"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"Checkout Form"</span><span class="tok-punc">,</span>
+  <span class="tok-key">"offers"</span><span class="tok-punc">:</span> <span class="tok-punc">{ "price": "10.00" }</span><span class="mock-caret"></span></pre>
+        </div>
+      </div>
+
+      <div class="agent-panel">
+        <div class="agent-panel-header">
+          <span class="agent-panel-title">agent</span>
+          <span class="agent-badge" id="agent-badge">Can't see you</span>
+        </div>
+        <div class="agent-panel-body">
+          <div class="agent-state active" data-beat="0">
+            <div class="agent-msg agent-msg-q">Do you sell a checkout form component?</div>
+            <div class="agent-msg">your-site.com: a page, some prose, no product data. Moving on.</div>
+          </div>
+          <div class="agent-state" data-beat="1">
+            <div class="agent-msg agent-spin">Re-reading…</div>
+          </div>
+          <div class="agent-state" data-beat="2">
+            <div class="agent-msg">Found <code>Multi-step Checkout Form · $10.00 USD · cmp_8f2a1c</code></div>
+            <div class="agent-msg"><code>purchase_endpoint</code> found</div>
+          </div>
+          <div class="agent-state" data-beat="3">
+            <div class="agent-msg"><code>.well-known/agent-commerce.json</code></div>
+            <div class="agent-catalog-row"><span>Multi-step Checkout Form</span><span>$10.00</span></div>
+            <div class="agent-catalog-row"><span>Command Palette (Cmd+K)</span><span>$10.00</span></div>
+          </div>
+          <div class="agent-state" data-beat="4">
+            <div class="agent-msg">I found the checkout form for $10.00. Want me to buy it?</div>
+            <div class="agent-approval">
+              <button class="agent-approve-btn" type="button" id="approve-btn">Approve $10.00</button>
+              <button class="agent-decline-btn" type="button">Not now</button>
+            </div>
+          </div>
+          <div class="agent-state" data-beat="5">
+            <div class="agent-msg"><code>confirmed_by_human: true</code></div>
+            <div class="agent-msg"><code>payment_intent.succeeded · $10.00</code></div>
+            <div class="agent-msg">Download token issued</div>
+            <div class="agent-payout">
+              <div>$10.00 paid out to your Stripe account</div>
+              <div class="agent-payout-sub">Done. You're all set. Nothing to reconcile later.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-rail" aria-hidden="true">
+        <span class="rail-segment"></span><span class="rail-segment"></span><span class="rail-segment"></span>
+        <span class="rail-segment"></span><span class="rail-segment"></span><span class="rail-segment"></span>
+      </div>
+    </div>
+
+    <div class="story-track">
+      <div class="beat active" id="beat-0">
+        <div>
+          <div class="beat-num">01 / 06</div>
+          <h2 class="beat-heading">Agents couldn't <span class="marker">discover</span> your products.</h2>
+          <p class="beat-body">The name, the price, the buy button. All of it written for human eyes. An agent arrives, finds prose, and moves on.</p>
+        </div>
+      </div>
+      <div class="beat" id="beat-1">
+        <div>
+          <div class="beat-num">02 / 06</div>
+          <h2 class="beat-heading"><span class="marker">Add</span> 4 lines of code on your website. That's it.</h2>
+          <p class="beat-body">Standard schema.org Product and Offer data, plus a little extra for agents that can read more. Nothing about your page changes for the people visiting it.</p>
+        </div>
+      </div>
+      <div class="beat" id="beat-2">
+        <div>
+          <div class="beat-num">03 / 06</div>
+          <h2 class="beat-heading">Agent ready in <span class="marker">minutes</span>.</h2>
+          <p class="beat-body">A name. A price. A way to buy. In a shape any agent doing an ordinary web search already understands.</p>
+        </div>
+      </div>
+      <div class="beat" id="beat-3">
+        <div>
+          <div class="beat-num">04 / 06</div>
+          <h2 class="beat-heading">Create an agent-friendly catalog to <span class="marker">showcase</span> your products.</h2>
+          <p class="beat-body">Publish a discovery file and an agent sees everything you sell, not just the page it happened to land on.</p>
+        </div>
+      </div>
+      <div class="beat" id="beat-4">
+        <div>
+          <div class="beat-num">05 / 06</div>
+          <h2 class="beat-heading">The agent <span class="marker">asks</span>. You approve.</h2>
+          <p class="beat-body">Every purchase carries <code>confirmed_by_human</code>. An agent can put something in the basket, but it can't decide for anyone.</p>
+        </div>
+      </div>
+      <div class="beat" id="beat-5">
+        <div>
+          <div class="beat-num">06 / 06</div>
+          <h2 class="beat-heading">Purchase <span class="marker">completed</span>.</h2>
+          <p class="beat-body">You get paid out directly.</p>
         </div>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -408,7 +663,7 @@
   <div class="section-inner">
     <div class="trust-grid">
       <div class="trust-item">
-        <div class="trust-lead">A person always says yes.</div>
+        <div class="trust-lead">A human is always in the loop.</div>
         <div class="trust-detail">Every purchase carries <code>confirmed_by_human</code>, so an agent can't complete a charge on its own.</div>
       </div>
       <div class="trust-item">
@@ -438,31 +693,35 @@
           <li><span class="check">✓</span> Connect Stripe once, and purchases pay out to you directly, with no card handling on your end</li>
           <li><span class="check">✓</span> See exactly what agents read about you, in your own discovery file</li>
         </ul>
-        <a class="btn-primary" style="font-size:15px; padding:12px 22px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
+        <a class="btn-ghost" style="font-size:15px; padding:11px 21px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
       </div>
 
       <div class="dashboard-preview">
         <div class="dashboard-preview-header">
-          <span class="dashboard-preview-title">Your components</span>
-          <span class="dashboard-badge"><span class="dot"></span>Stripe connected</span>
+          <div class="dashboard-preview-title">Your components</div>
+          <div class="dashboard-preview-subtitle">A look at the seller view</div>
         </div>
         <div class="dashboard-row">
           <div>
-            <div class="dashboard-row-name">Multi-step checkout form</div>
+            <div class="dashboard-row-name">Multi-step Checkout Form</div>
             <div class="dashboard-row-meta">forms · react-tailwind</div>
           </div>
-          <div class="dashboard-price">$10.00</div>
+          <div class="dashboard-row-right">
+            <span class="dashboard-badge"><span class="dot"></span>Gated</span>
+            <span class="dashboard-price">$10.00</span>
+          </div>
         </div>
-        <div class="dashboard-row">
+        <div class="dashboard-row" style="border-bottom: none;">
           <div>
-            <div class="dashboard-row-name">Command palette</div>
+            <div class="dashboard-row-name">Command Palette (Cmd+K)</div>
             <div class="dashboard-row-meta">navigation · react-tailwind</div>
           </div>
-          <div class="dashboard-price">$10.00</div>
+          <div class="dashboard-row-right">
+            <span class="dashboard-badge"><span class="dot"></span>Gated</span>
+            <span class="dashboard-price">$10.00</span>
+          </div>
         </div>
-        <div class="dashboard-preview-footer">
-          <a class="dashboard-link" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">See the live dashboard →</a>
-        </div>
+        <div class="dashboard-preview-footer">.well-known/agent-commerce.json</div>
       </div>
     </div>
   </div>
@@ -485,74 +744,94 @@
   </div>
 </section>
 
-<section class="footer-cta">
-  <div class="section-inner">
+<footer class="site-footer">
+  <div class="brand-rule"></div>
+  <div class="section-inner" style="padding: 72px 32px 40px;">
     <h2 class="footer-cta-heading"><span class="marker-green">Together</span> we can create commerce that works better for humans and agents.</h2>
     <div class="footer-cta-actions">
       <a class="btn-inverse" href="#for-sellers">Start selling</a>
       <a class="btn-outline-inverse" href="#for-sellers">Contact us</a>
     </div>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
-        <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
-        <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
-      </svg>
-      Open Commerce
-    </div>
-    <div class="footer-links">
-      <a href="/">Standard landing page</a>
-      <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">Storefront</a>
-      <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Seller dashboard</a>
-      <a href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json" target="_blank" rel="noopener">Protocol</a>
+    <div class="footer-links-row">
+      <div class="footer-brand">
+        <svg width="20" height="20" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="13" y="9" width="38" height="15" rx="7.5" fill="#1A73E8" transform="rotate(-7 32 16.5)"/>
+          <rect x="9" y="25" width="46" height="15" rx="7.5" fill="#0E9F6E" transform="rotate(4 32 32.5)"/>
+          <rect x="16" y="41" width="34" height="15" rx="7.5" fill="#C77D0A" transform="rotate(-5 32 48.5)"/>
+        </svg>
+        Open Commerce
+      </div>
+      <div class="footer-links">
+        <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">Live storefront</a>
+        <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Seller dashboard</a>
+        <a href="https://checkout-form-product.vercel.app/checkout-form/" target="_blank" rel="noopener">Components</a>
+      </div>
+      <div class="footer-copyright">© 2026 Open Commerce</div>
     </div>
   </div>
 </footer>
 
 <script>
-  document.getElementById('hero-copy-btn').addEventListener('click', function () {
-    const text = document.getElementById('hero-code').innerText;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('hero-copy-btn');
-      const original = btn.textContent;
-      btn.textContent = 'Copied';
-      setTimeout(() => { btn.textContent = original; }, 1500);
-    });
-  });
-
-  // Scroll-triggered reveal for each beat, plus a progress dot tracker.
+  // ---- Scroll-linked story progress ----
+  const story = document.getElementById('story');
   const beats = Array.from(document.querySelectorAll('.beat'));
-  const dots = Array.from(document.querySelectorAll('.progress-dot'));
+  const pillAccessible = document.getElementById('pill-accessible');
+  const pillDiscoverable = document.getElementById('pill-discoverable');
+  const pillPurchasable = document.getElementById('pill-purchasable');
+  const pageMock = document.getElementById('page-mock');
+  const agentStates = Array.from(document.querySelectorAll('.agent-state'));
+  const agentBadge = document.getElementById('agent-badge');
+  const railSegments = Array.from(document.querySelectorAll('.rail-segment'));
+  const approveBtn = document.getElementById('approve-btn');
 
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) entry.target.classList.add('in-view');
-    });
-  }, { threshold: 0.25 });
-  beats.forEach((beat) => revealObserver.observe(beat));
+  let ticking = false;
 
-  const activeObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      const dot = dots.find((d) => d.dataset.target === entry.target.id);
-      if (!dot) return;
-      if (entry.isIntersecting) {
-        dots.forEach((d) => d.classList.remove('active'));
-        dot.classList.add('active');
-      }
-    });
-  }, { threshold: 0.5 });
-  beats.forEach((beat) => activeObserver.observe(beat));
+  function computeActiveIndex() {
+    const rect = story.getBoundingClientRect();
+    const total = story.offsetHeight - window.innerHeight;
+    const raw = total > 0 ? (-rect.top) / total : 0;
+    const progress = Math.min(1, Math.max(0, raw));
+    return Math.min(5, Math.floor(progress * 6));
+  }
 
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      document.getElementById(dot.dataset.target).scrollIntoView({ behavior: 'smooth', block: 'center' });
+  function update() {
+    const activeIndex = computeActiveIndex();
+
+    beats.forEach((beat, i) => beat.classList.toggle('active', i === activeIndex));
+
+    pillAccessible.classList.toggle('on', activeIndex >= 1);
+    pillDiscoverable.classList.toggle('on', activeIndex >= 2);
+    pillPurchasable.classList.toggle('on', activeIndex >= 4);
+
+    pageMock.classList.toggle('scanning', activeIndex === 0);
+    pageMock.classList.toggle('structured', activeIndex >= 1);
+
+    agentStates.forEach((el) => el.classList.toggle('active', Number(el.dataset.beat) === activeIndex));
+    agentBadge.classList.toggle('reading', activeIndex >= 1 && activeIndex <= 4);
+    agentBadge.classList.toggle('paid', activeIndex === 5);
+    agentBadge.textContent = activeIndex === 0 ? "Can't see you" : activeIndex === 5 ? 'Paid' : 'Reading…';
+
+    railSegments.forEach((seg, i) => seg.classList.toggle('filled', activeIndex >= i));
+
+    ticking = false;
+  }
+
+  function onScroll() {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+
+  if (approveBtn) {
+    approveBtn.addEventListener('click', () => {
+      beats[beats.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
-  });
+  }
 </script>
 
 </body>
