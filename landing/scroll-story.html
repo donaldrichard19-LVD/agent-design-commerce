@@ -159,11 +159,6 @@
     padding: 10px 18px; border-radius: var(--radius-sm);
   }
   .btn-primary:hover { filter: brightness(0.94); transform: translateY(-1px); }
-  .btn-ghost {
-    background: transparent; border: 1px solid var(--border-default); color: var(--text-primary);
-    font-size: 14px; font-weight: 500; padding: 9px 17px; border-radius: var(--radius-sm);
-  }
-  .btn-ghost:hover { transform: translateY(-1px); filter: brightness(0.97); }
   .btn-inverse {
     background: var(--ink-0); color: var(--text-primary); font-size: 15px; font-weight: 600;
     padding: 12px 22px; border-radius: var(--radius-sm);
@@ -351,10 +346,6 @@
     opacity: 0.24; transform: translateY(14px); transition: opacity 550ms ease, transform 550ms ease;
   }
   .beat.active { opacity: 1; transform: translateY(0); }
-  .beat-num {
-    font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary);
-    letter-spacing: 0.06em; margin-bottom: 14px;
-  }
   .beat-heading {
     font-family: var(--font-display); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12;
     font-size: clamp(26px, 4vw, 38px); margin: 0 0 14px; max-width: 480px;
@@ -614,42 +605,36 @@
     <div class="story-track">
       <div class="beat active" id="beat-0">
         <div>
-          <div class="beat-num">01 / 06</div>
           <h2 class="beat-heading">Agents couldn't <span class="marker">discover</span> your products.</h2>
           <p class="beat-body">The name, the price, the buy button. All of it written for human eyes. An agent arrives, finds prose, and moves on.</p>
         </div>
       </div>
       <div class="beat" id="beat-1">
         <div>
-          <div class="beat-num">02 / 06</div>
           <h2 class="beat-heading"><span class="marker">Add</span> 4 lines of code on your website. That's it.</h2>
           <p class="beat-body">Standard schema.org Product and Offer data, plus a little extra for agents that can read more. Nothing about your page changes for the people visiting it.</p>
         </div>
       </div>
       <div class="beat" id="beat-2">
         <div>
-          <div class="beat-num">03 / 06</div>
           <h2 class="beat-heading">Agent ready in <span class="marker">minutes</span>.</h2>
           <p class="beat-body">A name. A price. A way to buy. In a shape any agent doing an ordinary web search already understands.</p>
         </div>
       </div>
       <div class="beat" id="beat-3">
         <div>
-          <div class="beat-num">04 / 06</div>
           <h2 class="beat-heading">Create an agent-friendly catalog to <span class="marker">showcase</span> your products.</h2>
           <p class="beat-body">Publish a discovery file and an agent sees everything you sell, not just the page it happened to land on.</p>
         </div>
       </div>
       <div class="beat" id="beat-4">
         <div>
-          <div class="beat-num">05 / 06</div>
           <h2 class="beat-heading">The agent <span class="marker">asks</span>. You approve.</h2>
           <p class="beat-body">Every purchase carries <code>confirmed_by_human</code>. An agent can put something in the basket, but it can't decide for anyone.</p>
         </div>
       </div>
       <div class="beat" id="beat-5">
         <div>
-          <div class="beat-num">06 / 06</div>
           <h2 class="beat-heading">Purchase <span class="marker">completed</span>.</h2>
           <p class="beat-body">You get paid out directly.</p>
         </div>
@@ -693,7 +678,7 @@
           <li><span class="check">✓</span> Connect Stripe once, and purchases pay out to you directly, with no card handling on your end</li>
           <li><span class="check">✓</span> See exactly what agents read about you, in your own discovery file</li>
         </ul>
-        <a class="btn-ghost" style="font-size:15px; padding:11px 21px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
+        <a class="btn-primary" style="font-size:15px; padding:12px 22px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
       </div>
 
       <div class="dashboard-preview">
@@ -737,9 +722,6 @@
       <span class="tool-pill">get_component</span>
       <span class="tool-pill">purchase_component</span>
       <span class="tool-pill">get_asset</span>
-    </div>
-    <div style="margin-top: 28px;">
-      <a class="btn-ghost" href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json" target="_blank" rel="noopener">See a live discovery file</a>
     </div>
   </div>
 </section>
