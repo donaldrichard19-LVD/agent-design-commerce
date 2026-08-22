@@ -160,10 +160,10 @@
     <div class="eyebrow">Open Commerce — internal reference</div>
     <h1>Who lands where, and what happens next</h1>
     <p class="doc-sub">
-      Three people touch this project today — a seller publishing a component, a human's AI agent buying one,
-      and a builder wiring up their own agent host. Each crosses a different set of pages, hosted on three
-      different services, with real API calls and real money in between. This maps what's actually live versus
-      what's still a gap, not the intended design.
+      Three kinds of people use this today: a seller listing a component for sale, a shopper's AI assistant
+      buying one, and a developer connecting their own AI tool to the system. Each one moves through a
+      different set of pages, hosted on three different services, with real money changing hands along the
+      way. This shows what actually works right now — not what's planned.
     </p>
     <div class="doc-meta">as of 2026-08-22 · agent-design-commerce</div>
   </div>
@@ -172,18 +172,18 @@
     <div class="legend-item"><span class="legend-dot live"></span> Live &amp; functional</div>
     <div class="legend-item"><span class="legend-dot gap"></span> Gap — not built / not deployed</div>
     <div class="legend-item"><span class="legend-dot external"></span> Outside this project's pages</div>
-    <div class="legend-item"><span class="legend-swatch" aria-hidden="true"></span> Dashed border = external or unbuilt</div>
+    <div class="legend-item"><span class="legend-swatch" aria-hidden="true"></span> Dashed border = outside the project, or not built yet</div>
   </div>
 
   <!-- ===================== LANE 1: SELLER ===================== -->
   <div class="lane">
     <div class="lane-heading">
       <h2 class="lane-title">The seller</h2>
-      <span class="lane-role">a designer publishing components — e.g. Priya Ramesh, the live example</span>
+      <span class="lane-role">someone selling design components — like Priya Ramesh, our one live example</span>
     </div>
     <figure>
       <div class="diagram-frame">
-        <svg viewBox="0 0 1210 260" role="img" aria-label="Seller journey: a prospective seller has no live channel to discover the landing page today; from the landing page they click through to a real sign-in/sign-up screen on Render, then reach a per-seller dashboard, where connecting Stripe branches out to Stripe's own hosted onboarding before returning, and adding a component publishes a live discovery file.">
+        <svg viewBox="0 0 1210 260" role="img" aria-label="Seller journey: today, a prospective seller has no way to find the landing page on their own. From the landing page, they click through to a real sign-in or sign-up screen, then reach their own dashboard. From there, connecting a Stripe account sends them to Stripe's own signup process before bringing them back, and adding a component makes it show up live for AI agents to find.">
           <defs>
             <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
@@ -240,14 +240,16 @@
         </svg>
       </div>
       <figcaption>
-        There's no live path to the landing page yet — it isn't linked from anywhere, so today a seller only
-        finds it if told directly. Once there, <code>Sign in / Sign up</code> is real now — scrypt-hashed
-        passwords and a signed session cookie, one seller per account, each with their own components, sales,
-        and discovery file — not a single hardcoded account. From a signed-in dashboard, <code>Connect
-        Stripe</code> is the one onboarding step left, and it hands off to Stripe's own hosted flow before
-        control returns to the dashboard. A separate, still-local-only path — a self-serve
-        <code>registry/</code> domain submission form, now with a real form UI, not just an API — exists for a
-        seller running their <em>own</em> site rather than using this project's shared gate-kit instance.
+        Nobody can just stumble onto the landing page yet — it isn't linked from anywhere else, so a seller
+        only finds it if someone sends them the link directly. Once they do, <code>Sign in / Sign up</code> is
+        real: passwords are properly hashed, sessions are secured with a cookie, and each seller gets their
+        own account with their own components, sales, and listing — it's no longer one shared account. From
+        there, the one step left is <code>Connect Stripe</code>, which hands off to Stripe's own signup flow
+        and brings them back when it's done. There's also a separate way in for a seller who runs their
+        <em>own</em> website instead of using this project's shared dashboard — a self-serve
+        <code>registry/</code> form for submitting their site, which now has a real page to fill out instead
+        of just a raw API. It still only runs on a developer's own computer, though — nobody outside the
+        project can reach it yet.
       </figcaption>
     </figure>
   </div>
@@ -256,11 +258,11 @@
   <div class="lane">
     <div class="lane-heading">
       <h2 class="lane-title">The buyer's agent</h2>
-      <span class="lane-role">a human's AI agent, buying on their behalf — the human never visits a page in this project</span>
+      <span class="lane-role">a person's AI assistant, buying on their behalf — the person never actually visits a page in this project</span>
     </div>
     <figure>
       <div class="diagram-frame">
-        <svg viewBox="0 0 1080 280" role="img" aria-label="Buyer's agent journey: a human and their agent host discover a component through one of two real paths, either the registry's MCP tools or by reading a live JSON-LD embed on a storefront listing page, both converging on human confirmation, a real Stripe purchase, a signature-checked webhook, and delivered files.">
+        <svg viewBox="0 0 1080 280" role="img" aria-label="Buyer's agent journey: a person and their AI assistant find a component one of two ways — either through the registry's tools, or by reading structured data embedded on a storefront page. Both paths lead to the same next steps: the person has to approve the purchase, a real payment goes through Stripe, a verified confirmation comes back, and the files get delivered.">
           <defs>
             <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
@@ -318,12 +320,13 @@
         </svg>
       </div>
       <figcaption>
-        Two real, independent discovery paths converge on the same purchase flow: an MCP-connected agent host
-        can call the registry's tools directly, or <em>any</em> browsing/search agent can land on a storefront
-        listing page and read the live <code>schema.org</code> + <code>openCommerce</code> JSON-LD embed on the
-        page — verified to point at real, working endpoints, not placeholders. Either way, nothing completes
-        without <code>confirmed_by_human: true</code>, and nothing is final until the signature-checked
-        <code>payment_intent.succeeded</code> webhook fires.
+        There are two separate, working ways for an AI agent to find a component, and both lead to the same
+        purchase process. An agent connected through MCP can ask the registry directly for what's available.
+        Or, any agent that can simply browse the web can land on a storefront page and read the
+        <code>schema.org</code> + <code>openCommerce</code> data embedded in it — real data pointing at real,
+        working links, not sample placeholders. Either way, a purchase can't go through without explicit human
+        approval (<code>confirmed_by_human: true</code>), and it isn't final until Stripe's own verified
+        confirmation — the <code>payment_intent.succeeded</code> webhook — comes back.
       </figcaption>
     </figure>
   </div>
@@ -332,11 +335,11 @@
   <div class="lane">
     <div class="lane-heading">
       <h2 class="lane-title">The builder</h2>
-      <span class="lane-role">a developer wiring their own agent host up to the protocol</span>
+      <span class="lane-role">a developer connecting their own AI tool to this system</span>
     </div>
     <figure>
       <div class="diagram-frame">
-        <svg viewBox="0 0 1240 180" role="img" aria-label="Builder journey: a developer starts at the landing page's for-builders section, follows a link to a real live discovery file, then clones the registry code and configures their own agent host to talk to the local MCP server over stdio.">
+        <svg viewBox="0 0 1240 180" role="img" aria-label="Builder journey: a developer starts on the landing page's section for builders, follows a link to a real, live example, then copies the registry code and sets up their own AI tool to talk to it directly on their own computer.">
           <defs>
             <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
@@ -379,22 +382,23 @@
         </svg>
       </div>
       <figcaption>
-        The most linear of the three — every step is real. The discovery file the landing page links to is the
-        actual live data, not a sample. The last hop happens entirely on the builder's own machine: their agent
-        host spawns <code>mcp-server.js</code> over stdio, per the README's own install instructions.
+        This is the simplest of the three paths, and every step in it is real. The example the landing page
+        links to is live data, not a mockup. The last step happens entirely on the developer's own computer:
+        their AI tool starts up <code>mcp-server.js</code> directly, following the setup instructions in the
+        project's README.
       </figcaption>
     </figure>
   </div>
 
   <!-- ===================== GAPS CALLOUT ===================== -->
   <div class="callout">
-    <h2>What this map makes visible</h2>
+    <h2>What this map shows</h2>
     <ul>
-      <li><b>The landing page has no live inbound path.</b> It's fully built and deployed, but nothing else in the project links to it yet — every visit today has to be a direct link someone was handed.</li>
-      <li><b>Human checkout doesn't exist.</b> A person who lands on a storefront listing page reads the same embed an agent would, but there's no "buy" button wired up for them — only agents can actually complete a purchase today.</li>
-      <li><b>The registry submission form has a UI now, but still isn't public.</b> It runs locally (<code>localhost:3002</code>) with a real form, a working SSRF guard, and real schema validation — a Render service for it is declared in <code>render.yaml</code> but has never actually been deployed (confirmed live: <code>x-render-routing: no-server</code>), so nothing points a real seller at it yet.</li>
-      <li><b>Multi-tenant auth is live, but only exercised by one seller.</b> Signup, login, and per-seller data are real and working — but the only account that exists today is Priya's, migrated into the new system rather than created through the live signup form. The path is unverified end-to-end with a second, genuinely new seller.</li>
-      <li><b>Two agent discovery paths exist independently.</b> The registry (MCP) and the open-web embed (schema.org JSON-LD) both work today and neither depends on the other — an agent doesn't need to know about the registry at all if it just reads a page.</li>
+      <li><b>Nobody can find the landing page on their own.</b> It's fully built and live, but nothing else in the project links to it — the only way to visit it is if someone hands you the link directly.</li>
+      <li><b>People can't buy anything themselves yet.</b> If a person visits a storefront page, they see the same information an AI agent would, but there's no working "buy" button for them — only AI agents can actually complete a purchase right now.</li>
+      <li><b>There's a real submission page for sellers now, but it's not actually online.</b> It runs on a developer's own computer (<code>localhost:3002</code>), with real safety checks and validation. Hosting for it is planned — a Render service is declared for it — but that hosting has never actually been turned on (we checked: it doesn't exist live), so no real seller can reach it yet.</li>
+      <li><b>Sellers can now have their own separate accounts, but only one ever has.</b> Signing up, logging in, and keeping each seller's data separate all genuinely work — but the only account that exists is Priya's, and it was moved into the new system rather than created by going through the actual signup form. Nobody's proven the whole thing works end-to-end for a brand-new seller yet.</li>
+      <li><b>There are two separate ways for an agent to find a component, and neither depends on the other.</b> The registry (using MCP) and the information embedded directly on the web page both work on their own — an agent doesn't need to know the registry exists if it can just read the page.</li>
     </ul>
   </div>
 
