@@ -145,6 +145,14 @@ function failSale(transactionId, error) {
 
 const app = express();
 
+// Render (and most PaaS reverse proxies) terminate TLS upstream and forward
+// to this process over plain HTTP, so req.protocol is 'http' unless Express
+// is told to trust X-Forwarded-Proto -- without this, the `secure: true`
+// cookie option below silently fails (the `cookies` package throws internally
+// on what it sees as an unencrypted connection, and cookie-session swallows
+// the error), so no session cookie is ever set in production.
+app.set('trust proxy', 1);
+
 // ---- Webhook route MUST be mounted with a raw body parser, and BEFORE the
 // global express.json() below, or Stripe's signature verification breaks. ----
 app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), (req, res) => {
