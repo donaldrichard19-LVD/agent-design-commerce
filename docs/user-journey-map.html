@@ -331,6 +331,71 @@
     </figure>
   </div>
 
+  <!-- ===================== LANE 2.5: PAYMENT ===================== -->
+  <div class="lane">
+    <div class="lane-heading">
+      <h2 class="lane-title">The payment</h2>
+      <span class="lane-role">where the money actually goes — Stripe handles it, not this project</span>
+    </div>
+    <figure>
+      <div class="diagram-frame">
+        <svg viewBox="0 0 1160 260" role="img" aria-label="Payment journey: a purchase request triggers a real charge sent straight to the seller's Stripe account; a declined card fails cleanly with nothing charged; otherwise the purchase waits on Stripe's own signature-verified webhook, which is the only thing that finishes the sale and unlocks a single-use download link.">
+          <defs>
+            <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
+            </marker>
+          </defs>
+
+          <rect x="10" y="98" width="150" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="85" y="120" text-anchor="middle" class="box-title">Purchase request</text>
+          <text x="85" y="136" text-anchor="middle" class="box-sub">RENDER · gate-kit</text>
+          <text x="85" y="150" text-anchor="middle" class="box-sub">same request twice = one charge</text>
+
+          <line x1="160" y1="130" x2="230" y2="130" class="flow-arrow" marker-end="url(#arrow4)"></line>
+
+          <rect x="230" y="98" width="190" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="325" y="120" text-anchor="middle" class="box-title">Charge created</text>
+          <text x="325" y="136" text-anchor="middle" class="box-sub">real Stripe PaymentIntent</text>
+          <text x="325" y="150" text-anchor="middle" class="box-sub">paid straight to seller</text>
+
+          <line x1="325" y1="162" x2="325" y2="200" class="flow-arrow-dashed" marker-end="url(#arrow4)"></line>
+          <text x="331" y="184" class="flow-label">card declined</text>
+          <rect x="225" y="200" width="200" height="52" rx="8" class="box-gap"></rect>
+          <text x="325" y="222" text-anchor="middle" class="box-title">Card declined</text>
+          <text x="325" y="238" text-anchor="middle" class="box-sub">nothing charged, no download</text>
+
+          <line x1="420" y1="130" x2="490" y2="130" class="flow-arrow" marker-end="url(#arrow4)"></line>
+          <text x="455" y="118" text-anchor="middle" class="flow-label">waits for</text>
+
+          <rect x="490" y="98" width="190" height="64" rx="8" class="box-external"></rect>
+          <text x="585" y="120" text-anchor="middle" class="box-title">Stripe confirms</text>
+          <text x="585" y="136" text-anchor="middle" class="box-sub">EXTERNAL · signed webhook</text>
+          <text x="585" y="150" text-anchor="middle" class="box-sub">only thing that finishes a sale</text>
+
+          <line x1="680" y1="130" x2="750" y2="130" class="flow-arrow" marker-end="url(#arrow4)"></line>
+
+          <rect x="750" y="98" width="170" height="64" rx="8" class="box-live"></rect>
+          <text x="835" y="120" text-anchor="middle" class="box-title">Sale completes</text>
+          <text x="835" y="136" text-anchor="middle" class="box-sub">sold_count +1</text>
+          <text x="835" y="150" text-anchor="middle" class="box-sub">download unlocked</text>
+
+          <line x1="920" y1="130" x2="990" y2="130" class="flow-arrow" marker-end="url(#arrow4)"></line>
+
+          <rect x="990" y="98" width="160" height="64" rx="8" class="box-live"></rect>
+          <text x="1070" y="120" text-anchor="middle" class="box-title">Download link</text>
+          <text x="1070" y="136" text-anchor="middle" class="box-sub">single-use</text>
+          <text x="1070" y="150" text-anchor="middle" class="box-sub">expires</text>
+        </svg>
+      </div>
+      <figcaption>
+        Money moves straight from buyer to seller through Stripe — this project's own server never touches
+        card details or holds funds itself. Nothing counts as sold until Stripe's own signed webhook confirms
+        the charge; a declined card fails cleanly, with nothing charged and no download issued. Retrying the
+        same purchase for the same buyer and component never charges twice.
+      </figcaption>
+    </figure>
+  </div>
+
   <!-- ===================== LANE 3: BUILDER ===================== -->
   <div class="lane">
     <div class="lane-heading">
@@ -399,6 +464,7 @@
       <li><b>There's a real submission page for sellers now, but it's not actually online.</b> It runs on a developer's own computer (<code>localhost:3002</code>), with real safety checks and validation. Hosting for it is planned — a Render service is declared for it — but that hosting has never actually been turned on (we checked: it doesn't exist live), so no real seller can reach it yet.</li>
       <li><b>Sellers can now have their own separate accounts, but only one ever has.</b> Signing up, logging in, and keeping each seller's data separate all genuinely work — but the only account that exists is Priya's, and it was moved into the new system rather than created by going through the actual signup form. Nobody's proven the whole thing works end-to-end for a brand-new seller yet.</li>
       <li><b>There are two separate ways for an agent to find a component, and neither depends on the other.</b> The registry (using MCP) and the information embedded directly on the web page both work on their own — an agent doesn't need to know the registry exists if it can just read the page.</li>
+      <li><b>There's no refund or dispute handling.</b> A completed sale has no way to reverse it — no refund endpoint, no chargeback handling — beyond whatever a seller does manually in their own Stripe dashboard.</li>
     </ul>
   </div>
 
