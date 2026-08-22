@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Open Commerce: Sell to agents</title>
-<meta name="description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it. No migration, no dashboard, no rebuilding what already works.">
-<link rel="canonical" href="https://checkout-form-product.vercel.app/">
+<title>Open Commerce: The scroll story</title>
+<meta name="description" content="How a product goes from invisible to agents to purchasable by one, four lines of code and one approval at a time.">
+<link rel="canonical" href="https://open-commerce-stack.vercel.app/scroll-story">
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Open Commerce: Sell to agents">
-<meta property="og:description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it.">
+<meta property="og:title" content="Open Commerce: The scroll story">
+<meta property="og:description" content="How a product goes from invisible to agents to purchasable by one, four lines of code and one approval at a time.">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Open Commerce">
-<meta name="twitter:description" content="Add one snippet to a page you already have, and AI agents can see what you sell, what it costs, and how to buy it.">
+<meta name="twitter:description" content="How a product goes from invisible to agents to purchasable by one, four lines of code and one approval at a time.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3QgeD0iMTMiIHk9IjkiIHdpZHRoPSIzOCIgaGVpZ2h0PSIxNSIgcng9IjcuNSIgZmlsbD0iIzFBNzNFOCIgdHJhbnNmb3JtPSJyb3RhdGUoLTcgMzIgMTYuNSkiLz48cmVjdCB4PSI5IiB5PSIyNSIgd2lkdGg9IjQ2IiBoZWlnaHQ9IjE1IiByeD0iNy41IiBmaWxsPSIjMEU5RjZFIiB0cmFuc2Zvcm09InJvdGF0ZSg0IDMyIDMyLjUpIi8+PHJlY3QgeD0iMTYiIHk9IjQxIiB3aWR0aD0iMzQiIGhlaWdodD0iMTUiIHJ4PSI3LjUiIGZpbGw9IiNDNzdEMEEiIHRyYW5zZm9ybT0icm90YXRlKC01IDMyIDQ4LjUpIi8+PC9zdmc+">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -77,23 +77,9 @@
     padding: 0.02em 0.18em;
   }
 
-  .rotator {
-    display: inline-block;
-    overflow: hidden;
-    height: 1.15em;
-    vertical-align: bottom;
-  }
-  .rotator-inner {
-    display: flex;
-    flex-direction: column;
-    animation: rotate-words 5.7s infinite;
-  }
-  .rotator-inner span {
-    display: block;
-    height: 1.15em;
-    line-height: 1.15em;
-    white-space: nowrap;
-  }
+  .rotator { display: inline-block; overflow: hidden; height: 1.15em; vertical-align: bottom; }
+  .rotator-inner { display: flex; flex-direction: column; animation: rotate-words 5.7s infinite; }
+  .rotator-inner span { display: block; height: 1.15em; line-height: 1.15em; white-space: nowrap; }
   @keyframes rotate-words {
     0%, 22% { transform: translateY(0); }
     28%, 47% { transform: translateY(-1.15em); }
@@ -156,22 +142,62 @@
   }
   .btn-outline-inverse:hover { background: rgba(255,255,255,0.08); }
 
-  /* Hero */
-  .hero { padding: 80px 32px 96px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); }
-  .hero-inner { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: minmax(0,1fr) 420px; gap: 56px; align-items: center; }
-  .hero-heading {
-    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.022em; line-height: 1.08;
-    font-size: clamp(32px, 4.6vw, 48px); margin: 14px 0 20px;
+  /* Intro (compact hero) */
+  .intro { padding: 64px 32px 56px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); text-align: center; }
+  .intro-inner { max-width: 680px; margin: 0 auto; }
+  .intro-heading {
+    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.022em; line-height: 1.1;
+    font-size: clamp(30px, 4.4vw, 44px); margin: 14px 0 18px;
   }
-  .hero-body { font-size: 18px; color: var(--text-secondary); line-height: 1.6; margin: 0 0 28px; max-width: 520px; }
-  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
-  .hero-footnote { font-size: 13px; color: var(--text-tertiary); }
+  .intro-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin: 0; }
+  .scroll-cue {
+    margin-top: 32px; font-size: 12px; color: var(--text-tertiary);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .scroll-cue svg { animation: bob 1.6s ease-in-out infinite; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+  @media (prefers-reduced-motion: reduce) { .scroll-cue svg { animation: none; } }
 
+  /* Story beats */
+  .story { position: relative; background: color-mix(in oklab, var(--amber-500) 6%, var(--surface-page)); padding: 0; }
+  .progress-track {
+    position: fixed; right: 28px; top: 50%; transform: translateY(-50%); z-index: 15;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .progress-dot {
+    width: 9px; height: 9px; border-radius: 50%; background: var(--border-default);
+    border: none; padding: 0; cursor: pointer; transition: background-color 200ms ease, transform 200ms ease;
+  }
+  .progress-dot.active { background: var(--blue-500); transform: scale(1.3); }
+  @media (max-width: 720px) { .progress-track { display: none; } }
+
+  .beat {
+    min-height: 78vh; display: flex; align-items: center; justify-content: center;
+    padding: 48px 32px; max-width: 780px; margin: 0 auto;
+    opacity: 0; transform: translateY(28px); transition: opacity 640ms ease, transform 640ms ease;
+  }
+  .beat.in-view { opacity: 1; transform: translateY(0); }
+  .beat-num {
+    font-family: var(--font-mono); font-size: 12px; color: var(--text-tertiary);
+    letter-spacing: 0.06em; margin-bottom: 14px;
+  }
+  .beat-heading {
+    font-family: var(--font-serif); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12;
+    font-size: clamp(28px, 5vw, 44px); margin: 0 0 16px;
+  }
+  .beat-body { font-size: 17px; color: var(--text-secondary); line-height: 1.6; max-width: 520px; }
+  @media (prefers-reduced-motion: reduce) {
+    .beat { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* How it works code sample, reused after the story */
   .code-panel {
     background: #161C25;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+    max-width: 560px;
+    margin: 0 auto;
   }
   .code-panel-header {
     display: flex; align-items: center; justify-content: space-between;
@@ -190,21 +216,6 @@
   .code-panel .tok-key { color: #7FB7FF; }
   .code-panel .tok-str { color: #A8E6C9; }
   .code-panel .tok-punc { color: rgba(255,255,255,0.4); }
-
-  /* How it works */
-  #how-it-works { background: color-mix(in oklab, var(--amber-500) 8%, var(--surface-page)); }
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .step-card {
-    background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm); padding: 24px; display: flex; flex-direction: column; gap: 12px;
-  }
-  .step-num {
-    width: 26px; height: 26px; border-radius: 50%; background: var(--blue-100); color: var(--blue-700);
-    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
-    display: flex; align-items: center; justify-content: center; flex: none;
-  }
-  .step-title { font-size: 16px; font-weight: 600; }
-  .step-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
 
   /* Trust bar */
   .trust-section { background: color-mix(in oklab, var(--green-500) 9%, var(--surface-page)); }
@@ -269,8 +280,6 @@
   .footer-brand { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: rgba(255,255,255,0.55); }
 
   @media (max-width: 860px) {
-    .hero-inner { grid-template-columns: 1fr; }
-    .steps { grid-template-columns: 1fr; }
     .trust-grid { grid-template-columns: repeat(2, 1fr); }
     .sellers-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
@@ -293,7 +302,7 @@
       <div class="wordmark">Open Commerce</div>
     </div>
     <div class="nav-links">
-      <a href="#how-it-works">How it works</a>
+      <a href="/">Standard page</a>
       <a href="#for-sellers">For sellers</a>
       <a href="#for-builders">For builders</a>
     </div>
@@ -301,29 +310,80 @@
   </div>
 </div>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="section-eyebrow">Commerce is opening up</div>
-      <h1 class="hero-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
-      <p class="hero-body">
-        Your next customer might not arrive by clicking through a storefront. They might come through an agent.
-        Add one small snippet to a page you already have, and agents can see what you sell, what it costs, and
-        how to buy it. No migration, no dashboard, no rebuilding what already works.
-      </p>
-      <div class="hero-actions">
-        <a class="btn-primary" href="#how-it-works" style="font-size:15px; padding:12px 22px;">Get your snippet</a>
-        <a class="btn-ghost" href="https://checkout-form-product.vercel.app/checkout-form/" style="font-size:15px; padding:11px 21px;" target="_blank" rel="noopener">See it in action</a>
-      </div>
-      <div class="hero-footnote">We're starting with design components. Wherever you're starting, there's a place to begin.</div>
+<section class="intro">
+  <div class="intro-inner">
+    <div class="section-eyebrow">Commerce is opening up</div>
+    <h1 class="intro-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
+    <p class="intro-body">Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.</p>
+    <div class="scroll-cue">
+      <span>Scroll</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
     </div>
+  </div>
+</section>
 
-    <div class="code-panel">
-      <div class="code-panel-header">
-        <span class="code-panel-title">what an agent reads</span>
-        <button class="copy-btn" type="button" id="hero-copy-btn">Copy</button>
-      </div>
-      <pre id="hero-code"><span class="tok-punc">{</span>
+<section class="story" id="story">
+  <nav class="progress-track" aria-label="Story progress">
+    <button class="progress-dot" data-target="beat-1" aria-label="Beat 1"></button>
+    <button class="progress-dot" data-target="beat-2" aria-label="Beat 2"></button>
+    <button class="progress-dot" data-target="beat-3" aria-label="Beat 3"></button>
+    <button class="progress-dot" data-target="beat-4" aria-label="Beat 4"></button>
+    <button class="progress-dot" data-target="beat-5" aria-label="Beat 5"></button>
+    <button class="progress-dot" data-target="beat-6" aria-label="Beat 6"></button>
+  </nav>
+
+  <div class="beat" id="beat-1">
+    <div>
+      <div class="beat-num">01 / 06</div>
+      <h2 class="beat-heading">Agents couldn't <span class="marker">discover</span> your products.</h2>
+      <p class="beat-body">The name, the price, the buy button. All of it written for human eyes. An agent arrives, finds prose, and moves on.</p>
+    </div>
+  </div>
+
+  <div class="beat" id="beat-2">
+    <div>
+      <div class="beat-num">02 / 06</div>
+      <h2 class="beat-heading"><span class="marker">Add</span> 4 lines of code on your website. That's it.</h2>
+      <p class="beat-body">Standard schema.org Product and Offer data, plus a little extra for agents that can read more.</p>
+    </div>
+  </div>
+
+  <div class="beat" id="beat-3">
+    <div>
+      <div class="beat-num">03 / 06</div>
+      <h2 class="beat-heading">Agent ready in <span class="marker">minutes</span>.</h2>
+      <p class="beat-body">A name. A price. A way to buy. In a shape any agent doing an ordinary web search already understands.</p>
+    </div>
+  </div>
+
+  <div class="beat" id="beat-4">
+    <div>
+      <div class="beat-num">04 / 06</div>
+      <h2 class="beat-heading">Create an agent-friendly catalog to <span class="marker">showcase</span> your products.</h2>
+      <p class="beat-body">Publish a discovery file and an agent sees everything you sell, not just the page it happened to land on.</p>
+    </div>
+  </div>
+
+  <div class="beat" id="beat-5">
+    <div>
+      <div class="beat-num">05 / 06</div>
+      <h2 class="beat-heading">The agent <span class="marker">asks</span>. You approve.</h2>
+      <p class="beat-body">Every purchase carries <code>confirmed_by_human</code>. An agent can put something in the basket, but it can't decide for anyone.</p>
+    </div>
+  </div>
+
+  <div class="beat" id="beat-6">
+    <div>
+      <div class="beat-num">06 / 06</div>
+      <h2 class="beat-heading">Purchase <span class="marker">completed</span>.</h2>
+      <p class="beat-body">You get paid out directly.</p>
+      <div style="margin-top: 32px;">
+        <div class="code-panel">
+          <div class="code-panel-header">
+            <span class="code-panel-title">what an agent reads</span>
+            <button class="copy-btn" type="button" id="hero-copy-btn">Copy</button>
+          </div>
+          <pre id="hero-code"><span class="tok-punc">{</span>
   <span class="tok-key">"@context"</span><span class="tok-punc">:</span> <span class="tok-str">"https://schema.org"</span><span class="tok-punc">,</span>
   <span class="tok-key">"@type"</span><span class="tok-punc">:</span> <span class="tok-str">"Product"</span><span class="tok-punc">,</span>
   <span class="tok-key">"name"</span><span class="tok-punc">:</span> <span class="tok-str">"Multi-step Checkout Form"</span><span class="tok-punc">,</span>
@@ -338,29 +398,7 @@
     <span class="tok-key">"license_type"</span><span class="tok-punc">:</span> <span class="tok-str">"non-exclusive"</span>
   <span class="tok-punc">}</span>
 <span class="tok-punc">}</span></pre>
-    </div>
-  </div>
-</section>
-
-<section id="how-it-works">
-  <div class="section-inner">
-    <div class="section-eyebrow">How it works</div>
-    <h2 class="section-heading">Two steps to get ready. Then an agent can buy.</h2>
-    <div class="steps">
-      <div class="step-card">
-        <div class="step-num">1</div>
-        <div class="step-title">Add the embed</div>
-        <div class="step-desc">One JSON-LD block in the page you already have. It speaks standard schema.org Product and Offer data, plus a little extra for agents that can read more. If you only do one thing, do this.</div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">2</div>
-        <div class="step-title">Publish your catalog</div>
-        <div class="step-desc">A <code>.well-known/agent-commerce.json</code> that lists everything you sell in a single fetch. Now an agent can see your whole shelf, not just the page it landed on.</div>
-      </div>
-      <div class="step-card">
-        <div class="step-num">3</div>
-        <div class="step-title">An agent buys</div>
-        <div class="step-desc">It finds what it needs, a person confirms the purchase, and Stripe pays out to your account directly. Nothing sits between you and getting paid.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -468,6 +506,7 @@
       Open Commerce
     </div>
     <div class="footer-links">
+      <a href="/">Standard landing page</a>
       <a href="https://checkout-form-product.vercel.app/" target="_blank" rel="noopener">Storefront</a>
       <a href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Seller dashboard</a>
       <a href="https://agent-commerce-gate-kit.onrender.com/.well-known/agent-commerce.json" target="_blank" rel="noopener">Protocol</a>
@@ -483,6 +522,35 @@
       const original = btn.textContent;
       btn.textContent = 'Copied';
       setTimeout(() => { btn.textContent = original; }, 1500);
+    });
+  });
+
+  // Scroll-triggered reveal for each beat, plus a progress dot tracker.
+  const beats = Array.from(document.querySelectorAll('.beat'));
+  const dots = Array.from(document.querySelectorAll('.progress-dot'));
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, { threshold: 0.25 });
+  beats.forEach((beat) => revealObserver.observe(beat));
+
+  const activeObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      const dot = dots.find((d) => d.dataset.target === entry.target.id);
+      if (!dot) return;
+      if (entry.isIntersecting) {
+        dots.forEach((d) => d.classList.remove('active'));
+        dot.classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+  beats.forEach((beat) => activeObserver.observe(beat));
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => {
+      document.getElementById(dot.dataset.target).scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
 </script>
