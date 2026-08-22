@@ -1,4 +1,4 @@
-<title>Open Commerce Stack Journey Map</title>
+<title>Open Commerce Journey Map</title>
 <style>
   :root {
     --surface-page: #F5F7FA;
@@ -157,7 +157,7 @@
 <div class="page">
 
   <div class="doc-header">
-    <div class="eyebrow">Open Commerce Stack — internal reference</div>
+    <div class="eyebrow">Open Commerce — internal reference</div>
     <h1>Who lands where, and what happens next</h1>
     <p class="doc-sub">
       Three people touch this project today — a seller publishing a component, a human's AI agent buying one,
@@ -165,7 +165,7 @@
       different services, with real API calls and real money in between. This maps what's actually live versus
       what's still a gap, not the intended design.
     </p>
-    <div class="doc-meta">as of 2026-08-21 · agent-design-commerce</div>
+    <div class="doc-meta">as of 2026-08-22 · agent-design-commerce</div>
   </div>
 
   <div class="legend" role="group" aria-label="Diagram legend">
@@ -183,7 +183,7 @@
     </div>
     <figure>
       <div class="diagram-frame">
-        <svg viewBox="0 0 1080 260" role="img" aria-label="Seller journey: a prospective seller has no live channel to discover the landing page today; from the landing page they click through to the seller dashboard on Render, where connecting Stripe branches out to Stripe's own hosted onboarding before returning, and adding a component publishes a live discovery file.">
+        <svg viewBox="0 0 1210 260" role="img" aria-label="Seller journey: a prospective seller has no live channel to discover the landing page today; from the landing page they click through to a real sign-in/sign-up screen on Render, then reach a per-seller dashboard, where connecting Stripe branches out to Stripe's own hosted onboarding before returning, and adding a component publishes a live discovery file.">
           <defs>
             <marker id="arrow1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0,0 L10,5 L0,10 z" fill="var(--text-tertiary)"></path>
@@ -191,51 +191,63 @@
           </defs>
 
           <!-- Box A: prospective seller -->
-          <rect x="10" y="98" width="150" height="64" rx="8" class="box-gap"></rect>
-          <text x="85" y="124" text-anchor="middle" class="box-title">Prospective seller</text>
-          <text x="85" y="142" text-anchor="middle" class="box-sub">NO CHANNEL YET</text>
+          <rect x="10" y="98" width="140" height="64" rx="8" class="box-gap"></rect>
+          <text x="80" y="124" text-anchor="middle" class="box-title">Prospective seller</text>
+          <text x="80" y="142" text-anchor="middle" class="box-sub">NO CHANNEL YET</text>
 
-          <line x1="160" y1="130" x2="280" y2="130" class="flow-arrow-dashed" marker-end="url(#arrow1)"></line>
-          <text x="220" y="118" text-anchor="middle" class="flow-label">told directly</text>
+          <line x1="150" y1="130" x2="250" y2="130" class="flow-arrow-dashed" marker-end="url(#arrow1)"></line>
+          <text x="200" y="118" text-anchor="middle" class="flow-label">told directly</text>
 
           <!-- Box B: landing page -->
-          <rect x="280" y="98" width="160" height="64" rx="8" class="box-live"></rect>
-          <text x="360" y="124" text-anchor="middle" class="box-title">Landing page</text>
-          <text x="360" y="142" text-anchor="middle" class="box-sub">VERCEL · STANDALONE</text>
+          <rect x="250" y="98" width="150" height="64" rx="8" class="box-live"></rect>
+          <text x="325" y="124" text-anchor="middle" class="box-title">Landing page</text>
+          <text x="325" y="142" text-anchor="middle" class="box-sub">VERCEL · STANDALONE</text>
 
-          <line x1="440" y1="130" x2="560" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
-          <text x="500" y="118" text-anchor="middle" class="flow-label">Start selling</text>
+          <line x1="400" y1="130" x2="480" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="440" y="118" text-anchor="middle" class="flow-label">Start selling</text>
 
-          <!-- Box C: seller dashboard -->
-          <rect x="560" y="98" width="180" height="64" rx="8" class="box-live-alt"></rect>
-          <text x="650" y="124" text-anchor="middle" class="box-title">Seller dashboard</text>
-          <text x="650" y="142" text-anchor="middle" class="box-sub">RENDER · gate-kit</text>
+          <!-- Box C: sign in / sign up (new — real multi-tenant auth) -->
+          <rect x="480" y="98" width="170" height="64" rx="8" class="box-live"></rect>
+          <text x="565" y="120" text-anchor="middle" class="box-title">Sign in / Sign up</text>
+          <text x="565" y="136" text-anchor="middle" class="box-sub">RENDER · real auth</text>
+          <text x="565" y="150" text-anchor="middle" class="box-sub">scrypt + session cookie</text>
+
+          <line x1="650" y1="130" x2="730" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="690" y="118" text-anchor="middle" class="flow-label">signed in</text>
+
+          <!-- Box D: seller dashboard -->
+          <rect x="730" y="98" width="170" height="64" rx="8" class="box-live-alt"></rect>
+          <text x="815" y="124" text-anchor="middle" class="box-title">Seller dashboard</text>
+          <text x="815" y="142" text-anchor="middle" class="box-sub">gate-kit · own data</text>
 
           <!-- branch down: Stripe -->
-          <line x1="610" y1="162" x2="610" y2="200" class="flow-arrow-dashed" marker-end="url(#arrow1)"></line>
-          <text x="604" y="184" text-anchor="end" class="flow-label">Connect Stripe</text>
-          <rect x="550" y="200" width="200" height="52" rx="8" class="box-external"></rect>
-          <text x="650" y="222" text-anchor="middle" class="box-title">Stripe hosted onboarding</text>
-          <text x="650" y="238" text-anchor="middle" class="box-sub">EXTERNAL · connect.stripe.com</text>
-          <line x1="690" y1="200" x2="690" y2="162" class="flow-arrow" marker-end="url(#arrow1)"></line>
-          <text x="696" y="184" class="flow-label">connected ✓</text>
+          <line x1="790" y1="162" x2="790" y2="200" class="flow-arrow-dashed" marker-end="url(#arrow1)"></line>
+          <text x="784" y="184" text-anchor="end" class="flow-label">Connect Stripe</text>
+          <rect x="700" y="200" width="220" height="52" rx="8" class="box-external"></rect>
+          <text x="810" y="222" text-anchor="middle" class="box-title">Stripe hosted onboarding</text>
+          <text x="810" y="238" text-anchor="middle" class="box-sub">EXTERNAL · connect.stripe.com</text>
+          <line x1="880" y1="200" x2="880" y2="162" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="886" y="184" class="flow-label">connected ✓</text>
 
-          <line x1="740" y1="130" x2="860" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
-          <text x="800" y="118" text-anchor="middle" class="flow-label">Add component</text>
+          <line x1="900" y1="130" x2="990" y2="130" class="flow-arrow" marker-end="url(#arrow1)"></line>
+          <text x="945" y="118" text-anchor="middle" class="flow-label">Add component</text>
 
-          <!-- Box D: discovery file live -->
-          <rect x="860" y="98" width="210" height="64" rx="8" class="box-live"></rect>
-          <text x="965" y="120" text-anchor="middle" class="box-title">Discovery file + listing</text>
-          <text x="965" y="136" text-anchor="middle" class="box-sub">.well-known/agent-commerce.json</text>
-          <text x="965" y="150" text-anchor="middle" class="box-sub">now visible to agents</text>
+          <!-- Box E: discovery file live -->
+          <rect x="990" y="98" width="210" height="64" rx="8" class="box-live"></rect>
+          <text x="1095" y="120" text-anchor="middle" class="box-title">Discovery file + listing</text>
+          <text x="1095" y="136" text-anchor="middle" class="box-sub">.well-known/agent-commerce.json</text>
+          <text x="1095" y="150" text-anchor="middle" class="box-sub">now visible to agents</text>
         </svg>
       </div>
       <figcaption>
         There's no live path to the landing page yet — it isn't linked from anywhere, so today a seller only
-        finds it if told directly. Once there, <code>Connect Stripe</code> is the one real onboarding step, and
-        it hands off to Stripe's own hosted flow before control returns to the dashboard.
-        A separate, not-yet-public path — a self-serve <code>registry/</code> domain submission form — exists
-        for a seller running their <em>own</em> site rather than using this project's shared gate-kit instance.
+        finds it if told directly. Once there, <code>Sign in / Sign up</code> is real now — scrypt-hashed
+        passwords and a signed session cookie, one seller per account, each with their own components, sales,
+        and discovery file — not a single hardcoded account. From a signed-in dashboard, <code>Connect
+        Stripe</code> is the one onboarding step left, and it hands off to Stripe's own hosted flow before
+        control returns to the dashboard. A separate, still-local-only path — a self-serve
+        <code>registry/</code> domain submission form, now with a real form UI, not just an API — exists for a
+        seller running their <em>own</em> site rather than using this project's shared gate-kit instance.
       </figcaption>
     </figure>
   </div>
@@ -380,8 +392,8 @@
     <ul>
       <li><b>The landing page has no live inbound path.</b> It's fully built and deployed, but nothing else in the project links to it yet — every visit today has to be a direct link someone was handed.</li>
       <li><b>Human checkout doesn't exist.</b> A person who lands on a storefront listing page reads the same embed an agent would, but there's no "buy" button wired up for them — only agents can actually complete a purchase today.</li>
-      <li><b>The registry submission form isn't public.</b> It runs locally (<code>localhost:3002</code>) with a working SSRF guard and real schema validation, but nothing points a real seller at it yet.</li>
-      <li><b>The seller dashboard has no multi-tenant auth.</b> "Let's get you set up" is a real, live link — but it lands on Priya's already-configured account and sales data, not a blank signup, since there's no login system yet.</li>
+      <li><b>The registry submission form has a UI now, but still isn't public.</b> It runs locally (<code>localhost:3002</code>) with a real form, a working SSRF guard, and real schema validation — a Render service for it is declared in <code>render.yaml</code> but has never actually been deployed (confirmed live: <code>x-render-routing: no-server</code>), so nothing points a real seller at it yet.</li>
+      <li><b>Multi-tenant auth is live, but only exercised by one seller.</b> Signup, login, and per-seller data are real and working — but the only account that exists today is Priya's, migrated into the new system rather than created through the live signup form. The path is unverified end-to-end with a second, genuinely new seller.</li>
       <li><b>Two agent discovery paths exist independently.</b> The registry (MCP) and the open-web embed (schema.org JSON-LD) both work today and neither depends on the other — an agent doesn't need to know about the registry at all if it just reads a page.</li>
     </ul>
   </div>
