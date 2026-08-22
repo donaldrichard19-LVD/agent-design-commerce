@@ -2,8 +2,9 @@
 // payment method. The purchase protocol is machine-to-machine (an agent
 // calls purchase_component, there's no browser for the buyer to enter a
 // card at that moment) — so a payment method has to be saved once, out of
-// band, via scripts/create-test-buyer.js (test mode) or a real Checkout
-// Session in `setup` mode (production). See P1 requirements, workstream 1.
+// band: via scripts/create-test-buyer.js (test mode), or POST
+// /api/buyer/setup + a real Checkout Session in `setup` mode, which a human
+// completes in their own browser (production — see server.js).
 const fs = require('fs');
 const path = require('path');
 

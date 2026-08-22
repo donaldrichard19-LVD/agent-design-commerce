@@ -314,7 +314,7 @@ app.post('/api/purchase', async (req, res) => {
   if (!buyer) {
     return res.status(402).json({
       error: 'buyer_payment_method_required',
-      message: 'This buyer_token has no saved payment method. Run scripts/create-test-buyer.js (test mode) or complete a Checkout Session in setup mode (production) first.',
+      message: 'This buyer_token has no saved payment method. Call POST /api/buyer/setup to get a checkout_url, have the buyer complete it, then retry this purchase with the returned buyer_token.',
     });
   }
 
@@ -403,6 +403,63 @@ app.get('/api/download/:token', (req, res) => {
   const c = data.components.find((x) => x.component_id === entry.component_id);
   if (!c) return res.status(404).json({ error: 'not_found' });
   res.json({ files: c.files, install_instructions: c.install_instructions });
+});
+
+// ---- Buyer payment setup (Checkout Session, setup mode) ----
+// The purchase protocol is machine-to-machine (an agent calls
+// purchase_component with a buyer_token) — there's no browser for the buyer
+// at that moment, so a payment method has to be saved once, out of band.
+// This is that out-of-band step: agent-initiated (it hits
+// buyer_payment_method_required on a purchase attempt, or calls this
+// upfront), then handed to the human to complete in their own browser.
+// A registered buyer_token is platform-wide *within this shared gate-kit
+// instance* — one saved payment method can pay any seller hosted here,
+// since the payout destination is chosen per-purchase (transfer_data), not
+// tied to the buyer. It would need a separate shared identity service to
+// stay platform-wide across a future world of independently-hosted seller
+// instances — see BACKLOG.md's ACP/AP2 interoperability notes, which solve
+// exactly this with provider-issued payment tokens instead.
+
+app.post('/api/buyer/setup', async (req, res) => {
+  try {
+    const buyerToken = `tok_${crypto.randomBytes(12).toString('hex')}`;
+    const customer = await stripe.customers.create({ metadata: { buyer_token: buyerToken } });
+    const session = await stripe.checkout.sessions.create({
+      mode: 'setup',
+      customer: customer.id,
+      payment_method_types: ['card'],
+      client_reference_id: buyerToken,
+      success_url: `${BASE_URL}/api/buyer/setup/return?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${BASE_URL}/api/buyer/setup/cancel`,
+    });
+    res.json({ buyer_token: buyerToken, checkout_url: session.url });
+  } catch (err) {
+    console.error('buyer setup error:', err.type, err.message);
+    res.status(502).json({ error: 'buyer_setup_error', message: err.message });
+  }
+});
+
+app.get('/api/buyer/setup/return', async (req, res) => {
+  const sessionId = req.query.session_id;
+  if (!sessionId) return res.status(400).send('Missing session_id.');
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId, { expand: ['setup_intent'] });
+    if (session.status !== 'complete' || !session.setup_intent || session.setup_intent.status !== 'succeeded') {
+      return res.status(400).send('<p>Payment method setup did not complete. Close this tab and ask your agent to try again.</p>');
+    }
+    registerBuyer(session.client_reference_id, {
+      stripeCustomerId: session.customer,
+      stripePaymentMethodId: session.setup_intent.payment_method,
+    });
+    res.send('<p>Payment method saved. You can close this tab — your agent already has what it needs to continue.</p>');
+  } catch (err) {
+    console.error('buyer setup return error:', err.type, err.message);
+    res.status(502).send('Something went wrong confirming your payment method.');
+  }
+});
+
+app.get('/api/buyer/setup/cancel', (req, res) => {
+  res.send("<p>Setup cancelled — nothing was saved. Ask your agent to try again when you're ready.</p>");
 });
 
 // ---- Stripe Connect onboarding (v2 Accounts + Account Links) ----
