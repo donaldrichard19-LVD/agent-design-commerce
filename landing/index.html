@@ -170,8 +170,13 @@
   .btn-outline-inverse:hover { background: rgba(255,255,255,0.08); }
 
   /* Hero */
-  .hero { padding: 80px 32px 96px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); text-align: center; }
-  .hero-inner { max-width: 680px; margin: 0 auto; }
+  .hero { position: relative; overflow: hidden; padding: 80px 32px 96px; background: color-mix(in oklab, var(--blue-500) 7%, var(--surface-page)); text-align: center; }
+  .hero-inner { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; }
+  .hero-vignettes { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+  .hero-vig { position: absolute; }
+  @media (max-width: 1180px) { .hero-vig-4 { display: none; } }
+  @media (max-width: 1080px) { .hero-vig-3 { display: none; } }
+  @media (max-width: 820px) { .hero-vig { display: none; } }
   .hero-heading {
     font-family: var(--font-display); font-weight: 400; letter-spacing: var(--tracking-display); line-height: var(--leading-display);
     font-size: clamp(32px, 4.6vw, var(--text-display-md)); margin: 14px 0 18px;
@@ -232,9 +237,19 @@
   /* Trust bar */
   .trust-section { background: color-mix(in oklab, var(--green-500) 9%, var(--surface-page)); }
   .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
-  .trust-item { display: flex; flex-direction: column; gap: 6px; }
-  .trust-lead { font-size: 15px; font-weight: 600; }
-  .trust-detail { font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
+  .trust-item { display: flex; flex-direction: column; gap: 10px; }
+  .trust-icon { width: 20px; height: 20px; color: var(--text-accent); }
+  .trust-text { margin: 0; font-size: 13.5px; color: var(--text-secondary); line-height: 1.55; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(28px);
+    transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in-view { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
 
   /* For sellers */
   #for-sellers {
@@ -346,6 +361,85 @@
 </div>
 
 <section class="hero">
+  <div class="hero-vignettes" aria-hidden="true">
+    <div class="hero-vig" style="left:-3%; top:7%; width:clamp(240px, 29vw, 420px); opacity:.30;">
+      <svg width="100%" viewBox="0 0 240 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="vig-group" data-x="12" data-y="62" data-my="-8">
+          <circle class="vig-headbob" cx="26" cy="12" r="12" fill="#1A73E8" data-my="-4"/>
+          <rect class="vig-pill" x="4" y="28" width="44" height="15" rx="7.5" fill="#1A73E8" data-rot="-6" data-mr="5" data-cx="26" data-cy="35.5"/>
+          <rect class="vig-pill" x="10" y="45" width="34" height="15" rx="7.5" fill="#0E9F6E" data-rot="4" data-mr="-6" data-mx="3" data-cx="27" data-cy="52.5"/>
+        </g>
+        <g class="vig-group" data-x="64" data-y="78" data-mx="-6" data-my="6" data-flip="-1">
+          <circle class="vig-headbob" cx="26" cy="12" r="12" fill="#0E9F6E" data-my="-4"/>
+          <rect class="vig-pill" x="4" y="28" width="44" height="15" rx="7.5" fill="#C77D0A" data-rot="-6" data-mr="5" data-cx="26" data-cy="35.5"/>
+          <rect class="vig-pill" x="10" y="45" width="34" height="15" rx="7.5" fill="#1A73E8" data-rot="4" data-mr="-6" data-mx="3" data-cx="27" data-cy="52.5"/>
+        </g>
+        <rect class="vig-pill" x="104" y="40" width="110" height="16" rx="8" fill="#C77D0A" data-rot="-7" data-mx="22" data-my="-14" data-mr="11" data-cx="159" data-cy="48"/>
+        <rect class="vig-pill" x="112" y="62" width="96" height="16" rx="8" fill="#1A73E8" data-rot="3" data-mx="-14" data-my="-2" data-mr="-9" data-cx="160" data-cy="70"/>
+        <rect class="vig-pill" x="120" y="84" width="82" height="16" rx="8" fill="#0E9F6E" data-rot="-4" data-mx="16" data-my="16" data-mr="8" data-cx="161" data-cy="92"/>
+        <rect class="vig-pill" x="96" y="124" width="126" height="12" rx="6" fill="#1A73E8" opacity=".45" data-my="10" data-mr="-3" data-cx="159" data-cy="130"/>
+      </svg>
+    </div>
+    <div class="hero-vig" style="right:-3%; top:11%; width:clamp(240px, 28vw, 405px); opacity:.30;">
+      <svg width="100%" viewBox="0 0 230 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="vig-group" data-x="8" data-y="72" data-mx="10">
+          <line x1="24" y1="-10" x2="24" y2="0" stroke="#1A73E8" stroke-width="3" stroke-linecap="round"/>
+          <circle class="vig-dot" cx="24" cy="-13" r="3.5" fill="#C77D0A" data-mx="6" data-my="-5"/>
+          <rect class="vig-rot" x="8" y="0" width="32" height="26" rx="10" fill="#1A73E8" data-mr="4" data-cx="24" data-cy="13"/>
+          <circle cx="18" cy="13" r="3.2" fill="#fff" opacity=".92"/>
+          <circle cx="30" cy="13" r="3.2" fill="#fff" opacity=".92"/>
+          <rect class="vig-pill" x="2" y="31" width="44" height="15" rx="7.5" fill="#0E9F6E" data-rot="-4" data-mr="6" data-cx="24" data-cy="38.5"/>
+        </g>
+        <rect class="vig-pill" x="70" y="54" width="40" height="13" rx="6.5" fill="#C77D0A" data-rot="-8" data-mx="62" data-my="16" data-mr="14" data-cx="90" data-cy="60.5"/>
+        <rect class="vig-pill" x="96" y="74" width="34" height="13" rx="6.5" fill="#1A73E8" opacity=".8" data-rot="6" data-mx="44" data-my="26" data-mr="-16" data-cx="113" data-cy="80.5"/>
+        <rect class="vig-pill" x="132" y="64" width="82" height="15" rx="7.5" fill="#0E9F6E" data-rot="-3" data-my="-8" data-mr="6" data-cx="173" data-cy="71.5"/>
+        <rect class="vig-pill" x="138" y="84" width="70" height="15" rx="7.5" fill="#C77D0A" data-rot="2" data-mx="6" data-mr="-7" data-cx="173" data-cy="91.5"/>
+        <rect class="vig-pill" x="144" y="104" width="58" height="15" rx="7.5" fill="#1A73E8" data-rot="-5" data-mx="-8" data-my="8" data-mr="9" data-cx="173" data-cy="111.5"/>
+        <path class="vig-check" d="M146 46 l10 11 18 -22" stroke="#0E9F6E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" data-mx="4" data-my="-10" style="opacity:.25;"/>
+      </svg>
+    </div>
+    <div class="hero-vig hero-vig-3" style="left:4%; bottom:-4%; width:clamp(200px, 22vw, 320px); opacity:.24;">
+      <svg width="100%" viewBox="0 0 210 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect class="vig-pill" x="14" y="92" width="96" height="14" rx="7" fill="#1A73E8" opacity=".75" data-rot="-5" data-mx="12" data-mr="7" data-cx="62" data-cy="99"/>
+        <rect class="vig-pill" x="26" y="114" width="78" height="14" rx="7" fill="#C77D0A" opacity=".75" data-rot="3" data-mx="-10" data-my="8" data-mr="-8" data-cx="65" data-cy="121"/>
+        <g class="vig-group" data-x="144" data-y="104" data-mx="-8" data-my="-6">
+          <line x1="24" y1="-10" x2="24" y2="0" stroke="#0E9F6E" stroke-width="3" stroke-linecap="round"/>
+          <circle class="vig-dot" cx="24" cy="-13" r="3.5" fill="#C77D0A" data-mx="6" data-my="-5"/>
+          <rect class="vig-rot" x="8" y="0" width="32" height="26" rx="10" fill="#0E9F6E" data-mr="4" data-cx="24" data-cy="13"/>
+          <circle cx="18" cy="13" r="3.2" fill="#fff" opacity=".92"/>
+          <circle cx="30" cy="13" r="3.2" fill="#fff" opacity=".92"/>
+          <rect class="vig-pill" x="2" y="31" width="44" height="15" rx="7.5" fill="#1A73E8" data-rot="-4" data-mr="6" data-cx="24" data-cy="38.5"/>
+        </g>
+        <g class="vig-lens" data-mx="34" data-my="-22" data-mr="14" data-cx="86" data-cy="52">
+          <circle cx="86" cy="52" r="38" stroke="#0E9F6E" stroke-width="7"/>
+          <line x1="114" y1="80" x2="140" y2="106" stroke="#0E9F6E" stroke-width="7" stroke-linecap="round"/>
+          <rect class="vig-pill" x="62" y="38" width="48" height="11" rx="5.5" fill="#C77D0A" data-rot="-6" data-mx="-8" data-mr="10" data-cx="86" data-cy="43.5"/>
+          <rect class="vig-pill" x="68" y="56" width="36" height="11" rx="5.5" fill="#1A73E8" data-rot="4" data-mx="8" data-mr="-11" data-cx="86" data-cy="61.5"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hero-vig hero-vig-4" style="right:2%; bottom:-3%; width:clamp(210px, 23vw, 345px); opacity:.24;">
+      <svg width="100%" viewBox="0 0 240 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g class="vig-group" data-x="12" data-y="86" data-mx="-6" data-my="4">
+          <line x1="24" y1="-10" x2="24" y2="0" stroke="#C77D0A" stroke-width="3" stroke-linecap="round"/>
+          <circle class="vig-dot" cx="24" cy="-13" r="3.5" fill="#C77D0A" data-mx="6" data-my="-5"/>
+          <rect class="vig-rot" x="8" y="0" width="32" height="26" rx="10" fill="#C77D0A" data-mr="4" data-cx="24" data-cy="13"/>
+          <circle cx="18" cy="13" r="3.2" fill="#fff" opacity=".92"/>
+          <circle cx="30" cy="13" r="3.2" fill="#fff" opacity=".92"/>
+          <rect class="vig-pill" x="2" y="31" width="44" height="15" rx="7.5" fill="#1A73E8" data-rot="-4" data-mr="6" data-cx="24" data-cy="38.5"/>
+        </g>
+        <g class="vig-group" data-x="168" data-y="78" data-mx="8" data-my="-6" data-flip="-1">
+          <circle class="vig-headbob" cx="26" cy="12" r="12" fill="#0E9F6E" data-my="-4"/>
+          <rect class="vig-pill" x="4" y="28" width="44" height="15" rx="7.5" fill="#0E9F6E" data-rot="-6" data-mr="5" data-cx="26" data-cy="35.5"/>
+          <rect class="vig-pill" x="10" y="45" width="34" height="15" rx="7.5" fill="#C77D0A" data-rot="4" data-mr="-6" data-mx="3" data-cx="27" data-cy="52.5"/>
+        </g>
+        <rect class="vig-pill" x="72" y="44" width="34" height="12" rx="6" fill="#0E9F6E" data-rot="-9" data-mx="78" data-my="14" data-mr="18" data-cx="89" data-cy="50"/>
+        <rect class="vig-pill" x="92" y="68" width="30" height="12" rx="6" fill="#1A73E8" data-rot="7" data-mx="62" data-my="-6" data-mr="-20" data-cx="107" data-cy="74"/>
+        <rect class="vig-pill" x="78" y="94" width="26" height="12" rx="6" fill="#C77D0A" data-rot="-4" data-mx="86" data-my="-22" data-mr="16" data-cx="91" data-cy="100"/>
+        <rect class="vig-pill" x="64" y="140" width="132" height="11" rx="5.5" fill="#0E9F6E" opacity=".4" data-my="8" data-mr="4" data-cx="130" data-cy="145.5"/>
+      </svg>
+    </div>
+  </div>
   <div class="hero-inner">
     <h1 class="hero-heading">Sell to agents <span class="marker rotator" aria-hidden="true"><span class="rotator-inner"><span>now</span><span>faster</span><span>better</span><span>now</span></span></span><span class="sr-only">now, faster, better</span></h1>
     <p class="hero-body">Open Commerce is a suite of tools that allow agents to discover and purchase on your website. Add 4 lines of code and enable any agent to find and buy your products on your site.</p>
@@ -409,20 +503,21 @@
 <section class="trust-section">
   <div class="section-inner">
     <div class="trust-grid">
-      <div class="trust-item">
-        <div class="trust-lead">A human is always in the loop.</div>
-        <div class="trust-detail">Every purchase carries <code>confirmed_by_human</code>, so an agent can't complete a charge on its own.</div>
+      <div class="trust-item reveal" style="transition-delay:0ms;">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 8l-3 3-1.5-1.5"/></svg>
+        <p class="trust-text">A human is always in the loop. Every purchase carries <code>confirmed_by_human</code>, so an agent can't complete a charge on its own.</p>
       </div>
-      <div class="trust-item">
-        <div class="trust-lead">Money goes straight to you.</div>
-        <div class="trust-detail">Payments run as Stripe Connect destination charges into your own account, and we never touch card data.</div>
+      <div class="trust-item reveal" style="transition-delay:90ms;">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        <p class="trust-text">Money goes straight to you. Payments run as Stripe Connect destination charges into your own account, and we never touch card data.</p>
       </div>
-      <div class="trust-item">
-        <div class="trust-lead">A purchase is only final on a signature-checked <code>payment_intent.succeeded</code> webhook.</div>
+      <div class="trust-item reveal" style="transition-delay:180ms;">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <p class="trust-text">A purchase is only final on a signature-checked <code>payment_intent.succeeded</code> webhook.</p>
       </div>
-      <div class="trust-item">
-        <div class="trust-lead">What you sell stays yours.</div>
-        <div class="trust-detail">Download links are single-use tokens that expire, not permanent URLs.</div>
+      <div class="trust-item reveal" style="transition-delay:270ms;">
+        <svg class="trust-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2h4"/><path d="M12 14l3-3"/><circle cx="12" cy="14" r="8"/></svg>
+        <p class="trust-text">What you sell stays yours. Download links are single-use tokens that expire, not permanent URLs.</p>
       </div>
     </div>
   </div>
@@ -435,10 +530,10 @@
         <div class="section-eyebrow">For sellers</div>
         <h2 class="section-heading">A new kind of <span class="marker">customer</span> is discovering your products. We'll help you get the <span class="marker">sale</span>.</h2>
         <ul class="checklist">
-          <li><span class="check">✓</span> Publish what you've made: name, category, framework, price, code</li>
-          <li><span class="check">✓</span> Gate it or open it up whenever you like. You stay in control</li>
-          <li><span class="check">✓</span> Connect Stripe once, and purchases pay out to you directly, with no card handling on your end</li>
-          <li><span class="check">✓</span> See exactly what agents read about you, in your own discovery file</li>
+          <li class="reveal" style="transition-delay:140ms;"><span class="check">✓</span> Publish what you've made: name, category, framework, price, code</li>
+          <li class="reveal" style="transition-delay:220ms;"><span class="check">✓</span> Gate it or open it up whenever you like. You stay in control</li>
+          <li class="reveal" style="transition-delay:300ms;"><span class="check">✓</span> Connect Stripe once, and purchases pay out to you directly, with no card handling on your end</li>
+          <li class="reveal" style="transition-delay:380ms;"><span class="check">✓</span> See exactly what agents read about you, in your own discovery file</li>
         </ul>
         <a class="btn-primary" style="font-size:15px; padding:12px 22px; display:inline-block;" href="https://agent-commerce-gate-kit.onrender.com/" target="_blank" rel="noopener">Let's get you set up</a>
       </div>
@@ -480,10 +575,10 @@
     <h2 class="section-heading">You're <span class="marker">building</span> something great with agents. Let's help you find what you need to get <span class="marker">launch</span> ready.</h2>
     <p class="section-body">Your agent can already understand, decide, and act. When it's ready to buy something, four tools are all it takes.</p>
     <div class="tool-pills">
-      <span class="tool-pill">search_components</span>
-      <span class="tool-pill">get_component</span>
-      <span class="tool-pill">purchase_component</span>
-      <span class="tool-pill">get_asset</span>
+      <span class="tool-pill reveal" style="transition-delay:0ms;">search_components</span>
+      <span class="tool-pill reveal" style="transition-delay:90ms;">get_component</span>
+      <span class="tool-pill reveal" style="transition-delay:180ms;">purchase_component</span>
+      <span class="tool-pill reveal" style="transition-delay:270ms;">get_asset</span>
     </div>
   </div>
 </section>
@@ -525,6 +620,80 @@
       setTimeout(() => { btn.textContent = original; }, 1500);
     });
   });
+
+  // ---- Hero vignette scroll drift ----
+  (function () {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pills = Array.from(document.querySelectorAll('.vig-pill'));
+    const groups = Array.from(document.querySelectorAll('.vig-group'));
+    const headbobs = Array.from(document.querySelectorAll('.vig-headbob'));
+    const rots = Array.from(document.querySelectorAll('.vig-rot'));
+    const dots = Array.from(document.querySelectorAll('.vig-dot'));
+    const checks = Array.from(document.querySelectorAll('.vig-check'));
+    const lenses = Array.from(document.querySelectorAll('.vig-lens'));
+
+    function applyDrift(e) {
+      pills.forEach((el) => {
+        const mx = +el.dataset.mx || 0, my = +el.dataset.my || 0, mr = +el.dataset.mr || 0;
+        const rot = +el.dataset.rot || 0, cx = el.dataset.cx, cy = el.dataset.cy;
+        el.setAttribute('transform', 'translate(' + (mx * e) + ' ' + (my * e) + ') rotate(' + (rot + mr * e) + ' ' + cx + ' ' + cy + ')');
+      });
+      groups.forEach((el) => {
+        const x = +el.dataset.x, y = +el.dataset.y, mx = +el.dataset.mx || 0, my = +el.dataset.my || 0, flip = +el.dataset.flip || 1;
+        el.setAttribute('transform', 'translate(' + (x + mx * e) + ' ' + (y + my * e) + ') scale(' + flip + ' 1)');
+      });
+      headbobs.forEach((el) => {
+        const my = +el.dataset.my || 0;
+        el.setAttribute('transform', 'translate(0 ' + (my * e) + ')');
+      });
+      rots.forEach((el) => {
+        const mr = +el.dataset.mr || 0, cx = el.dataset.cx, cy = el.dataset.cy;
+        el.setAttribute('transform', 'rotate(' + (mr * e) + ' ' + cx + ' ' + cy + ')');
+      });
+      dots.forEach((el) => {
+        const mx = +el.dataset.mx || 0, my = +el.dataset.my || 0;
+        el.setAttribute('transform', 'translate(' + (mx * e) + ' ' + (my * e) + ')');
+      });
+      checks.forEach((el) => {
+        const mx = +el.dataset.mx || 0, my = +el.dataset.my || 0;
+        el.setAttribute('transform', 'translate(' + (mx * e) + ' ' + (my * e) + ')');
+        el.style.opacity = 0.25 + 0.75 * e;
+      });
+      lenses.forEach((el) => {
+        const mx = +el.dataset.mx || 0, my = +el.dataset.my || 0, mr = +el.dataset.mr || 0, cx = el.dataset.cx, cy = el.dataset.cy;
+        el.setAttribute('transform', 'translate(' + (mx * e) + ' ' + (my * e) + ') rotate(' + (mr * e) + ' ' + cx + ' ' + cy + ')');
+      });
+    }
+
+    function computeDrift() {
+      if (reduceMotion) return 0;
+      const s = Math.min(1, Math.max(0, window.scrollY / (window.innerHeight * 0.9)));
+      return s * s * (3 - 2 * s);
+    }
+
+    let vigTicking = false;
+    function onVigScroll() {
+      if (!vigTicking) {
+        requestAnimationFrame(() => { applyDrift(computeDrift()); vigTicking = false; });
+        vigTicking = true;
+      }
+    }
+    window.addEventListener('scroll', onVigScroll, { passive: true });
+    window.addEventListener('resize', onVigScroll);
+    applyDrift(computeDrift());
+  })();
+
+  // ---- Scroll reveal for static sections ----
+  (function () {
+    const els = document.querySelectorAll('.reveal');
+    if (!els.length) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); io.unobserve(entry.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -10% 0px' });
+    els.forEach((el) => io.observe(el));
+  })();
 </script>
 
 </body>
