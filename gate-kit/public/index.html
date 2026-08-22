@@ -255,7 +255,8 @@
     border-bottom: 1px solid var(--border-subtle);
   }
   .sale-row:last-child { border-bottom: none; }
-  .sale-amount { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--success-fg); }
+  .sale-amount { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--success-fg); }
+  .sale-amount .btn-secondary { font-family: var(--font-sans); font-size: 12px; padding: 3px 10px; }
 
   /* Discovery row */
   .discovery-row {
@@ -509,12 +510,36 @@ async function load() {
   if (data.recent_sales.length) {
     sales.classList.remove('empty-state');
     sales.innerHTML = data.recent_sales
-      .map((s) => `<div class="sale-row"><span>${s.transaction_id} — ${s.component_id}</span><span class="sale-amount">$${s.amount_usd}</span></div>`)
+      .map((s) => {
+        let badge = '';
+        if (s.dispute_status) badge = `<span class="badge danger"><span class="dot"></span>Disputed: ${s.dispute_status}</span>`;
+        else if (s.status === 'refunded') badge = `<span class="badge warning"><span class="dot"></span>Refunded</span>`;
+        const refundBtn = s.status === 'completed'
+          ? `<button data-refund="${s.transaction_id}" class="btn-secondary">Refund</button>`
+          : '';
+        return `<div class="sale-row"><span>${s.transaction_id} — ${s.component_id}</span><span class="sale-amount">$${s.amount_usd} ${badge} ${refundBtn}</span></div>`;
+      })
       .join('');
   } else {
     sales.classList.add('empty-state');
     sales.textContent = 'No sales yet.';
   }
+
+  document.querySelectorAll('[data-refund]').forEach((btn) => {
+    btn.onclick = async () => {
+      if (!confirm('Refund this sale? This cannot be undone.')) return;
+      btn.disabled = true;
+      const res = await fetch(`/api/sales/${btn.dataset.refund}/refund`, { method: 'POST' });
+      if (res.status === 401) return showAuth();
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        alert(body.message || 'Refund failed.');
+        btn.disabled = false;
+        return;
+      }
+      load();
+    };
+  });
 }
 
 document.getElementById('add-form').onsubmit = async (e) => {

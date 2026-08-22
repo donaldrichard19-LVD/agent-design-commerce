@@ -69,6 +69,12 @@ function saleResponseShape(sale) {
     base.message = 'Payment is awaiting confirmation. Poll GET /api/purchase/:transaction_id, or retry the same purchase request (it is idempotent).';
     base.poll_url = `${BASE_URL}/api/purchase/${sale.transaction_id}`;
   }
+  if (sale.status === 'refunded') {
+    base.refunded_at = sale.refunded_at;
+  }
+  if (sale.dispute_status) {
+    base.dispute_status = sale.dispute_status;
+  }
   return base;
 }
 
@@ -143,6 +149,34 @@ function failSale(transactionId, error) {
   saveData(data);
 }
 
+// Called after a Stripe refund succeeds -- either the seller-initiated
+// route below, or (in case a refund was ever issued directly in the Stripe
+// dashboard instead) the charge.refunded webhook, so our own record stays
+// the source of truth either way.
+function markSaleRefunded(transactionId, refundId) {
+  const data = loadData();
+  const sale = findSaleByTransactionId(data, transactionId);
+  if (!sale || sale.status === 'refunded') return; // unknown PI, or already recorded
+  sale.status = 'refunded';
+  sale.refund_id = refundId;
+  sale.refunded_at = new Date().toISOString();
+  saveData(data);
+}
+
+// Disputes (chargebacks) are opened by the buyer's bank, not through this
+// API -- Stripe is the only source of truth for them. We just record status
+// so a seller can see it in their dashboard; responding with evidence still
+// happens in the seller's own Stripe Express dashboard, same as onboarding.
+function recordDispute(paymentIntentId, disputeId, status) {
+  const data = loadData();
+  const sale = findSaleByTransactionId(data, paymentIntentId);
+  if (!sale) return;
+  sale.dispute_id = disputeId;
+  sale.dispute_status = status;
+  sale.dispute_updated_at = new Date().toISOString();
+  saveData(data);
+}
+
 const app = express();
 
 // Render (and most PaaS reverse proxies) terminate TLS upstream and forward
@@ -169,6 +203,13 @@ app.post('/webhooks/stripe', express.raw({ type: 'application/json' }), (req, re
     completeSale(event.data.object.id);
   } else if (event.type === 'payment_intent.payment_failed') {
     failSale(event.data.object.id, event.data.object.last_payment_error && event.data.object.last_payment_error.message);
+  } else if (event.type === 'charge.refunded') {
+    const pi = event.data.object.payment_intent;
+    const refund = event.data.object.refunds && event.data.object.refunds.data[0];
+    markSaleRefunded(pi, refund && refund.id);
+  } else if (event.type === 'charge.dispute.created' || event.type === 'charge.dispute.closed') {
+    const dispute = event.data.object;
+    recordDispute(dispute.payment_intent, dispute.id, dispute.status);
   }
 
   res.json({ received: true });
@@ -630,6 +671,36 @@ app.post('/api/components/:id/toggle-gate', requireAuth, (req, res) => {
   c.gated = !c.gated;
   saveData(data);
   res.json({ component_id: c.component_id, gated: c.gated });
+});
+
+// Seller-initiated refund. Buyers/agents can't self-serve a refund — only
+// the seller who made the sale can issue one, from their own dashboard.
+app.post('/api/sales/:transaction_id/refund', requireAuth, async (req, res) => {
+  const data = loadData();
+  const sale = findSaleByTransactionId(data, req.params.transaction_id);
+  if (!sale) return res.status(404).json({ error: 'not_found' });
+  if (sale.seller_id !== req.session.seller_id) {
+    return res.status(403).json({ error: 'forbidden' });
+  }
+  if (sale.status !== 'completed') {
+    return res.status(409).json({ error: 'not_refundable', message: `Sale status is '${sale.status}', not 'completed'.` });
+  }
+  try {
+    // reverse_transfer: the payout already left the platform account for
+    // the seller's connected account (this is a destination charge), so
+    // without this the platform would eat the refund with no way to pay
+    // it -- pulling it back from the seller is the only correct move here.
+    const refund = await stripe.refunds.create({
+      payment_intent: sale.transaction_id,
+      reverse_transfer: true,
+      refund_application_fee: true,
+    });
+    markSaleRefunded(sale.transaction_id, refund.id);
+    res.json({ transaction_id: sale.transaction_id, status: 'refunded', refund_id: refund.id });
+  } catch (err) {
+    console.error('refund error:', err.type, err.message);
+    res.status(502).json({ error: 'refund_error', message: err.message });
+  }
 });
 
 app.listen(PORT, () => {
