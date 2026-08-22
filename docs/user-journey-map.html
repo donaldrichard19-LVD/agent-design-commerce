@@ -465,6 +465,7 @@
       <li><b>Sellers can now have their own separate accounts, but only one ever has.</b> Signing up, logging in, and keeping each seller's data separate all genuinely work — but the only account that exists is Priya's, and it was moved into the new system rather than created by going through the actual signup form. Nobody's proven the whole thing works end-to-end for a brand-new seller yet.</li>
       <li><b>There are two separate ways for an agent to find a component, and neither depends on the other.</b> The registry (using MCP) and the information embedded directly on the web page both work on their own — an agent doesn't need to know the registry exists if it can just read the page.</li>
       <li><b>There's no refund or dispute handling.</b> A completed sale has no way to reverse it — no refund endpoint, no chargeback handling — beyond whatever a seller does manually in their own Stripe dashboard.</li>
+      <li><b>A buyer has no real way to get a <code>buyer_token</code>.</b> Every purchase requires one already tied to a saved Stripe payment method, but the only thing that creates one is a dev script that hardcodes a Stripe test card. The production path — a Stripe Checkout Session in setup mode, completed once in a browser — is referenced in the code but was never built.</li>
     </ul>
   </div>
 
