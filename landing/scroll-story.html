@@ -491,87 +491,9 @@
     .hero-actions { flex-direction: column; }
   }
 
-  /* ---- Splash / loading screen ---- */
-  html.splash-lock, html.splash-lock body { overflow: hidden; height: 100%; }
-
-  .splash {
-    position: fixed; inset: 0; z-index: 999;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
-    background: var(--surface-page);
-    transition: opacity .45s ease;
-  }
-  .splash.splash-hidden { opacity: 0; pointer-events: none; }
-  @media (prefers-reduced-motion: reduce) {
-    .splash { transition: opacity .15s ease; }
-  }
-
-  .splash-stage {
-    position: relative;
-    width: 160px; height: 108px;
-    overflow: hidden;
-  }
-  .splash-block {
-    position: absolute; left: 50%;
-    height: 26px; border-radius: 999px;
-    box-shadow: var(--shadow-sm);
-    animation-duration: 2.6s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-  .splash-block-a { top: 0;  width: 112px; margin-left: -56px; background: var(--blue-500);  animation-name: splashDropA; }
-  .splash-block-b { top: 40px; width: 140px; margin-left: -70px; background: var(--green-500); animation-name: splashDropB; }
-  .splash-block-c { top: 80px; width: 96px;  margin-left: -48px; background: var(--amber-500); animation-name: splashDropC; }
-
-  @keyframes splashDropA {
-    0%   { transform: translateY(-160px) rotate(0deg); opacity: 1; }
-    9%   { transform: translateY(8px) rotate(-7deg); }
-    13%  { transform: translateY(0) rotate(-7deg); }
-    74%  { transform: translateY(0) rotate(-7deg); opacity: 1; }
-    84%  { transform: translateY(0) rotate(-7deg); opacity: 0; }
-    85%  { transform: translateY(-160px) rotate(0deg); opacity: 0; }
-    100% { transform: translateY(-160px) rotate(0deg); opacity: 1; }
-  }
-  @keyframes splashDropB {
-    0%   { transform: translateY(-160px) rotate(0deg); opacity: 1; }
-    22%  { transform: translateY(8px) rotate(4deg); }
-    26%  { transform: translateY(0) rotate(4deg); }
-    74%  { transform: translateY(0) rotate(4deg); opacity: 1; }
-    84%  { transform: translateY(0) rotate(4deg); opacity: 0; }
-    85%  { transform: translateY(-160px) rotate(0deg); opacity: 0; }
-    100% { transform: translateY(-160px) rotate(0deg); opacity: 1; }
-  }
-  @keyframes splashDropC {
-    0%   { transform: translateY(-160px) rotate(0deg); opacity: 1; }
-    31%  { transform: translateY(8px) rotate(-5deg); }
-    35%  { transform: translateY(0) rotate(-5deg); }
-    74%  { transform: translateY(0) rotate(-5deg); opacity: 1; }
-    84%  { transform: translateY(0) rotate(-5deg); opacity: 0; }
-    85%  { transform: translateY(-160px) rotate(0deg); opacity: 0; }
-    100% { transform: translateY(-160px) rotate(0deg); opacity: 1; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .splash-block { animation: none !important; top: auto; position: static; margin-left: 0; }
-    .splash-stage { display: flex; flex-direction: column; align-items: center; gap: 8px; height: auto; overflow: visible; }
-    .splash-block-a { transform: rotate(-7deg); }
-    .splash-block-b { transform: rotate(4deg); }
-    .splash-block-c { transform: rotate(-5deg); }
-  }
-
 </style>
 </head>
 <body>
-
-<div id="splash" class="splash" role="status" aria-live="polite">
-  <div class="splash-stage" aria-hidden="true">
-    <div class="splash-block splash-block-a"></div>
-    <div class="splash-block splash-block-b"></div>
-    <div class="splash-block splash-block-c"></div>
-  </div>
-  <span class="sr-only">Loading Open Commerce, please wait</span>
-</div>
-<script>
-  document.documentElement.classList.add('splash-lock');
-</script>
 
 <div class="header">
   <div class="brand-rule"></div>
@@ -950,37 +872,6 @@
 </footer>
 
 <script>
-  // ---- Splash screen ----
-  (function () {
-    const splash = document.getElementById('splash');
-    if (!splash) return;
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const MIN_MS = reduceMotion ? 0 : 1200;
-    const MAX_MS = 6000; // fallback in case 'load' never fires
-    const start = performance.now();
-    let hidden = false;
-
-    function hideSplash() {
-      if (hidden) return;
-      hidden = true;
-      const wait = Math.max(0, MIN_MS - (performance.now() - start));
-      setTimeout(() => {
-        document.documentElement.classList.remove('splash-lock');
-        splash.classList.add('splash-hidden');
-        splash.setAttribute('aria-hidden', 'true');
-        splash.addEventListener('transitionend', () => splash.remove(), { once: true });
-        setTimeout(() => splash.remove(), 700); // in case transitionend doesn't fire
-      }, wait);
-    }
-
-    if (document.readyState === 'complete') {
-      hideSplash();
-    } else {
-      window.addEventListener('load', hideSplash, { once: true });
-    }
-    setTimeout(hideSplash, MAX_MS);
-  })();
-
   // ---- Scroll-linked story progress ----
   const story = document.getElementById('story');
   const beats = Array.from(document.querySelectorAll('.beat'));
