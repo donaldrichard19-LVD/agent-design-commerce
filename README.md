@@ -61,7 +61,7 @@ npm run crawl
 ```
 npm run mcp
 ```
-Point your MCP host's config at `node /path/to/registry/mcp-server.js`. It exposes four tools: `search_components`, `get_component`, `purchase_component`, `get_asset`.
+Point your MCP host's config at `node /path/to/registry/mcp-server.js`. It exposes five tools: `search_components`, `get_component`, `purchase_component`, `get_asset`, `check_purchase_status`.
 
 **Or, prove it works without a full agent host** — the included test client drives the same MCP protocol directly:
 ```
@@ -84,8 +84,8 @@ Replaces the mocked payment with a real Connect integration, per `agent-design-c
 - **Onboarding** — `POST /api/stripe/connect` creates a v2 recipient connected account (`dashboard: express`, `fees_collector`/`losses_collector: application`, `stripe_balance.stripe_transfers` capability) and returns a hosted Account Link. This replaces the legacy OAuth flow the P0 comment described — Stripe's current guidance is v2 Accounts + Account Links, not `stripe.oauth.token()`.
 - **Purchase** — `POST /api/purchase` creates a real destination-charge PaymentIntent (`transfer_data.destination` + optional `application_fee_amount`, off-session against a saved buyer payment method). It does **not** decide completion itself — that only ever happens inside the `payment_intent.succeeded` webhook handler (`POST /webhooks/stripe`, signature-verified). The request handler waits briefly for that webhook to land (fast in practice) and falls back to a `status: "processing"` + poll URL if it doesn't.
 - **Idempotency** — retried purchases for the same `buyer_token` + `component_id` reuse the existing PaymentIntent instead of double-charging (dedupe key passed as the Stripe idempotency key too).
-- **Buyers** — since this is a machine-to-machine purchase (no browser at purchase time), a buyer's payment method has to be saved once, out of band. `scripts/create-test-buyer.js <buyer_token>` does this in test mode with a saved test card. Production replaces that script with a one-time Stripe Checkout Session in `setup` mode.
-- **Registry** — `mcp-server.js`'s `purchase_component` tool polls the gate-kit's status endpoint a few more times if it comes back `processing`; a new `check_purchase_status` tool lets an agent check later.
+- **Buyers** — since this is a machine-to-machine purchase (no browser at purchase time), a buyer's payment method has to be saved once, out of band. `scripts/create-test-buyer.js <buyer_token>` does this in test mode with a saved test card. Production uses the real buyer payment setup flow (below), a one-time Stripe Checkout Session in `setup` mode.
+- **Registry** — `mcp-server.js`'s `purchase_component` tool polls the gate-kit's status endpoint a few more times if it comes back `processing`; a `check_purchase_status` tool lets an agent check later.
 
 ### Running the P1 flow locally
 
@@ -125,6 +125,23 @@ Built and tested against a real Stripe test-mode sandbox (`stripe sandbox create
 Workstream 1 is now fully validated end to end, including the one gap flagged above. One operational note from getting there: `stripe listen` must be started with `--api-key <the sandbox's test-mode key>` — without it, the CLI silently forwards from whatever account it's currently configured for (e.g. a stale/previous sandbox), and purchases against the *actual* target account will sit stuck at `status: "pending"` with no error, since the webhook that would complete them never arrives.
 
 **Production (`agent-commerce-gate-kit.onrender.com`), not just local, is now live-validated too.** Deploying the new connected-account ID without also updating Render's `STRIPE_SECRET_KEY`/`STRIPE_PUBLISHABLE_KEY` (set directly in Render's dashboard, not synced from `render.yaml`) briefly broke production purchases with `No such destination` — the discovery file advertised a connected account the configured key couldn't reach. There was also no webhook endpoint registered against the live URL at all, which would have left completions stuck pending indefinitely even with the right key. Both are fixed: a real webhook endpoint (`we_1U6ikHDO6LUr92PKqvLicyQG`) is registered for `payment_intent.succeeded`/`payment_intent.payment_failed`, Render's env vars match the claimed sandbox, and a real `purchase_component` call against the live URL completed on the first attempt — `payment_intent.succeeded` → `completeSale` → asset delivered via `GET /api/download/:token`, all over the public internet, not localhost.
+
+## Buyer payment setup (closes the "how does a buyer get a `buyer_token`" gap)
+
+Purchase was always machine-to-machine — an agent calls `purchase_component` with a `buyer_token` — but until now the only way to attach a real payment method to one was `scripts/create-test-buyer.js`, a dev-only script hardcoding a test card. This is the real, production-usable flow:
+
+- `POST /api/buyer/setup` mints a `buyer_token` (`tok_...`), creates a Stripe Customer, and returns a hosted Checkout Session URL (`mode: setup`) — no charge, just card capture. The agent relays this URL to the human buyer.
+- `GET /api/buyer/setup/return?session_id=...` runs once the human completes the hosted page: retrieves the Checkout Session, pulls the saved payment method off it, and registers it against the `buyer_token`.
+- `GET /api/buyer/setup/cancel` handles the abandoned-checkout path.
+- A purchase attempt against an unregistered `buyer_token` returns `402 buyer_payment_method_required` with a `message` pointing at this endpoint, replacing the old guidance that only mentioned the dev script.
+
+Tested locally: `POST /api/buyer/setup` returns a real `checkout_url`; the error paths (missing/invalid `session_id`, cancel) behave correctly; existing purchases are unaffected. Completing the hosted Checkout page itself isn't verifiable in this sandbox (no browser) — that leg still wants a real click-through before calling it fully live-validated, same caveat as the scroll-story landing page's visual checks.
+
+## Refunds and dispute tracking
+
+- **Refunds** — `POST /api/sales/:transaction_id/refund` (seller-only, `requireAuth`). Scoped to the caller's own sales (`403` otherwise) and only for sales in `completed` status (`409 not_refundable` otherwise). Issues a real Stripe refund with `reverse_transfer: true` and `refund_application_fee: true` — required because this is a destination charge, so the payout already left the platform account for the seller's connected account; without reversing it, the platform would eat the refund with no balance to pay it from. The dashboard's sales panel has a Refund button and status badges reflecting the result.
+- **Disputes** — new webhook handlers for `charge.dispute.created`/`charge.dispute.closed` record `dispute_id`/`dispute_status`/`dispute_updated_at` on the sale (`recordDispute`). A chargeback is opened by the buyer's bank, not through this API — Stripe is the only source of truth, and evidence response still happens in the seller's own Stripe Express dashboard, same pattern as Connect onboarding.
+- **`charge.refunded`** is also handled, so a refund issued directly in Stripe's dashboard (bypassing the API above) still updates the sale's status here instead of drifting out of sync.
 
 ## Workstream 5 dry run: delivered-code quality (seed components)
 
