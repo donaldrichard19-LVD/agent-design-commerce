@@ -213,6 +213,9 @@
     transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
   }
   .status-pill svg { width: 13px; height: 13px; flex: none; }
+  .status-pill .icon-on { display: none; }
+  .status-pill.on .icon-off { display: none; }
+  .status-pill.on .icon-on { display: inline; }
   .status-pill.on {
     background: color-mix(in oklab, var(--blue-500) 12%, var(--surface-card));
     border-color: color-mix(in oklab, var(--blue-500) 45%, transparent);
@@ -487,7 +490,7 @@
     .agent-panel, .progress-rail { flex: 0 0 auto; }
 
     .mock-body { padding: 12px; }
-    .mock-code-pane { max-height: 100px; }
+    .page-mock.structured .mock-code-pane { max-height: 100px; }
     .mock-code-pane pre { height: 66px; font-size: 10px; line-height: 1.55; }
     .agent-panel-body { padding: 12px; min-height: 88px; }
     .agent-state { gap: 7px; }
@@ -639,15 +642,18 @@
     <div class="story-stage">
       <div class="status-pills">
         <span class="status-pill" id="pill-accessible">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
           Accessible
         </span>
         <span class="status-pill" id="pill-discoverable">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
           Discoverable
         </span>
         <span class="status-pill" id="pill-purchasable">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
           Purchasable
         </span>
       </div>
