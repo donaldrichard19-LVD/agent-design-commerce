@@ -377,7 +377,10 @@
   }
 
   /* Mobile stage fallback */
-  .stage-mobile-bar { display: none; }
+  .beat-copy-mobile { display: none; }
+  .beat-copy-item { display: none; }
+  .beat-copy-item.active { display: block; animation: pop 450ms ease; }
+  @media (prefers-reduced-motion: reduce) { .beat-copy-item { animation: none; } }
 
   /* How it works code sample reuse spacing not needed here */
 
@@ -469,16 +472,36 @@
     section { padding: 56px 20px; }
     .header-inner { padding: 0 20px; }
     .section-inner { padding: 0; }
-    .story { padding: 40px 20px; }
-    .story-inner { grid-template-columns: 1fr; gap: 24px; }
-    .story-stage { position: sticky; top: 64px; z-index: 10; flex-direction: row; align-items: center; gap: 12px; }
-    .status-pills, .agent-panel, .page-mock, .story-stage > .progress-rail { display: none; }
-    .stage-mobile-bar {
-      display: flex; align-items: center; gap: 10px; flex: 1;
-      background: var(--surface-card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
-      padding: 10px 14px; font-size: 12.5px; color: var(--text-secondary);
+    .story { padding: 0 20px; }
+    .story-inner { grid-template-columns: 1fr; gap: 0; }
+
+    .story-stage {
+      top: 64px; z-index: 10;
+      height: calc(100svh - 64px); overflow: hidden;
+      gap: 10px; padding: 14px 0 18px;
+      background: var(--surface-card);
+      box-shadow: 0 14px 22px -20px rgba(0,0,0,.6);
     }
-    .beat { min-height: 55vh; }
+    .status-pills { gap: 6px; flex: 0 0 auto; }
+    .page-mock { flex: 0 1 auto; min-height: 96px; }
+    .agent-panel, .progress-rail { flex: 0 0 auto; }
+
+    .mock-body { padding: 12px; }
+    .mock-code-pane { max-height: 100px; }
+    .mock-code-pane pre { height: 66px; font-size: 10px; line-height: 1.55; }
+    .agent-panel-body { padding: 12px; min-height: 88px; }
+    .agent-state { gap: 7px; }
+    .agent-msg, .agent-msg-q { font-size: 13px; }
+    .agent-msg code, .agent-catalog-row, .agent-catalog-row span { font-size: 12px; }
+
+    .beat-copy-mobile { display: flex; flex-direction: column; flex: 0 0 auto; margin-top: auto; }
+    .beat-copy-mobile .beat-heading { font-size: clamp(19px, 5.2vw, 26px); margin: 0 0 8px; }
+    .beat-copy-mobile .beat-body { font-size: 14px; line-height: 1.5; }
+
+    .beat > div { display: none; }
+    .beat { min-height: 100svh; }
+
+    .btn-primary, .mock-buy-btn, .agent-approve-btn, .agent-decline-btn { min-height: 44px; }
   }
   @media (max-width: 860px) {
     .trust-grid { grid-template-columns: repeat(2, 1fr); }
@@ -629,14 +652,6 @@
         </span>
       </div>
 
-      <div class="stage-mobile-bar">
-        <span>Story progress</span>
-        <div class="progress-rail" style="flex:1;">
-          <span class="rail-segment"></span><span class="rail-segment"></span><span class="rail-segment"></span>
-          <span class="rail-segment"></span><span class="rail-segment"></span><span class="rail-segment"></span>
-        </div>
-      </div>
-
       <div class="page-mock" id="page-mock">
         <div class="mock-chrome">
           <span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span>
@@ -710,6 +725,33 @@
               <div class="agent-payout-sub">Done. You're all set. Nothing to reconcile later.</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="beat-copy-mobile" id="beat-copy-mobile">
+        <div class="beat-copy-item active" data-beat="0">
+          <h2 class="beat-heading">Agents couldn't <span class="marker">discover</span> your products.</h2>
+          <p class="beat-body">The name, the price, the buy button. All of it written for human eyes. An agent arrives, finds prose, and moves on.</p>
+        </div>
+        <div class="beat-copy-item" data-beat="1">
+          <h2 class="beat-heading"><span class="marker">Add</span> 4 lines of code on your website. That's it.</h2>
+          <p class="beat-body">Standard schema.org Product and Offer data, plus a little extra for agents that can read more. Nothing about your page changes for the people visiting it.</p>
+        </div>
+        <div class="beat-copy-item" data-beat="2">
+          <h2 class="beat-heading">Agent ready in <span class="marker">minutes</span>.</h2>
+          <p class="beat-body">A name. A price. A way to buy. In a shape any agent doing an ordinary web search already understands.</p>
+        </div>
+        <div class="beat-copy-item" data-beat="3">
+          <h2 class="beat-heading">Create an agent-friendly catalog to <span class="marker">showcase</span> your products.</h2>
+          <p class="beat-body">Publish a discovery file and an agent sees everything you sell, not just the page it happened to land on.</p>
+        </div>
+        <div class="beat-copy-item" data-beat="4">
+          <h2 class="beat-heading">The agent <span class="marker">asks</span>. You approve.</h2>
+          <p class="beat-body">Every purchase carries <code>confirmed_by_human</code>. An agent can put something in the basket, but it can't decide for anyone.</p>
+        </div>
+        <div class="beat-copy-item" data-beat="5">
+          <h2 class="beat-heading">Purchase <span class="marker">completed</span>.</h2>
+          <p class="beat-body">You get paid out directly.</p>
         </div>
       </div>
 
@@ -885,6 +927,7 @@
   const railSegments = Array.from(document.querySelectorAll('.rail-segment'));
   const approveBtn = document.getElementById('approve-btn');
   const codePre = document.getElementById('mock-code-pre');
+  const beatCopyItems = Array.from(document.querySelectorAll('.beat-copy-item'));
 
   const EMBED_LINES = [
     '<span class="tok-punc">&lt;script type=</span><span class="tok-str">"application/ld+json"</span><span class="tok-punc">&gt;</span>',
@@ -927,6 +970,7 @@
     const { beat: activeIndex, sub } = computeProgress();
 
     beats.forEach((beat, i) => beat.classList.toggle('active', i === activeIndex));
+    beatCopyItems.forEach((el) => el.classList.toggle('active', Number(el.dataset.beat) === activeIndex));
 
     pillAccessible.classList.toggle('on', activeIndex >= 2);
     pillDiscoverable.classList.toggle('on', activeIndex >= 3);
