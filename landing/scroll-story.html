@@ -201,12 +201,9 @@
   }
   .story-inner {
     max-width: var(--max-width); margin: 0 auto;
-    display: grid; grid-template-columns: 380px minmax(0,1fr); grid-template-areas: "stage text"; gap: 56px; align-items: start;
-    transition: grid-template-columns 200ms ease;
+    display: grid; grid-template-columns: 380px minmax(0,1fr); gap: 56px; align-items: start;
   }
-  .story-inner.flip { grid-template-columns: minmax(0,1fr) 380px; grid-template-areas: "text stage"; }
-  .story-stage { grid-area: stage; position: sticky; top: 92px; display: flex; flex-direction: column; gap: 16px; }
-  .story-track { grid-area: text; }
+  .story-stage { position: sticky; top: 92px; display: flex; flex-direction: column; gap: 16px; }
 
   .status-pills { display: flex; gap: 8px; flex-wrap: wrap; }
   .status-pill {
@@ -363,7 +360,7 @@
   }
   .rail-segment.filled { background: var(--blue-500); }
 
-  /* Story track (alternates left/right with .story-inner.flip) */
+  /* Story track (right column) */
   .story-track { display: flex; flex-direction: column; }
   .beat {
     min-height: 92vh; display: flex; align-items: center;
@@ -473,7 +470,7 @@
     .header-inner { padding: 0 20px; }
     .section-inner { padding: 0; }
     .story { padding: 40px 20px; }
-    .story-inner, .story-inner.flip { grid-template-columns: 1fr; grid-template-areas: "stage" "text"; gap: 24px; }
+    .story-inner { grid-template-columns: 1fr; gap: 24px; }
     .story-stage { position: sticky; top: 64px; z-index: 10; flex-direction: row; align-items: center; gap: 12px; }
     .status-pills, .agent-panel, .page-mock, .story-stage > .progress-rail { display: none; }
     .stage-mobile-bar {
@@ -877,7 +874,6 @@
 <script>
   // ---- Scroll-linked story progress ----
   const story = document.getElementById('story');
-  const storyInner = document.querySelector('.story-inner');
   const beats = Array.from(document.querySelectorAll('.beat'));
   const pillAccessible = document.getElementById('pill-accessible');
   const pillDiscoverable = document.getElementById('pill-discoverable');
@@ -931,7 +927,6 @@
     const { beat: activeIndex, sub } = computeProgress();
 
     beats.forEach((beat, i) => beat.classList.toggle('active', i === activeIndex));
-    if (storyInner) storyInner.classList.toggle('flip', activeIndex % 2 === 1);
 
     pillAccessible.classList.toggle('on', activeIndex >= 2);
     pillDiscoverable.classList.toggle('on', activeIndex >= 3);
