@@ -11,7 +11,7 @@
       "email": "priya@example.com",
       "stripe_connect": {
         "connected": true,
-        "connected_account_id": "acct_1U6i1hDO6LnxIz7l"
+        "connected_account_id": "acct_dev_seed_example"
       },
       "password_hash": "e11fd429f875922987dfd773df1a5fba9d84f8f9b8d4460d3f7342bebf3bba707db25d426c9b93440305c8c27688c8ff153a1c1e9d0732b50ed2c5f95898abfb",
       "password_salt": "f011d1bf820157857d83234c5b073681",
@@ -98,7 +98,7 @@
   ],
   "sales": [
     {
-      "transaction_id": "pi_3U6iESDO6LUr92PK2upaO7uT",
+      "transaction_id": "pi_dev_seed_0001",
       "dedupe_key": "067796ba50977921939384f401387cd7043350177191fbdd1d8e36af8aa7d4f7",
       "component_id": "cmp_8f2a1c",
       "buyer_token": "tok_dev_9f1a",
@@ -108,7 +108,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6iG0DO6LUr92PK2dBcwBbS",
+      "transaction_id": "pi_dev_seed_0002",
       "dedupe_key": "8ee1c85a7cab0c38b435d40d2f1407bdd3891eeb11d3667f92ce3a7cdfcbed94",
       "component_id": "cmp_9b3d2e",
       "buyer_token": "tok_dev_9f1a",
@@ -118,7 +118,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6iIMDO6LUr92PK20hFRq09",
+      "transaction_id": "pi_dev_seed_0003",
       "dedupe_key": "34949ed24f5cce2982fdb754c506e07d273de7b0276911938f438db681a00717",
       "component_id": "cmp_8f2a1c",
       "buyer_token": "tok_dev_live_check",
@@ -131,7 +131,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6iJIDO6LUr92PK1wpgHfW7",
+      "transaction_id": "pi_dev_seed_0004",
       "dedupe_key": "5dfec2aff471173c6d25f8b2265d94262ea617a0480d631cd24bfe75f5570436",
       "component_id": "cmp_9b3d2e",
       "buyer_token": "tok_dev_mcp_check",
@@ -144,7 +144,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6tm2DO6LUr92PK1krzE0Li",
+      "transaction_id": "pi_dev_seed_0005",
       "dedupe_key": "975857271b58ca6a1f06af09d7b37d77b9ca6be4b7afb8cf3ce9b31baa5cf888",
       "component_id": "cmp_8f2a1c",
       "buyer_token": "tok_ws5_checkout",
@@ -157,7 +157,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6tnNDO6LUr92PK2PyyhFqV",
+      "transaction_id": "pi_dev_seed_0006",
       "dedupe_key": "41f9d77256fbce4f9280490008ceb62a12247d450b08267998e6c449f7d4c574",
       "component_id": "cmp_9b3d2e",
       "buyer_token": "tok_ws5_checkout",
@@ -170,7 +170,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6u6iDO6LUr92PK2XrKRFA2",
+      "transaction_id": "pi_dev_seed_0007",
       "dedupe_key": "f7aaf7b383c976a09799311ed41b01a96e0a60bf9429d8b7f72a83059da4ba52",
       "component_id": "cmp_8f2a1c",
       "buyer_token": "tok_ws5_verify2",
@@ -183,7 +183,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6u6kDO6LUr92PK2FBLkx8Q",
+      "transaction_id": "pi_dev_seed_0008",
       "dedupe_key": "79a63ecbb1a7ca43895d25be7b4ba2315bde4dfdfec4d9c1cf2d080aba862376",
       "component_id": "cmp_9b3d2e",
       "buyer_token": "tok_ws5_verify2",
@@ -196,7 +196,7 @@
       "seller_id": "dsn_priya_r"
     },
     {
-      "transaction_id": "pi_3U6z5MDO6LUr92PK12CYxl8c",
+      "transaction_id": "pi_dev_seed_0009",
       "dedupe_key": "cdb5b6fc6683ef7d1c854c601763d6e8490c95ee89bb5ca3daf9f542adda1f2b",
       "component_id": "cmp_8f2a1c",
       "seller_id": "dsn_priya_r",
