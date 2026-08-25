@@ -331,7 +331,9 @@
         <div class="wordmark">Open Commerce</div>
       </div>
       <div id="header-actions" class="hidden" style="display: flex; align-items: center; gap: 12px;">
+        <span class="field-error hidden" id="connect-stripe-error" style="margin: 0;"></span>
         <span id="stripe-badge" class="badge danger"><span class="dot"></span>Stripe not connected</span>
+        <button id="connect-stripe-btn" class="btn-primary hidden">Connect Stripe</button>
         <button id="logout-btn" class="btn-secondary">Log out</button>
       </div>
     </div>
@@ -475,6 +477,7 @@ async function load() {
   const connected = !!(data.stripe_connect && data.stripe_connect.connected);
   stripeBadge.className = `badge ${connected ? 'success' : 'danger'}`;
   stripeBadge.innerHTML = `<span class="dot"></span>${connected ? 'Stripe connected' : 'Stripe not connected'}`;
+  document.getElementById('connect-stripe-btn').classList.toggle('hidden', connected);
 
   document.getElementById('discovery-url').textContent = data.discovery_file_url;
 
@@ -564,6 +567,23 @@ document.getElementById('add-form').onsubmit = async (e) => {
 document.getElementById('logout-btn').onclick = async () => {
   await fetch('/api/auth/logout', { method: 'POST' });
   showAuth();
+};
+
+document.getElementById('connect-stripe-btn').onclick = async (e) => {
+  const errorEl = document.getElementById('connect-stripe-error');
+  errorEl.classList.add('hidden');
+  e.target.disabled = true;
+  try {
+    const res = await fetch('/api/stripe/connect', { method: 'POST' });
+    if (res.status === 401) return showAuth();
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error || 'stripe_connect_error');
+    window.location.href = data.url;
+  } catch (err) {
+    errorEl.textContent = 'Could not start Stripe onboarding: ' + err.message;
+    errorEl.classList.remove('hidden');
+    e.target.disabled = false;
+  }
 };
 
 document.getElementById('show-signup').onclick = () => {
